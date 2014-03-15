@@ -1,0 +1,53 @@
+﻿------ Rebuild All started: Project: Core, Configuration: Release Any CPU ------
+V:\D\1.7\DxfNet\DxfNet\Insert.cs(125,21): warning CS0219: The variable 'ddd' is assigned but its value is never used
+V:\D\1.7\DxfNet\DxfNet\DrawPoly.cs(55,21): warning CS0219: The variable 'i' is assigned but its value is never used
+V:\D\1.7\DxfNet\DxfNet\DrawObj.cs(56,14): warning CS0169: The field 'DxfNet.DrawObj.m_bTurnWithSymbol' is never used
+V:\D\1.7\DxfNet\DxfNet\DrawObj.cs(58,17): warning CS0169: The field 'DxfNet.DrawObj.m_ObjType' is never used
+V:\D\1.7\DxfNet\DxfNet\FreeText.cs(15,13): warning CS0649: Field 'DxfNet.FreeText.m_otacek' is never assigned to, and will always have its default value 0
+V:\D\1.7\DxfNet\DxfNet\FreeText.cs(16,14): warning CS0649: Field 'DxfNet.FreeText.m_bTurnWithSymbol' is never assigned to, and will always have its default value false
+
+Compile complete -- 0 errors, 6 warnings
+Build started 6.6.2011 22:32:26.
+CoreClean:
+  Deleting file "V:\D\1.7\DxfNet\DxfNet\bin\Release\DxfNet.dll".
+  Deleting file "V:\D\1.7\DxfNet\DxfNet\bin\Release\DxfNet.pdb".
+  Deleting file "V:\D\1.7\DxfNet\DxfNet\obj\Release\DxfNet.dll".
+  Deleting file "V:\D\1.7\DxfNet\DxfNet\obj\Release\DxfNet.pdb".
+CoreCompile:
+  C:\Windows\Microsoft.NET\Framework\v4.0.30319\Csc.exe /noconfig /nowarn:1701,1702 /nostdlib+ /errorreport:prompt /warn:4 /define:TRACE /reference:C:\Windows\Microsoft.NET\Framework\v2.0.50727\mscorlib.dll /reference:"C:\Program Files\Reference Assemblies\Microsoft\Framework\v3.5\System.Core.dll" /reference:"C:\Program Files\Reference Assemblies\Microsoft\Framework\v3.5\System.Data.DataSetExtensions.dll" /reference:C:\Windows\Microsoft.NET\Framework\v2.0.50727\System.Data.dll /reference:C:\Windows\Microsoft.NET\Framework\v2.0.50727\System.dll /reference:C:\Windows\Microsoft.NET\Framework\v2.0.50727\System.Drawing.dll /reference:C:\Windows\Microsoft.NET\Framework\v2.0.50727\System.Xml.dll /reference:"C:\Program Files\Reference Assemblies\Microsoft\Framework\v3.5\System.Xml.Linq.dll" /debug:pdbonly /filealign:512 /optimize+ /out:obj\Release\DxfNet.dll /target:library Attribute.cs DrawDoc.cs DrawObj.cs DrawPoly.cs DrawRect.cs EFont.cs Enums.cs FreeText.cs Helper.cs Insert.cs Layer.cs MFC_Types\MyLogBrush.cs MFC_Types\MyLogPen.cs MyRect.cs ObjProps.cs PCadDoc.cs PositionAspect.cs PpdDoc.cs PrintSettings.cs Program.cs Properties\AssemblyInfo.cs PtbDoc.cs PtbPosition.cs QFontsCollection.cs QGate.cs QIC.cs QLin.cs QPivot.cs QSummInfo.cs Repo.cs Trafo.cs TrafoWinding.cs Wire.cs
+CopyFilesToOutputDirectory:
+  Copying file from "obj\Release\DxfNet.dll" to "bin\Release\DxfNet.dll".
+  Core -> V:\D\1.7\DxfNet\DxfNet\bin\Release\DxfNet.dll
+  Copying file from "obj\Release\DxfNet.pdb" to "bin\Release\DxfNet.pdb".
+
+Build succeeded.
+
+Time Elapsed 00:00:00.23
+------ Rebuild All started: Project: Loader, Configuration: Release Any CPU ------
+V:\D\1.7\DxfNet\Loader\Exporter.cs(64,13): warning CS0618: 'WW.Cad.IO.DxfWriter.WriteDxf(string, WW.Cad.Model.DxfModel, bool)' is obsolete: 'This method is replaced by method Write(string filename, DxfModel model, bool binary).'
+V:\D\1.7\DxfNet\Loader\Loader.cs(41,43): warning CS0168: The variable 'exc' is declared but never used
+
+Compile complete -- 0 errors, 2 warnings
+Build started 6.6.2011 22:32:26.
+CoreClean:
+  Deleting file "V:\D\1.7\DxfNet\Loader\bin\Release\Loader.dll".
+  Deleting file "V:\D\1.7\DxfNet\Loader\bin\Release\Loader.pdb".
+  Deleting file "V:\D\1.7\DxfNet\Loader\bin\Release\DxfNet.dll".
+  Deleting file "V:\D\1.7\DxfNet\Loader\bin\Release\DxfNet.pdb".
+  Deleting file "V:\D\1.7\DxfNet\Loader\obj\Release\ResolveAssemblyReference.cache".
+  Deleting file "V:\D\1.7\DxfNet\Loader\obj\Release\Loader.dll".
+  Deleting file "V:\D\1.7\DxfNet\Loader\obj\Release\Loader.pdb".
+CoreCompile:
+  C:\Windows\Microsoft.NET\Framework\v4.0.30319\Csc.exe /noconfig /nowarn:1701,1702 /nostdlib+ /errorreport:prompt /warn:4 /define:TRACE /reference:V:\D\1.7\DxfNet\DxfNet\bin\Release\DxfNet.dll /reference:C:\Windows\Microsoft.NET\Framework\v2.0.50727\mscorlib.dll /reference:"C:\Program Files\Reference Assemblies\Microsoft\Framework\v3.5\System.Core.dll" /reference:"C:\Program Files\Reference Assemblies\Microsoft\Framework\v3.5\System.Data.DataSetExtensions.dll" /reference:C:\Windows\Microsoft.NET\Framework\v2.0.50727\System.Data.dll /reference:C:\Windows\Microsoft.NET\Framework\v2.0.50727\System.dll /reference:C:\Windows\Microsoft.NET\Framework\v2.0.50727\System.Drawing.dll /reference:C:\Windows\Microsoft.NET\Framework\v2.0.50727\System.Web.dll /reference:C:\Windows\Microsoft.NET\Framework\v2.0.50727\System.Xml.dll /reference:"C:\Program Files\Reference Assemblies\Microsoft\Framework\v3.5\System.Xml.Linq.dll" /reference:"C:\Program Files\Reference Assemblies\Microsoft\Framework\v3.0\WindowsBase.dll" /reference:V:\D\1.7\DxfNet\Loader\bin\Release\WW.Cad.dll /reference:V:\D\1.7\DxfNet\Loader\bin\Release\WW.dll /reference:V:\D\1.7\DxfNet\Loader\bin\Release\WW.GL.dll /reference:V:\D\1.7\DxfNet\Loader\bin\Release\WW.License.dll /reference:V:\D\1.7\DxfNet\Loader\bin\Release\WW.Pdf.dll /debug:pdbonly /filealign:512 /optimize+ /out:obj\Release\Loader.dll /target:library ContextP2A.cs DrawDocDumper.cs ExportContext.cs Exporter.cs ExporterGate.cs ExporterQic.cs Helper.cs Loader.cs Program.cs Properties\AssemblyInfo.cs VersionPre5.cs
+_CopyFilesMarkedCopyLocal:
+  Copying file from "V:\D\1.7\DxfNet\DxfNet\bin\Release\DxfNet.dll" to "bin\Release\DxfNet.dll".
+  Copying file from "V:\D\1.7\DxfNet\DxfNet\bin\Release\DxfNet.pdb" to "bin\Release\DxfNet.pdb".
+CopyFilesToOutputDirectory:
+  Copying file from "obj\Release\Loader.dll" to "bin\Release\Loader.dll".
+  Loader -> V:\D\1.7\DxfNet\Loader\bin\Release\Loader.dll
+  Copying file from "obj\Release\Loader.pdb" to "bin\Release\Loader.pdb".
+
+Build succeeded.
+
+Time Elapsed 00:00:00.37
+========== Rebuild All: 2 succeeded, 0 failed, 0 skipped ==========

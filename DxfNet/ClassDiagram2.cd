@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="DxfNet.PCadDoc">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CKAEAQAAAAAAACAIAAAIAQBAAAAAAAAgAAAAAgKAAIA=</HashCode>
+      <FileName>PCadDoc.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DxfNet.ObjProps" Collapsed="true">
+    <Position X="6.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAABAKACAAAAAAACAAAAAAAAAAAAIoAAA=</HashCode>
+      <FileName>ObjProps.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DxfNet.DrawObj" Collapsed="true">
+    <Position X="4.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DrawObj.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Tahoma" Size="8.4" />
+</ClassDiagram>

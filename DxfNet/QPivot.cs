@@ -1,0 +1,91 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Drawing;
+
+namespace DxfNet
+{
+    public class QPivot
+    {
+        public Point m_pivot;//axis of the object
+        public int m_otacek;//step pi/4
+        public bool m_horizontal;
+        public bool m_vertical;
+
+        public QPivot(Point a_pivot, int a_otacek, bool ab_horizontal, bool ab_vertical)
+        {
+            m_pivot = a_pivot;
+            m_otacek = a_otacek;
+            m_horizontal = ab_horizontal;
+            m_vertical = ab_vertical;
+        }
+
+        public Point PrevodBodu (int x, int y)
+        {
+	        return PrevodBodu(new Point(x,y));
+        }
+
+        public Point PrevodBodu (Point vstup)
+        {
+	        Point	vysledek = vstup;
+
+            if ((m_otacek == 0) && (m_vertical == false) && (m_horizontal == false))
+            {
+		        return vstup;
+	        }
+
+	        int	otacek = m_otacek;                    
+	        // dostat otáčky do intervalu <0;7>
+	        for(otacek = m_otacek;otacek<0;otacek += 8);
+	        for(;otacek>7;otacek -= 8);
+	        //zohlednit polohu bodu vůči středu součástky...
+	        int X = m_pivot.X; 
+	        int Y = m_pivot.Y; 
+	        int x = vstup.X - X; 
+	        int y = vstup.Y - Y;
+	        // a natočení
+	        if (m_vertical) x = -x;
+	        if (m_horizontal) y = -y;//máme MM_TEXT
+
+	        //////
+	        switch(otacek){
+	        case 0: 
+		        vysledek.X = X + x;
+		        vysledek.Y = Y + y;
+		        break;
+	        case 2: 
+		        vysledek.X = X + y;
+		        vysledek.Y = Y - x;
+		        break;
+	        case 4: 
+		        vysledek.X = X - x;
+		        vysledek.Y = Y - y;
+		        break;
+	        case 6: 
+		        vysledek.X = X - y;
+		        vysledek.Y = Y + x;
+		        break;
+	        default: {
+		        double pi;
+		        pi = 3.1415927;
+		        y = -y;
+		        double fi = Math.Atan2((double)y, (double)x);
+		        double z = (double)((y*y)+(x*x)); z = Math.Sqrt(z);
+		        //
+		        x = (int)(z * Math.Cos(fi + (pi * 0.25 * m_otacek)));
+		        y = -(int)(z * Math.Sin(fi + (pi * 0.25 * m_otacek)));
+		        // update the size
+		        //
+		        x += X; y += Y ;
+		        vysledek.X = x;
+		        vysledek.Y = y;
+		        }//defa
+                break;
+	        }//switch
+
+
+	        return vysledek;	
+        }
+    }
+}

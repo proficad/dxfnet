@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="DxfNet">
+</Property><Property Name="Solution File" Value="W:\D\1.5\DxfNet\DxfNet.sln">
+</Property><Property Name="User Options File" Value="W:\D\1.5\DxfNet\DxfNet.suo">
+</Property><Property Name="Date" Value="19. září 2010">
+</Property><Property Name="Time" Value="22:06">
+</Property></Properties><Event ErrorLevel="0" Project="" Source="DxfNet.sln" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet.sln">
+</Event><Event ErrorLevel="0" Project="" Source="DxfNet.suo" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet.suo">
+</Event><Event ErrorLevel="0" Project="ProfiCAD2Dxf" Source="Export2Dxf\ProfiCAD2Dxf.csproj" Description="Project file successfully backed up as W:\D\1.5\DxfNet\Backup\Export2Dxf\ProfiCAD2Dxf.csproj">
+</Event><Event ErrorLevel="0" Project="ProfiCAD2Dxf" Source="Export2Dxf\ProfiCAD2Dxf.csproj.user" Description="Project user file successfully backed up as W:\D\1.5\DxfNet\Backup\Export2Dxf\ProfiCAD2Dxf.csproj.user">
+</Event><Event ErrorLevel="0" Project="ProfiCAD2Dxf" Source="Export2Dxf\Program.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\Export2Dxf\Program.cs">
+</Event><Event ErrorLevel="0" Project="ProfiCAD2Dxf" Source="Export2Dxf\Properties\AssemblyInfo.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\Export2Dxf\Properties\AssemblyInfo.cs">
+</Event><Event ErrorLevel="0" Project="ProfiCAD2Dxf" Source="Export2Dxf\ProfiCAD2Dxf.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="ProfiCAD2Dxf" Source="Export2Dxf\ProfiCAD2Dxf.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="Loader" Source="Loader\Loader.csproj" Description="Project file successfully backed up as W:\D\1.5\DxfNet\Backup\Loader\Loader.csproj">
+</Event><Event ErrorLevel="0" Project="Loader" Source="Loader\ContextP2A.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\Loader\ContextP2A.cs">
+</Event><Event ErrorLevel="0" Project="Loader" Source="Loader\DrawDocDumper.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\Loader\DrawDocDumper.cs">
+</Event><Event ErrorLevel="0" Project="Loader" Source="Loader\ExportContext.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\Loader\ExportContext.cs">
+</Event><Event ErrorLevel="0" Project="Loader" Source="Loader\Exporter.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\Loader\Exporter.cs">
+</Event><Event ErrorLevel="0" Project="Loader" Source="Loader\ExporterGate.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\Loader\ExporterGate.cs">
+</Event><Event ErrorLevel="0" Project="Loader" Source="Loader\ExporterQic.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\Loader\ExporterQic.cs">
+</Event><Event ErrorLevel="0" Project="Loader" Source="Loader\Helper.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\Loader\Helper.cs">
+</Event><Event ErrorLevel="0" Project="Loader" Source="Loader\Loader.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\Loader\Loader.cs">
+</Event><Event ErrorLevel="0" Project="Loader" Source="Loader\Program.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\Loader\Program.cs">
+</Event><Event ErrorLevel="0" Project="Loader" Source="Loader\Properties\AssemblyInfo.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\Loader\Properties\AssemblyInfo.cs">
+</Event><Event ErrorLevel="0" Project="Loader" Source="Loader\VersionPre5.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\Loader\VersionPre5.cs">
+</Event><Event ErrorLevel="0" Project="Loader" Source="Loader\Loader.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="Loader" Source="Loader\Loader.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\Core.csproj" Description="Project file successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\Core.csproj">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\Attribute.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\Attribute.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\DrawDoc.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\DrawDoc.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\DrawObj.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\DrawObj.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\DrawPoly.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\DrawPoly.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\DrawRect.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\DrawRect.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\EFont.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\EFont.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\Enums.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\Enums.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\FreeText.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\FreeText.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\Helper.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\Helper.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\Insert.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\Insert.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\Layer.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\Layer.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\MFC_Types\MyLogBrush.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\MFC_Types\MyLogBrush.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\MFC_Types\MyLogPen.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\MFC_Types\MyLogPen.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\MyRect.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\MyRect.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\ObjProps.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\ObjProps.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\PCadDoc.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\PCadDoc.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\PositionAspect.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\PositionAspect.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\PpdDoc.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\PpdDoc.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\PrintSettings.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\PrintSettings.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\Program.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\Program.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\Properties\AssemblyInfo.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\Properties\AssemblyInfo.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\PtbDoc.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\PtbDoc.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\PtbPosition.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\PtbPosition.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\QFontsCollection.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\QFontsCollection.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\QGate.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\QGate.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\QIC.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\QIC.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\QLin.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\QLin.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\QPivot.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\QPivot.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\QSummInfo.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\QSummInfo.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\Repo.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\Repo.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\Trafo.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\Trafo.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\TrafoWinding.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\TrafoWinding.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\Wire.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\Wire.cs">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\ClassDiagram1.cd" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\ClassDiagram1.cd">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\ClassDiagram2.cd" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfNet\ClassDiagram2.cd">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\Core.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="Core" Source="DxfNet\Core.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="Dxf2ProfiCAD" Source="Dxf2ProfiCAD\Dxf2ProfiCAD.csproj" Description="Project file successfully backed up as W:\D\1.5\DxfNet\Backup\Dxf2ProfiCAD\Dxf2ProfiCAD.csproj">
+</Event><Event ErrorLevel="0" Project="Dxf2ProfiCAD" Source="Dxf2ProfiCAD\Converter.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\Dxf2ProfiCAD\Converter.cs">
+</Event><Event ErrorLevel="0" Project="Dxf2ProfiCAD" Source="Dxf2ProfiCAD\Program.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\Dxf2ProfiCAD\Program.cs">
+</Event><Event ErrorLevel="0" Project="Dxf2ProfiCAD" Source="Dxf2ProfiCAD\Properties\AssemblyInfo.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\Dxf2ProfiCAD\Properties\AssemblyInfo.cs">
+</Event><Event ErrorLevel="0" Project="Dxf2ProfiCAD" Source="Dxf2ProfiCAD\Dxf2ProfiCAD.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="Dxf2ProfiCAD" Source="Dxf2ProfiCAD\Dxf2ProfiCAD.csproj" Description="Converted">
+</Event><Event ErrorLevel="1" Project="WinFormsViewExampleCS" Source="C:\Program Files\Wout Ware\CadLib 3.5\Examples\WinFormsViewExampleCS\WinFormsViewExampleCS.csproj" Description="Warning: The project file is being backed up to a relative path that differs from the original solution relative path.  The difference in folder hierarchy may create problems in opening or building the backed up solution and project.">
+</Event><Event ErrorLevel="2" Project="WinFormsViewExampleCS" Source="C:\Program Files\Wout Ware\CadLib 3.5\Examples\WinFormsViewExampleCS\WinFormsViewExampleCS.csproj" Description="Unable to open project file to perform upgrade.  ">
+</Event><Event ErrorLevel="0" Project="A2IDLL" Source="A2IDLL\A2IDLL.csproj" Description="Project file successfully backed up as W:\D\1.5\DxfNet\Backup\A2IDLL\A2IDLL.csproj">
+</Event><Event ErrorLevel="0" Project="A2IDLL" Source="A2IDLL\A2IDLL.csproj.user" Description="Project user file successfully backed up as W:\D\1.5\DxfNet\Backup\A2IDLL\A2IDLL.csproj.user">
+</Event><Event ErrorLevel="0" Project="A2IDLL" Source="A2IDLL\Program.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\A2IDLL\Program.cs">
+</Event><Event ErrorLevel="0" Project="A2IDLL" Source="A2IDLL\Properties\AssemblyInfo.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\A2IDLL\Properties\AssemblyInfo.cs">
+</Event><Event ErrorLevel="0" Project="A2IDLL" Source="A2IDLL\A2IDLL.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="A2IDLL" Source="A2IDLL\A2IDLL.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="A2IEXE" Source="A2IEXE\A2IEXE.csproj" Description="Project file successfully backed up as W:\D\1.5\DxfNet\Backup\A2IEXE\A2IEXE.csproj">
+</Event><Event ErrorLevel="0" Project="A2IEXE" Source="A2IEXE\A2IEXE.csproj.user" Description="Project user file successfully backed up as W:\D\1.5\DxfNet\Backup\A2IEXE\A2IEXE.csproj.user">
+</Event><Event ErrorLevel="0" Project="A2IEXE" Source="A2IEXE\Program.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\A2IEXE\Program.cs">
+</Event><Event ErrorLevel="0" Project="A2IEXE" Source="A2IEXE\Properties\AssemblyInfo.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\A2IEXE\Properties\AssemblyInfo.cs">
+</Event><Event ErrorLevel="0" Project="A2IEXE" Source="A2IEXE\A2IEXE.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="A2IEXE" Source="A2IEXE\A2IEXE.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="DxfExportSample" Source="DxfExportSample\DxfExportSample.csproj" Description="Project file successfully backed up as W:\D\1.5\DxfNet\Backup\DxfExportSample\DxfExportSample.csproj">
+</Event><Event ErrorLevel="0" Project="DxfExportSample" Source="DxfExportSample\DxfExportSample.csproj.user" Description="Project user file successfully backed up as W:\D\1.5\DxfNet\Backup\DxfExportSample\DxfExportSample.csproj.user">
+</Event><Event ErrorLevel="0" Project="DxfExportSample" Source="DxfExportSample\Program.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfExportSample\Program.cs">
+</Event><Event ErrorLevel="0" Project="DxfExportSample" Source="DxfExportSample\Properties\AssemblyInfo.cs" Description="File successfully backed up as W:\D\1.5\DxfNet\Backup\DxfExportSample\Properties\AssemblyInfo.cs">
+</Event><Event ErrorLevel="0" Project="DxfExportSample" Source="DxfExportSample\DxfExportSample.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="DxfExportSample" Source="DxfExportSample\DxfExportSample.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="" Source="DxfNet.sln" Description="Solution converted successfully">
+</Event><Event ErrorLevel="3" Project="" Source="DxfNet.sln" Description="Converted">
+</Event><Event ErrorLevel="0" Project="ProfiCAD2Dxf" Source="Export2Dxf\ProfiCAD2Dxf.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="Loader" Source="Loader\Loader.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="Core" Source="DxfNet\Core.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="Dxf2ProfiCAD" Source="Dxf2ProfiCAD\Dxf2ProfiCAD.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="A2IDLL" Source="A2IDLL\A2IDLL.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="A2IEXE" Source="A2IEXE\A2IEXE.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="DxfExportSample" Source="DxfExportSample\DxfExportSample.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event></UpgradeLog>
