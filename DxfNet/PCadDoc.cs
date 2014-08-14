@@ -20,6 +20,7 @@ namespace DxfNet
         public bool m_oramovani;
         public Size m_size;
         public int m_rastr;//rastr in 0.1mm
+        public PtbPosition m_ptbPosition = new PtbPosition();//version 8, each page may have its own TB
 
         public Hashtable m_summInfo = new Hashtable();//2012-11-02
  

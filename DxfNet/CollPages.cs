@@ -26,7 +26,7 @@ namespace DxfNet
         public PtbPosition m_ptbPosition;
         public bool m_show_types;
         public bool m_show_values;
-
+        public int Version;
 
         public CollPages()
         {

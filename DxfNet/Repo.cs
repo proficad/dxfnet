@@ -11,10 +11,7 @@ namespace DxfNet
         public List<QImageDesc> m_listImgDesc   = new List<QImageDesc>();
         public List<PtbDoc>     m_listPtb       = new List<PtbDoc>();
 
-        public void AddPpd(PpdDoc a_ppdDoc)
-        {
-            m_listPpd.Add(a_ppdDoc);
-        }
+
 
 
         internal PpdDoc FindPpdDocInRepo(string ls_lastGuid)
@@ -29,6 +26,24 @@ namespace DxfNet
 
             return null;
             
+        }
+
+        public PtbDoc GetPtb(string as_name)
+        {
+            foreach (PtbDoc l_doc in m_listPtb)
+            {
+                if (l_doc.Path == as_name)
+                {
+                    return l_doc;
+                }
+            }
+
+            return null;
+        }
+
+        public void AddPpd(PpdDoc a_ppdDoc)
+        {
+            m_listPpd.Add(a_ppdDoc);
         }
 
         public void AddImgDesc(QImageDesc a_imgDesc)

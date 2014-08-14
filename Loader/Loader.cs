@@ -79,6 +79,8 @@ namespace Loader
             string ls_version   = docNode.Attributes["version"].Value;
             decimal ld_version = decimal.Parse(ls_version, formatInfo);
 
+            l_collPages.Version = (int)ld_version;
+
             if (ld_version < 7)
             {
                 string ls_pgsHor = docNode.Attributes["pgsHor"].Value;
@@ -169,6 +171,10 @@ namespace Loader
                     string ls_pageName = l_node.Attributes["name"].Value;
                     l_collPages.AddPageByName(ls_pageName);
                     PCadDoc l_page = l_collPages.GetLatestPage();
+
+                    //nastavit ptbPosition
+                    LoadPtb(l_page, l_node);
+
                     XmlNode l_summaryNode = l_node.SelectSingleNode("summary");
                     LoadSummary(l_page.m_summInfo, l_summaryNode);
                     XmlNodeList layerNodes = l_node.SelectNodes("layers/layer[@v='1']");
@@ -248,12 +254,14 @@ namespace Loader
             }
         }
 
+        //for version < 8, position and TB was stored together
         private static void LoadTb(PtbPosition a_ptbPosition, XmlNode a_node)
         {
             a_ptbPosition.m_useTb = XmlAttrToBool(a_node.Attributes["use"]);
             a_ptbPosition.m_horDist = XmlAttrToInt(a_node.Attributes["h"]);
             a_ptbPosition.m_verDist = XmlAttrToInt(a_node.Attributes["v"]);
             a_ptbPosition.m_turn = XmlAttrToBool(a_node.Attributes["t"]);
+            a_ptbPosition.Path = XmlAttrToString(a_node.Attributes["name"]);
 
             a_ptbPosition.m_pPtb = new PtbDoc();
 
@@ -1021,6 +1029,16 @@ namespace Loader
                 a_printSettings.SheetSizeY = li_long;
             }
              
+        }
+
+        private static void LoadPtb(PCadDoc a_page, XmlNode a_node)
+        {
+            XmlNode l_node_tb = a_node.SelectSingleNode("tb");
+            if (l_node_tb != null)
+            {
+                a_page.m_ptbPosition.Path = XmlAttrToString(l_node_tb.Attributes["name"]);
+                a_page.m_ptbPosition.m_useTb = XmlAttrToBool(l_node_tb.Attributes["use"]);
+            }
         }
 
 

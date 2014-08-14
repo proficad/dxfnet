@@ -151,7 +151,29 @@ namespace Loader
             ExportContext.Current.BlockCollection.Add(l_block);
             PtbPosition l_ptbPosition = ExportContext.Current.PCadDocument.Parent.m_ptbPosition;
 
-            Size l_size = ExportContext.Current.PCadDocument.Parent.GetSize();
+
+            if (ExportContext.Current.PCadDocument.Parent.Version > 7)
+            {
+                string ls_path = ExportContext.Current.PCadDocument.m_ptbPosition.Path;
+
+                //if empty, grab the defa name from root of the doc
+                if (string.IsNullOrEmpty(ls_path))
+                {
+                    ls_path = ExportContext.Current.PCadDocument.Parent.m_ptbPosition.Path;
+                    if (string.IsNullOrEmpty(ls_path))
+                    {
+                        return;
+                    }
+                }
+
+
+
+                l_ptbPosition.m_pPtb = ExportContext.Current.PCadDocument.Parent.m_repo.GetPtb(ls_path);
+                if (l_ptbPosition.m_pPtb == null)
+                {
+                    return;
+                }
+            }
 
 
             HybridDictionary l_dictRepo = new HybridDictionary();
@@ -162,6 +184,10 @@ namespace Loader
             ExportDrawDoc(l_block.Entities, l_ptbPosition.m_pPtb, l_dictRepo, false);
 
 
+
+
+
+            Size l_size = ExportContext.Current.PCadDocument.Parent.GetSize();
             //calc center point of the TB
             Rectangle l_rectUsed = l_ptbPosition.m_pPtb.GetUsedRect();
 
@@ -192,7 +218,6 @@ namespace Loader
             l_centerPoint.Y *= REVERSE_Y;
 
             DxfInsert l_insert = new DxfInsert(l_block, l_centerPoint);
-//            l_insert.ScaleFactor = new Vector3D(a_insert.m_ver ? -1 : 1, a_insert.m_hor ? -1 : 1, 1);
 
             l_insert.Rotation = (Math.PI * li_turns) / 4;
             l_insert.Layer = ExportContext.Current.Layer;

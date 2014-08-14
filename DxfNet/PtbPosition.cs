@@ -12,5 +12,7 @@ namespace DxfNet
         public bool m_turn;
         public bool m_useTb;
         public PtbDoc m_pPtb;
+
+        public string Path { get; set; }
     }
 }
