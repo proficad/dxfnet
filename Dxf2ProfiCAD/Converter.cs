@@ -301,7 +301,7 @@ namespace Dxf2ProfiCAD
 
             Rectangle l_rect = new Rectangle(MyShiftScaleX(l_dxfMText.InsertionPoint.X), MyShiftScaleY(l_dxfMText.InsertionPoint.Y), 0, 0);
 
-            string ls_text = ParseText(l_dxfMText.Text);
+            string ls_text = l_dxfMText.SimplifiedText;
 
             double l_angle = 0;
             double l_axis_x = l_dxfMText.XAxis.X;

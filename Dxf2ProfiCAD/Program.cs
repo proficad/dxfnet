@@ -132,7 +132,8 @@ namespace Dxf2ProfiCAD
 
             int li_shift_x = (int)(-l_bounds3D.Corner1.X);
             int li_shift_y = (int)(-l_bounds3D.Corner1.Y);
-            Converter.SetShift(li_shift_x, li_shift_y, a_size_target.Height);
+//            Converter.SetShift(li_shift_x, li_shift_y, a_size_target.Height);
+            Converter.SetShift(li_shift_x, li_shift_y, 20000);
         }
 
         private static void ConvertRepo(PCadDoc l_pcadDoc, DxfModel model)
