@@ -788,15 +788,10 @@ namespace Loader
                 {
                     switch (nodeRepoElement.Name)
                     {
-                        case "ppd": AddPpd(a_repo, nodeRepoElement); break;
+                        case "ppd":     AddPpd      (a_repo, nodeRepoElement); break;
                         case "imgDesc": AddImageDesc(a_repo, nodeRepoElement); break;
-                            /*
-                        case "polybezier": AddPolyLine(doc, nodeElement, nodeElement.Name); break;
-                        case "roundRect": AddRoundRect(doc, nodeElement); break;
-                        case "rect": AddRect(doc, nodeElement); break;
-                        case "ellipse": AddEllipse(doc, nodeElement); break;
-                        case "pie": AddPie(doc, nodeElement); break;
-                             */
+                        case "tb":      AddTb       (a_repo, nodeRepoElement); break;
+            
                     }
                 }
             }
@@ -857,6 +852,33 @@ namespace Loader
             a_repo.AddPpd(doc);
             //add it to coll
         }
+
+
+        private static void AddTb(Repo a_repo, XmlNode nodeElement)
+        {
+            //create a ppd
+            PtbDoc doc = new PtbDoc();
+            doc.Path = XmlAttrToString(nodeElement.Attributes["path"]);
+
+
+            XmlNode nodeRepo = nodeElement.SelectSingleNode("repo");
+            if (nodeRepo != null)
+            {
+                LoadRepo(doc.m_repo, nodeRepo);
+            }
+
+     
+            XmlNodeList layerNodes = nodeElement.SelectNodes("layers/layer");
+            foreach (XmlNode l_node in layerNodes)
+            {
+                LoadDrawDoc(doc, l_node);
+            }
+            
+
+            a_repo.AddTb(doc);
+            //add it to coll
+        }
+
 
         private static void AddQIC(DrawDoc doc, XmlNode a_node)
         {

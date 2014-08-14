@@ -7,8 +7,9 @@ namespace DxfNet
 {
     public class Repo
     {
-        public List<PpdDoc>     m_listPpd = new List<PpdDoc>();
-        public List<QImageDesc> m_listImgDesc = new List<QImageDesc>();
+        public List<PpdDoc>     m_listPpd       = new List<PpdDoc>();
+        public List<QImageDesc> m_listImgDesc   = new List<QImageDesc>();
+        public List<PtbDoc>     m_listPtb       = new List<PtbDoc>();
 
         public void AddPpd(PpdDoc a_ppdDoc)
         {
@@ -34,5 +35,12 @@ namespace DxfNet
         {
             m_listImgDesc.Add(a_imgDesc);
         }
+
+        public void AddTb(PtbDoc a_ptbDoc)
+        {
+            m_listPtb.Add(a_ptbDoc);
+        }
+
+
     }
 }
