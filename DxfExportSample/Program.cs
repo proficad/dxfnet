@@ -84,7 +84,7 @@ namespace DxfExportSample
                 GDIGraphics3D graphics = new GDIGraphics3D(GraphicsConfig.BlackBackgroundCorrectForBackColor);
                 Size maxSize = new Size(5000, 5000);
 
-                /*
+                
                 Bitmap bitmap =
                     ImageExporter.CreateAutoSizedBitmap(
                         model,
@@ -93,15 +93,9 @@ namespace DxfExportSample
                         Color.Black,
                         maxSize
                     );
-                */
+                
 
 
-                Bitmap bitmap =
-               ImageExporter.CreateAutoSizedBitmap(
-                   model,
-                   Matrix4D.Identity,
-                   GraphicsConfig.Default
-               );
                  
 
 

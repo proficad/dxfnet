@@ -34,11 +34,7 @@ namespace Dxf2ProfiCAD
             DxfModel model = DwgReader.Read(ls_path);
 
             //try to convert using the WireFrameGraphicsFactory
-            //Covert_To_ProfiCAD_Lines(model, @"H:\lines.sxe");
-            BoundsCalculator l_bc = new BoundsCalculator();
-            l_bc.GetBounds(model);
-            Bounds3D l_bounds3D = l_bc.Bounds;
-
+            Covert_To_ProfiCAD_Lines(model, @"H:\lines.sxe");
 
             
             double ld_smallest_font_size = PrintStats(model);
@@ -134,8 +130,8 @@ namespace Dxf2ProfiCAD
             double li_scale = Math.Min(li_scale_x, li_scale_y);
             Converter.SetScale(li_scale);
 
-            int li_shift_x = (int)(-l_bounds3D.Min.X);
-            int li_shift_y = (int)(-l_bounds3D.Max.Y);
+            int li_shift_x = (int)(-l_bounds3D.Corner1.X);
+            int li_shift_y = (int)(-l_bounds3D.Corner1.Y);
             Converter.SetShift(li_shift_x, li_shift_y, a_size_target.Height);
         }
 
