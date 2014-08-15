@@ -172,6 +172,16 @@ namespace Loader
                     l_collPages.AddPageByName(ls_pageName);
                     PCadDoc l_page = l_collPages.GetLatestPage();
 
+                    //custom ori of this page
+                    string ls_ori = XmlAttrToString(l_node.Attributes["ori"]);
+                    if (!string.IsNullOrEmpty(ls_ori))
+                    {
+                        l_page.OriByPage = true;
+                        l_page.Orientation = int.Parse(ls_ori);
+                    }
+
+
+
                     //nastavit ptbPosition
                     LoadPtb(l_page, l_node);
 
@@ -1036,8 +1046,9 @@ namespace Loader
             XmlNode l_node_tb = a_node.SelectSingleNode("tb");
             if (l_node_tb != null)
             {
-                a_page.m_ptbPosition.Path = XmlAttrToString(l_node_tb.Attributes["name"]);
-                a_page.m_ptbPosition.m_useTb = XmlAttrToBool(l_node_tb.Attributes["use"]);
+                a_page.m_ptbPosition.Path       = XmlAttrToString(l_node_tb.Attributes["name"]);
+                a_page.m_ptbPosition.m_useTb    = XmlAttrToBool  (l_node_tb.Attributes["use"]);
+                a_page.m_ptbPosition.m_turn     = XmlAttrToBool  (l_node_tb.Attributes["t"]);
             }
         }
 

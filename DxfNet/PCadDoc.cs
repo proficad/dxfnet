@@ -262,5 +262,29 @@ namespace DxfNet
             return m_parent.m_repo;
         }
 
+
+        public bool OriByPage { get; set; }
+
+        public int Orientation { get; set; }//0 == portrait    1 == landscape
+
+        public Size GetSize()
+        {
+            Size l_size = Parent.GetSize();
+
+            if (OriByPage)
+            {
+                bool lb_global_landscape = l_size.Width > l_size.Height;
+                bool lb_this_page_landscape = (Orientation == 1);
+
+                if (lb_global_landscape != lb_this_page_landscape)
+                {
+                    int li_temp = l_size.Width;
+                    l_size.Width = l_size.Height;
+                    l_size.Height = li_temp;
+                }
+            }
+
+            return l_size;
+        }
     }
 }

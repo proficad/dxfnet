@@ -134,7 +134,7 @@ namespace Loader
 
         private static void ExportFrame(DxfEntityCollection a_coll)
         {
-            Size l_size = ExportContext.Current.PCadDocument.Parent.GetSize();
+            Size l_size = ExportContext.Current.PCadDocument.GetSize();
             
             Rectangle l_rect = new Rectangle(0, 0, l_size.Width, l_size.Height);
             DrawRect l_frame = new DrawRect(Shape.rectangle, l_rect);
@@ -150,7 +150,7 @@ namespace Loader
             DxfBlock l_block = new DxfBlock("title_block");
             ExportContext.Current.BlockCollection.Add(l_block);
             PtbPosition l_ptbPosition = ExportContext.Current.PCadDocument.Parent.m_ptbPosition;
-
+            bool lb_turn = l_ptbPosition.m_turn;
 
             if (ExportContext.Current.PCadDocument.Parent.Version > 7)
             {
@@ -165,14 +165,19 @@ namespace Loader
                         return;
                     }
                 }
-
-
+                else //tb has name, so we take seriously the other attributes too //TODO maybe copy the m_ptbPosition if ours has name?
+                {
+                    lb_turn = ExportContext.Current.PCadDocument.m_ptbPosition.m_turn;
+                }
 
                 l_ptbPosition.m_pPtb = ExportContext.Current.PCadDocument.Parent.m_repo.GetPtb(ls_path);
                 if (l_ptbPosition.m_pPtb == null)
                 {
                     return;
                 }
+
+             
+
             }
 
 
@@ -187,7 +192,11 @@ namespace Loader
 
 
 
-            Size l_size = ExportContext.Current.PCadDocument.Parent.GetSize();
+            //Size l_size = ExportContext.Current.PCadDocument.Parent.GetSize();
+            Size l_size = ExportContext.Current.PCadDocument.GetSize();
+
+
+
             //calc center point of the TB
             Rectangle l_rectUsed = l_ptbPosition.m_pPtb.GetUsedRect();
 
@@ -195,7 +204,7 @@ namespace Loader
             int li_tbBorderBottom = l_rectUsed.Bottom;
 
             Point3D l_centerPoint = new Point3D();
-            int li_turns = l_ptbPosition.m_turn ? 2 : 0;
+            int li_turns = lb_turn ? 2 : 0;
             if (li_turns == 2)
             {
                 li_tbBorderRight = l_rectUsed.Bottom;
