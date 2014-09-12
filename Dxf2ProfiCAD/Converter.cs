@@ -139,12 +139,19 @@ namespace Dxf2ProfiCAD
                 string ls_tagString = l_attr.TagString;
                 int li_x = MyShiftScaleX(l_attr.AlignmentPoint1.X);
                 int li_y = MyShiftScaleY(l_attr.AlignmentPoint1.Y);
+                
+                int li_turns_attr = 0;//TODO
+                if (l_attr.Rotation != 0)
+                {
+                    li_turns_attr = (int)Math.Round(4d * l_attr.Rotation / Math.PI);
+                }
+
                 /*
                 DxfExtendedDataCollection coll = l_attr.ExtendedDataCollection;
                 Console.WriteLine("attributes {0} ~ {1} ~ {2} ~ {3}", ls_blockName, ls_text, ls_tagString, coll.Count);
                 int d = 5;
                 */
-                Insert.Satelite l_sat = new Insert.Satelite(ls_tagString, ls_text, li_x, li_y, true);
+                Insert.Satelite l_sat = new Insert.Satelite(ls_tagString, ls_text, li_x, li_y, true, li_turns_attr);
                 l_insert.m_satelites.Add(l_sat);
 
             }

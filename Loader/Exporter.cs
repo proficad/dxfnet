@@ -291,13 +291,13 @@ namespace Loader
 
                 switch (obj.m_nShape)
                 {
-                    case Shape.poly: ExportPolygon(a_coll, obj as DrawPoly, ab_block); break;
+                    case Shape.poly:            ExportPolygon(a_coll, obj as DrawPoly, ab_block); break;
                     case Shape.polyline:        ExportPolyline  (a_coll, obj as DrawPoly, ab_block); break;
                     case Shape.spoj:            ExportWire      (a_coll, obj as DxfNet.Wire, a_doc as PCadDoc); break;
-                    case Shape.bezier: ExportBezier(a_coll, obj as DrawPoly, ab_block); break;
+                    case Shape.bezier:          ExportBezier(a_coll, obj as DrawPoly, ab_block); break;
                     case Shape.ellipse:         ExportEllipse   (a_coll, obj as DrawRect, ab_block); break;
                     case Shape.pie:
-                    case Shape.chord: ExportPieChord(a_coll, obj as DrawRect, ab_block); break;
+                    case Shape.chord:           ExportPieChord(a_coll, obj as DrawRect, ab_block); break;
                     case Shape.arc:             ExportArc       (a_coll, obj as DrawRect, ab_block); break;
                     case Shape.rectangle:       ExportRect      (a_coll, obj as DrawRect, ab_block); break;
                     case Shape.roundRectangle:  ExportRoundRect (a_coll, obj as DrawRect, ab_block); break;
@@ -590,9 +590,6 @@ namespace Loader
             }
             */
             dxfText.AttachmentPoint = GetAttachementPoint(freeText.m_alignment);//2012-11-2
-
-            //dxfText.Rotation = (Math.PI * a_insert.m_turns) / 4;
-
             dxfText.XAxis = TurnsToVector3D(freeText.m_turns);
 
             dxfText.Layer = ExportContext.Current.Layer;
@@ -699,9 +696,9 @@ namespace Loader
             l_center3D.Y *= REVERSE_Y;
 
             DxfMText dxfText = new DxfMText(ls_text, l_center3D, li_height);
+
             dxfText.AttachmentPoint = GetAttachementPoint(a_sat.m_alignment);
-
-
+            dxfText.XAxis = TurnsToVector3D(a_sat.m_turns);
             
             a_dxfEntityCollection.Add(dxfText);
         }

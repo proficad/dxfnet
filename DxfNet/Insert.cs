@@ -10,19 +10,21 @@ namespace DxfNet
     {
         public class Satelite 
         {
-            public Satelite(string as_name, string as_value, int ai_x, int ai_y, bool ab_visible)
+            public Satelite(string as_name, string as_value, int ai_x, int ai_y, bool ab_visible, int ai_turns)
             {
                 m_name = as_name;
                 m_value = as_value;
                 m_x = ai_x;
                 m_y = ai_y;
                 m_visible = ab_visible;
+                m_turns = ai_turns;
             }
             public string m_name;
             public string m_value;
             public int m_x;
             public int m_y;
             public bool m_visible;
+            public int m_turns;
             public QTextAlignment m_alignment;
             
 
@@ -35,6 +37,7 @@ namespace DxfNet
                 a_xmlWriter.WriteAttributeString("x", m_x.ToString());
                 a_xmlWriter.WriteAttributeString("y", m_y.ToString());
                 a_xmlWriter.WriteAttributeString("v", "1");
+                a_xmlWriter.WriteAttributeString("t", m_turns.ToString());
                 a_xmlWriter.WriteEndElement();
             }
         }

@@ -983,8 +983,9 @@ namespace Loader
             int li_x = int.Parse(a_node.Attributes["x"].Value);
             int li_y = int.Parse(a_node.Attributes["y"].Value);
             bool lb_visible = XmlAttrToBool(a_node.Attributes["v"]);
+            int li_turns = XmlAttrToInt(a_node.Attributes["t"]);
 
-            Insert.Satelite l_satelite = new Insert.Satelite(ls_name, ls_value, li_x, li_y, lb_visible);
+            Insert.Satelite l_satelite = new Insert.Satelite(ls_name, ls_value, li_x, li_y, lb_visible, li_turns);
 
 
             l_satelite.m_alignment = QTextAlignment.AL_LM;// 2013-04-10 for now we assume ref + type are left aligned
@@ -1012,8 +1013,9 @@ namespace Loader
 
                     int li_x = int.Parse(nodeElement.Attributes["x"].Value);
                     int li_y = int.Parse(nodeElement.Attributes["y"].Value);
+                    int li_turns = XmlAttrToInt(nodeElement.Attributes["t"]);
 
-                    Insert.Satelite l_satelite = new Insert.Satelite(ls_name, ls_value, li_x, li_y, lb_visible);
+                    Insert.Satelite l_satelite = new Insert.Satelite(ls_name, ls_value, li_x, li_y, lb_visible, li_turns);
                     l_satelite.m_alignment = (QTextAlignment)XmlAttrToInt(nodeElement.Attributes["al"]);
 
                     a_insert.m_satelites.Add(l_satelite);
