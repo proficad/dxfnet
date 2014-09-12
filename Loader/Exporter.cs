@@ -93,8 +93,17 @@ namespace Loader
 
             DxfImageDef l_imgDef = new DxfImageDef(ExportContext.Current.Model);
 
+            byte[] l_rawImg;
+            try
+            {
+                l_rawImg = Convert.FromBase64String(a_imgDesc.ImgEncoded);
+            }
+            catch (System.Exception ex)
+            {
+            	return;
+            }
+            
 
-            byte [] l_rawImg = Convert.FromBase64String(a_imgDesc.ImgEncoded);
             Random l_rnd = new Random();
             string ls_ext = GetImageExtension(a_imgDesc.ImgType);
             
