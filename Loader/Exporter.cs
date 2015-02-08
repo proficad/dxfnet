@@ -896,13 +896,14 @@ namespace Loader
 //            dxfEllipse. =  .DefaultStartWidth = drawRect.m_objProps.m_logpen.m_width;
 
             //Lineweight may not be larger than 211. (2012-11-05)
-            if (a_drawRect.m_objProps.m_logpen.m_width > 10)
+            int li_maximum_thickness = 14;
+            if (a_drawRect.m_objProps.m_logpen.m_width > li_maximum_thickness)
             {
-                a_drawRect.m_objProps.m_logpen.m_width = 10;
+                a_drawRect.m_objProps.m_logpen.m_width = li_maximum_thickness;
             }
 
 
-            dxfEllipse.LineWeight = (short)(20 * a_drawRect.m_objProps.m_logpen.m_width);
+            dxfEllipse.LineWeight = (short)(10 * a_drawRect.m_objProps.m_logpen.m_width);
             //99 dxfEllipse.ColorSource = AttributeSource.This;
             dxfEllipse.Color = Helper.MakeEntityColorByBlock(a_drawRect.m_objProps.m_logpen.m_color, ab_block);
 
