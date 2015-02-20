@@ -286,5 +286,87 @@ namespace DxfNet
 
             return l_size;
         }
+
+        internal void SetupWireStatusConnected()
+        {
+            return;
+            List<Wire> l_list_of_wires = new List<Wire>();
+            GetAllWiresFromThisPage(l_list_of_wires);
+
+            List<Point> l_vyvody = new List<Point>();
+
+            PripravVyvody(l_vyvody);
+
+            foreach(Wire l_wire in l_list_of_wires)
+            {
+                SetupWireStatusConnected(l_wire, l_vyvody);
+                l_wire.SetupWireStatusConnectedKapky();
+            }
+
+
+        }
+
+        private void SetupWireStatusConnected(Wire a_wire, List<Point> a_vyvody)
+        {
+            a_wire.Is_connected_first = false;
+            a_wire.Is_connected_last = false;
+
+            foreach(Point l_point in a_vyvody)
+            {
+                if (l_point == a_wire.GetEndingPoint(true))
+                {
+                    a_wire.Is_connected_first = true;
+
+                    if (a_wire.Is_connected_first && a_wire.Is_connected_last)
+                    {
+                        return;
+                    }
+                }
+                if (l_point == a_wire.GetEndingPoint(false))
+                {
+                    a_wire.Is_connected_last = true;
+
+                    if (a_wire.Is_connected_first && a_wire.Is_connected_last)
+                    {
+                        return;
+                    }
+                }
+
+
+            }
+        }
+
+        private void GetAllWiresFromThisPage(List<Wire> a_list_of_wires)
+        {
+           foreach(DrawObj l_obj in m_objects)
+           {
+               if(l_obj is Wire)
+               {
+                   Wire l_wire = l_obj as Wire;
+                   a_list_of_wires.Add(l_wire);
+               }
+           }
+        }
+
+
+        private void PripravVyvody(List<Point> a_vyvody)
+        {
+            List<Insert> l_list_CElems = new List<Insert>();
+	
+	        GetAllCElems(l_list_CElems);
+
+            foreach(Insert l_insert in l_list_CElems)
+	        {
+		        l_insert.GetVyvody(a_vyvody);
+	        } 
+
+        }
+
+
+        private void GetAllCElems(List<Insert> l_list_CElems)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

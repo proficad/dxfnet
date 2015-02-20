@@ -69,8 +69,16 @@ namespace DxfNet
 
 
 
-
+        public void SetupWireStatusConnected()
+        {
+            foreach(PCadDoc l_page in m_pages)
+            {
+                l_page.SetupWireStatusConnected();
+            }
+        }
 
         //--------------------------
+
+
     }
 }

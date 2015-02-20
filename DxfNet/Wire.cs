@@ -9,6 +9,36 @@ namespace DxfNet
     {
         private bool m_drop1;
         private bool m_drop2;
+
+        bool m_is_connected_first;
+        bool m_is_connected_last;
+
+        string m_name;
+
+        public string GetName()
+        {
+            return m_name;
+        }
+
+        public void SetName(string as_name)
+        {
+            m_name = as_name;
+        }
+
+        public bool Is_connected_first
+        {
+            get { return m_is_connected_first; }
+            set { m_is_connected_first = value; }
+        }
+
+        public bool Is_connected_last
+        {
+            get { return m_is_connected_last; }
+            set { m_is_connected_last = value; }
+        }
+
+
+
         public Wire()
             : base(Shape.spoj)
         { }
@@ -29,6 +59,25 @@ namespace DxfNet
         {
             return m_drop2;
         }
+
+        public System.Drawing.Point GetEndingPoint(bool ab_first)
+        {
+            return ab_first ? m_points[0] : m_points.Last();
+        }
+
+        public void SetupWireStatusConnectedKapky()
+        {
+            if (m_drop1)
+            {
+                Is_connected_first = true;
+            }
+            if (m_drop2)
+            {
+                Is_connected_last = true;
+            }
+        }
+
         //-------------------------
+
     }
 }

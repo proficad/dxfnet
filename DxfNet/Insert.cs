@@ -155,8 +155,13 @@ namespace DxfNet
         }
 
 
-
+        internal void GetVyvody(List<Point> a_vyvody)
+        {
+            throw new NotImplementedException();
+        }
 
     //-------------------
+
+
     }
 }
