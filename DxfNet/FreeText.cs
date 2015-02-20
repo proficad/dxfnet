@@ -102,7 +102,7 @@ namespace DxfNet
 
         public override void RecalcPosition()
         {
-            //99 //TODO throw new NotImplementedException();
+            
         }
 
 

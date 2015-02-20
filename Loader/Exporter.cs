@@ -28,7 +28,6 @@ namespace Loader
         internal static void Export(PCadDoc a_doc, string as_pathDxf)
         {
             DxfModel model = new DxfModel(DxfVersion.Dxf21);//2012-12-02 vracime se k dxf21
-//            DxfModel model = new DxfModel(DxfVersion.Dxf15);
 
 
             //add layers
@@ -98,7 +97,7 @@ namespace Loader
             {
                 l_rawImg = Convert.FromBase64String(a_imgDesc.ImgEncoded);
             }
-            catch (System.Exception ex)
+            catch (System.Exception )
             {
             	return;
             }
@@ -310,9 +309,56 @@ namespace Loader
                     case Shape.arc:             ExportArc       (a_coll, obj as DrawRect, ab_block); break;
                     case Shape.rectangle:       ExportRect      (a_coll, obj as DrawRect, ab_block); break;
                     case Shape.roundRectangle:  ExportRoundRect (a_coll, obj as DrawRect, ab_block); break;
-                    case Shape.text:            ExportFreeText  (a_coll, obj as FreeText); break;
+                    case Shape.text:            ExportFreeText(a_coll, obj as FreeText); break;
+                    case Shape.cable: ExportCable(a_coll, obj as CableSymbol, a_doc as PCadDoc); break;
                 }
             }
+        }
+
+        private static void ExportCable(DxfEntityCollection a_coll, CableSymbol a_cable_symbol, PCadDoc a_pCadDoc)
+        {
+            const int MARGIN_POSITION = 20;
+            Point2D[] l_arrPoints = new Point2D[2];
+
+            if(a_cable_symbol.Hor)
+            {
+                l_arrPoints[0].X = a_cable_symbol.Min + MARGIN_POSITION;
+                l_arrPoints[1].X = a_cable_symbol.Max - MARGIN_POSITION;
+
+                l_arrPoints[0].Y = a_cable_symbol.Common;
+                l_arrPoints[1].Y = a_cable_symbol.Common;
+            }
+            else
+            {
+                l_arrPoints[0].Y = a_cable_symbol.Min + MARGIN_POSITION;
+                l_arrPoints[1].Y = a_cable_symbol.Max - MARGIN_POSITION;
+
+                l_arrPoints[0].X = a_cable_symbol.Common;
+                l_arrPoints[1].X = a_cable_symbol.Common;
+            }
+
+            l_arrPoints[0].Y *= REVERSE_Y;
+            l_arrPoints[1].Y *= REVERSE_Y;
+
+            DxfPolyline2D l_dxfPolyline = new DxfPolyline2D(l_arrPoints);
+
+            const int CABLE_SYMBOL_THICKNESS = 3;
+            l_dxfPolyline.DefaultStartWidth = CABLE_SYMBOL_THICKNESS;
+            l_dxfPolyline.DefaultEndWidth = CABLE_SYMBOL_THICKNESS;
+
+            a_coll.Add(l_dxfPolyline);
+
+
+            foreach (Insert.Satelite l_sat in a_cable_symbol.m_satelites)
+            {
+                if (l_sat.m_visible)
+                {
+
+
+                    ExportSatelite(a_coll, l_sat, a_pCadDoc);
+                }
+            }
+
         }
 
         private static void ExportQImage(DxfEntityCollection a_coll, QImage a_image, PCadDoc pCadDoc, DxfImageDef a_imgDef)
@@ -684,7 +730,7 @@ namespace Loader
             string ls_text = a_sat.m_value;
 
             EFont l_efont = null;
-            if (a_sat.m_name == "_type")
+            if ((a_sat.m_name == "_type") || (a_sat.m_name == "_ref"))
             {
                 l_efont = a_pCadDoc.Parent.m_fonts.m_fontType;
             }
@@ -705,6 +751,7 @@ namespace Loader
             l_center3D.Y *= REVERSE_Y;
 
             DxfMText dxfText = new DxfMText(ls_text, l_center3D, li_height);
+            dxfText.Color = EntityColor.CreateFrom(l_efont.m_color);
 
             dxfText.AttachmentPoint = GetAttachementPoint(a_sat.m_alignment);
             dxfText.XAxis = TurnsToVector3D(a_sat.m_turns);

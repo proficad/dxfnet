@@ -24,6 +24,11 @@ namespace Loader
             string ls_ext = Path.GetExtension(as_out);
 
             CollPages doc = Loader.Load(as_in);
+
+            doc.SetupWireStatusConnected();
+
+
+
             if (doc != null)
             {
                 if (doc.m_pages.Count == 1)
@@ -475,6 +480,7 @@ namespace Loader
                 Wire l_wire = poly as Wire;
                 l_wire.SetDrop1(XmlAttrToBool(a_node.Attributes["drop1"]));
                 l_wire.SetDrop2(XmlAttrToBool(a_node.Attributes["drop2"]));
+                l_wire.SetName(XmlAttrToString(a_node.Attributes["name"]));
             }
 
 
@@ -647,7 +653,7 @@ namespace Loader
                     switch (nodeElement.Name)
                     {
                         case "polygon":
-                        case "wire":
+                        case "wire":      
                         case "polyline":    
                         case "polybezier":  AddPolyLine     (a_drawDoc, nodeElement); break;
                         case "roundRect":   AddRoundRect    (a_drawDoc, nodeElement); break;
@@ -660,13 +666,52 @@ namespace Loader
                         case "text":        AddText         (a_drawDoc, nodeElement); break;
                         case "trafo":       AddTrafo        (a_drawDoc, nodeElement); break;
                         case "ic":          AddQIC          (a_drawDoc, nodeElement); break;
-                        case "gate":        AddGate(a_drawDoc, nodeElement); break;
-                        case "img":         AddImage(a_drawDoc, nodeElement); break;
+                        case "gate":        AddGate         (a_drawDoc, nodeElement); break;
+                        case "img":         AddImage        (a_drawDoc, nodeElement); break;
+                        case "CableSymbol": AddCableSymbol  (a_drawDoc, nodeElement); break;
 
                     }
                 }
             }
         }
+
+        private static void AddCableSymbol(DrawDoc a_drawDoc, XmlNode a_node)
+        {
+            int li_min, li_common, li_max; bool lb_hor;
+
+            li_min = XmlAttrToInt(a_node.Attributes["min"]);
+            li_common = XmlAttrToInt(a_node.Attributes["com"]);
+            li_max = XmlAttrToInt(a_node.Attributes["max"]);
+            lb_hor = XmlAttrToBool(a_node.Attributes["hor"]);
+
+            //calculate position of the symbol - BOGUS
+            //TODO add real calculation when position is needed
+            Rectangle l_rect = new Rectangle(li_min, li_common, 100, 100);
+
+
+            CableSymbol l_cable_symbol = new CableSymbol(li_min, li_common, li_max, lb_hor, l_rect);
+            a_drawDoc.Add(l_cable_symbol, ContextP2A.Current.CurrentLayer);
+
+            foreach (XmlNode nodeElement in a_node)
+            {
+                if (nodeElement.NodeType == XmlNodeType.Element)
+                {
+                    switch (nodeElement.Name)
+                    {
+                        case "type":
+                        case "value":
+
+                            //AddSateliteToInsert(a_insert, nodeElement);
+                            break;
+                        case "attributes":
+                            AddAttributesToCable(l_cable_symbol, nodeElement);
+                            break;
+                    }
+                }
+            }
+
+        }
+
 
         private static void AddImage(DrawDoc a_drawDoc, XmlNode a_node)
         {
@@ -999,6 +1044,29 @@ namespace Loader
 
             insert.m_satelites.Add(l_satelite);
 
+        }
+
+        private static void AddAttributesToCable(CableSymbol a_cable, XmlNode a_node)
+        {
+            foreach (XmlNode nodeElement in a_node)
+            {
+                if (nodeElement.Name == "attribute")
+                {
+                    string ls_name = nodeElement.Attributes["name"].Value;
+                    string ls_value = nodeElement.Attributes["value"].Value;
+                    bool lb_visible = (nodeElement.Attributes["visible"].Value == "1");
+
+                    int li_x = int.Parse(nodeElement.Attributes["x"].Value);
+                    int li_y = int.Parse(nodeElement.Attributes["y"].Value);
+                    int li_turns = XmlAttrToInt(nodeElement.Attributes["t"]);
+
+                    Insert.Satelite l_satelite = new Insert.Satelite(ls_name, ls_value, li_x, li_y, lb_visible, li_turns);
+                    l_satelite.m_alignment = (QTextAlignment)XmlAttrToInt(nodeElement.Attributes["al"]);
+
+                    a_cable.m_satelites.Add(l_satelite);
+
+                }
+            }
         }
 
         private static void AddAttributesToInsert(Insert a_insert, XmlNode a_node)
