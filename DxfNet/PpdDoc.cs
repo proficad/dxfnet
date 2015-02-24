@@ -105,6 +105,30 @@ namespace DxfNet
             return l_rect;
         }
 
+        public List<Point> Vyvody
+        {
+            get
+            {
+                List<Point> l_vyvody = new List<Point>();
+                foreach(var l_object in m_objects)
+                {
+                    if(l_object is Outlet)
+                    {
+                        Outlet l_outlet = l_object as Outlet;
+                        Point l_point = new Point();
+                        l_point.X = l_outlet.X;
+                        l_point.Y = l_outlet.Y;
+                        l_vyvody.Add(l_point);
+                    }
+                }
+                return l_vyvody;
+            }
+        }
+
+
+
         //---------------------------
+
+        
     }
 }

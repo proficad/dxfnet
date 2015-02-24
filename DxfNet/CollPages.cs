@@ -15,6 +15,7 @@ namespace DxfNet
 
         public PrintSettings m_printSettings;
         public SettingsPage m_settingsPage;
+        public SettingsWireNumbering m_settingsWireNumbering;
 
         public Color m_paperColor;
 

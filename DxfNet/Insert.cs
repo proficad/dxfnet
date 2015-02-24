@@ -155,13 +155,35 @@ namespace DxfNet
         }
 
 
-        internal void GetVyvody(List<Point> a_vyvody)
+   
+
+
+
+
+        internal Point RecalculatePoint(Point a_vyvod)
         {
-            throw new NotImplementedException();
+            
+            
+            if ((0 == m_turns)&&(false == m_ver)&&(false == m_hor)&&(m_scaleX==1)&&(m_scaleY==1))
+	        {
+		        return a_vyvod;
+	        }
+
+
+	        PositionAspect l_positionAspect = new PositionAspect();
+	        l_positionAspect.m_pivot = Helper.GetRectCenterPoint(m_position);
+	        l_positionAspect.m_otacek = m_turns;
+	        l_positionAspect.m_horizontal = m_hor;
+	        l_positionAspect.m_vertical = m_ver;
+	        l_positionAspect.ScaleX = m_scaleX;
+	        l_positionAspect.ScaleY = m_scaleY;
+
+	        QPivot pivot = new QPivot(l_positionAspect);
+	        Point	vysledek = pivot.PrevodBodu(a_vyvod);
+
+        	return vysledek;	
+
+
         }
-
-    //-------------------
-
-
     }
 }

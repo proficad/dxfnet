@@ -13,12 +13,26 @@ namespace DxfNet
         public bool m_horizontal;
         public bool m_vertical;
 
+        public double ScaleX { get; set; }
+        public double ScaleY { get; set; }
+
         public QPivot(Point a_pivot, int a_otacek, bool ab_horizontal, bool ab_vertical)
         {
             m_pivot = a_pivot;
             m_otacek = a_otacek;
             m_horizontal = ab_horizontal;
             m_vertical = ab_vertical;
+        }
+
+        public QPivot(PositionAspect a_aspect)
+        {
+            m_pivot = a_aspect.m_pivot;
+            m_otacek = a_aspect.m_otacek;
+            m_horizontal = a_aspect.m_horizontal;
+            m_vertical = a_aspect.m_vertical;
+            ScaleX = a_aspect.ScaleX;
+            ScaleY = a_aspect.ScaleY;
+
         }
 
         public Point PrevodBodu (int x, int y)
@@ -44,6 +58,12 @@ namespace DxfNet
 	        int Y = m_pivot.Y; 
 	        int x = vstup.X - X; 
 	        int y = vstup.Y - Y;
+
+
+            x = (int)(x * ScaleX);
+            y = (int)(x * ScaleY);
+
+
 	        // a natočení
 	        if (m_vertical) x = -x;
 	        if (m_horizontal) y = -y;//máme MM_TEXT

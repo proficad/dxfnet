@@ -540,7 +540,42 @@ namespace Loader
                 int li_lastIndex = a_wire.m_points.Count - 1;
                 ExportJoint(a_coll, a_wire.m_points[li_lastIndex], a_wire.m_objProps.m_logpen.m_color);
             }
+
+
+            ExportWireLabels(a_wire);
         }
+
+
+
+        private static void ExportWireLabels(DxfNet.Wire a_wire)
+        {
+            if (a_wire.GetName().Length == 0)
+            {
+                return;
+            }
+	/*
+		QSettingsNumberingWire* pSettings = GetSettingsNumberingWire();
+		if(pSettings)
+		{
+			QSettingsNumberingWire::ShowWireNumbers l_swn = pSettings->GetShowWireNumbers();
+			if (l_swn != QSettingsNumberingWire::swn_no)
+			{
+				if ((!m_is_connected_first) || l_swn == QSettingsNumberingWire::swn_both)
+				{
+					DrawWireLabel(pDC, true);
+				}
+				if ((!m_is_connected_last) || l_swn == QSettingsNumberingWire::swn_both)
+				{
+					DrawWireLabel(pDC, false);
+				}
+			}
+		}
+     */
+
+	
+        }
+
+
 
         private static void ExportJoint(DxfEntityCollection a_coll, Point a_point, System.Drawing.Color a_color)
         {

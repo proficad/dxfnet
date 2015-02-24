@@ -12,6 +12,8 @@ namespace DxfNet
         public int m_otacek;
         public bool m_horizontal;
         public bool m_vertical;
+        public double ScaleX { get; set; }
+        public double ScaleY { get; set; }
 
         public PositionAspect()
         {

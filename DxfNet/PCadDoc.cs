@@ -289,7 +289,6 @@ namespace DxfNet
 
         internal void SetupWireStatusConnected()
         {
-            return;
             List<Wire> l_list_of_wires = new List<Wire>();
             GetAllWiresFromThisPage(l_list_of_wires);
 
@@ -355,9 +354,20 @@ namespace DxfNet
 	
 	        GetAllCElems(l_list_CElems);
 
+            //Repo l_repo = GetRepo();
+
             foreach(Insert l_insert in l_list_CElems)
 	        {
-		        l_insert.GetVyvody(a_vyvody);
+                Point l_center_point = Helper.GetRectCenterPoint(l_insert.m_position);
+
+                PpdDoc l_ppd = FindPpdDocInRepo(l_insert.m_lG);
+                foreach(Point l_vyvod in l_ppd.Vyvody)
+                {
+                    Point l_point = l_vyvod;
+                    l_point.X += l_center_point.X;
+                    l_point.Y += l_center_point.Y;
+                    a_vyvody.Add(l_insert.RecalculatePoint(l_point));
+                }
 	        } 
 
         }
@@ -365,7 +375,14 @@ namespace DxfNet
 
         private void GetAllCElems(List<Insert> l_list_CElems)
         {
-            throw new NotImplementedException();
+            foreach (DrawObj l_obj in m_objects)
+            {
+                if (l_obj is Insert)
+                {
+                    Insert l_wire = l_obj as Insert;
+                    l_list_CElems.Add(l_wire);
+                }
+            }
         }
 
     }

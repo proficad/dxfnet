@@ -74,6 +74,7 @@
     <Compile Include="MyRect.cs" />
     <Compile Include="ObjColors.cs" />
     <Compile Include="ObjProps.cs" />
+    <Compile Include="Outlet.cs" />
     <Compile Include="PCadDoc.cs" />
     <Compile Include="PositionAspect.cs" />
     <Compile Include="PpdDoc.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="QSummInfo.cs" />
     <Compile Include="Repo.cs" />
     <Compile Include="SettingsPage.cs" />
+    <Compile Include="SettingsWireNumbering.cs" />
     <Compile Include="Trafo.cs" />
     <Compile Include="TrafoWinding.cs" />
     <Compile Include="Wire.cs" />

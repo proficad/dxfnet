@@ -14,7 +14,7 @@ namespace DxfNet
 
 
 
-        internal PpdDoc FindPpdDocInRepo(string ls_lastGuid)
+        public PpdDoc FindPpdDocInRepo(string ls_lastGuid)
         {
             foreach(PpdDoc l_doc in m_listPpd)
             {

@@ -25,7 +25,7 @@ namespace Loader
 
             CollPages doc = Loader.Load(as_in);
 
-            doc.SetupWireStatusConnected();
+            // doc.SetupWireStatusConnected();
 
 
 
@@ -128,6 +128,10 @@ namespace Loader
             XmlNode nodePageSettings = xmlDoc.SelectSingleNode("/document/PageSettings");
             LoadPageSettings(l_collPages.m_settingsPage, nodePageSettings, l_collPages);
 
+            XmlNode nodeNumberingWireSettings = xmlDoc.SelectSingleNode("/document/NumberingWire");
+            LoadNumberingWireSettings(l_collPages.m_settingsWireNumbering, nodeNumberingWireSettings, l_collPages);
+
+
             XmlNode nodeFonts = xmlDoc.SelectSingleNode("/document/fonts");
             LoadFonts(l_collPages.m_fonts, nodeFonts);
 
@@ -203,6 +207,11 @@ namespace Loader
 
             System.Diagnostics.Trace.WriteLine("loaded doc {0}", as_path);
             return l_collPages;
+        }
+
+        private static void LoadNumberingWireSettings(global::DxfNet.SettingsWireNumbering settingsPage, XmlNode a_node, CollPages a_collPages)
+        { 
+
         }
 
         private static void LoadPageSettings(global::DxfNet.SettingsPage settingsPage, XmlNode nodePageSettings, CollPages a_collPages)
@@ -669,10 +678,20 @@ namespace Loader
                         case "gate":        AddGate         (a_drawDoc, nodeElement); break;
                         case "img":         AddImage        (a_drawDoc, nodeElement); break;
                         case "CableSymbol": AddCableSymbol  (a_drawDoc, nodeElement); break;
+                        case "outlet":      AddOutlet       (a_drawDoc, nodeElement); break;
 
                     }
                 }
             }
+        }
+
+        private static void AddOutlet(DrawDoc a_drawDoc, XmlNode a_node)
+        {
+            int li_x = XmlAttrToInt(a_node.Attributes["x"]);
+            int li_y = XmlAttrToInt(a_node.Attributes["y"]);
+
+            Outlet l_outlet = new Outlet(li_x, li_y);
+            a_drawDoc.Add(l_outlet, ContextP2A.Current.CurrentLayer);
         }
 
         private static void AddCableSymbol(DrawDoc a_drawDoc, XmlNode a_node)
