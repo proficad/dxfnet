@@ -11,7 +11,7 @@ namespace DxfNet
         public int X { get; set; }
         public int Y { get; set; }
 
-        public Outlet(int ai_x, int ai_y) : base(Shape.cable, new Rectangle(ai_x, ai_y, 1, 1))
+        public Outlet(int ai_x, int ai_y) : base(Shape.outlet, new Rectangle(ai_x, ai_y, 1, 1))
         {
             X = ai_x;
             Y = ai_y;
