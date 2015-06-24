@@ -56,7 +56,7 @@ namespace Loader
                 return a_vstup;
             }
 
-            QPivot pivot = new QPivot(a_aspect.m_pivot, a_aspect.m_otacek, a_aspect.m_horizontal, a_aspect.m_vertical);
+            QPivot pivot = new QPivot(a_aspect);
 
             return pivot.PrevodBodu(a_vstup);
         }

@@ -61,7 +61,7 @@ namespace DxfNet
 
 
             x = (int)(x * ScaleX);
-            y = (int)(x * ScaleY);
+            y = (int)(y * ScaleY);
 
 
 	        // a natočení

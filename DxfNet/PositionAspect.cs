@@ -30,6 +30,8 @@ namespace DxfNet
             m_otacek = a_otacek;
             m_horizontal = a_horizontal;
             m_vertical = a_vertical;
+            ScaleX = 1;
+            ScaleY = 1;
         }
     }
 }

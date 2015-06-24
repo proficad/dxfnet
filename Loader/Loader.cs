@@ -1073,7 +1073,12 @@ namespace Loader
                 {
                     string ls_name = nodeElement.Attributes["name"].Value;
                     string ls_value = nodeElement.Attributes["value"].Value;
-                    bool lb_visible = (nodeElement.Attributes["visible"].Value == "1");
+                    XmlAttribute l_attr_visible = nodeElement.Attributes["v"];
+                    if (null == l_attr_visible)
+                    {
+                        l_attr_visible = nodeElement.Attributes["visible"];
+                    }
+                    bool lb_visible = (l_attr_visible.Value == "1");
 
                     int li_x = int.Parse(nodeElement.Attributes["x"].Value);
                     int li_y = int.Parse(nodeElement.Attributes["y"].Value);
@@ -1096,7 +1101,14 @@ namespace Loader
                 {
                     string ls_name = nodeElement.Attributes["name"].Value;
                     string ls_value = nodeElement.Attributes["value"].Value;
-                    bool lb_visible = (nodeElement.Attributes["visible"].Value == "1");
+
+                    XmlAttribute l_attr_visible = nodeElement.Attributes["v"];
+                    if(null == l_attr_visible)
+                    {
+                        l_attr_visible = nodeElement.Attributes["visible"];
+                    }
+                    bool lb_visible = (l_attr_visible.Value == "1");
+
 
                     int li_x = int.Parse(nodeElement.Attributes["x"].Value);
                     int li_y = int.Parse(nodeElement.Attributes["y"].Value);
