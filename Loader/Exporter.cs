@@ -978,10 +978,23 @@ namespace Loader
 //            dxfEllipse. =  .DefaultStartWidth = drawRect.m_objProps.m_logpen.m_width;
 
             //Lineweight may not be larger than 211. (2012-11-05)
-            int li_maximum_thickness = 14;
-            if (a_drawRect.m_objProps.m_logpen.m_width > li_maximum_thickness)
+            //pozor, síla čáry smí mít jen některé hodnoty !!!
+            // http://www.woutware.com/doc/cadlib3.5/html/77645917-cadd-ddfa-f10b-57fbbaaf64ae.htm
+            // http://knowledge.autodesk.com/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2015/ENU/AutoCAD-Core/files/GUID-969FE4A6-C30D-44DE-AFD4-A81B53F175F6-htm.html
+
+            const int li_maximum_thickness = 14;
+            a_drawRect.m_objProps.m_logpen.m_width = Math.Min(a_drawRect.m_objProps.m_logpen.m_width, li_maximum_thickness);
+
+            const int li_minimum_thickness = 2;
+            a_drawRect.m_objProps.m_logpen.m_width = Math.Max(a_drawRect.m_objProps.m_logpen.m_width, li_minimum_thickness);
+
+            if (a_drawRect.m_objProps.m_logpen.m_width == 11)
             {
-                a_drawRect.m_objProps.m_logpen.m_width = li_maximum_thickness;
+                a_drawRect.m_objProps.m_logpen.m_width = 10;
+            }
+            if (a_drawRect.m_objProps.m_logpen.m_width == 13)
+            {
+                a_drawRect.m_objProps.m_logpen.m_width = 12;
             }
 
 
