@@ -1244,7 +1244,7 @@ namespace Loader
 
             if (startAngle == endAngle) // 2011-05-09
             {
-                return;
+                // 2015-09-25 just try what it does with Lehmann drawing return;
             }
 
             startAngle *= 180 / Math.PI;
@@ -1252,7 +1252,7 @@ namespace Loader
 
 
             double sweepAngle = endAngle - startAngle;
-            if (sweepAngle < 0)
+            if (sweepAngle <= 0)
             {
                 sweepAngle += 360;
             }
