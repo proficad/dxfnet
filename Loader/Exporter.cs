@@ -1205,29 +1205,23 @@ namespace Loader
             RectangleF l_rect = drawRect.m_position;
             Helper.FixRectangle(ref l_rect);
 
-            if (l_rect.Width == l_rect.Height)
-            {
-                ExportSquareArc(a_coll, drawRect, ab_block, startAngle, endAngle);
-            }
-            else
-            {
                
-                System.Drawing.Drawing2D.GraphicsPath l_path = new System.Drawing.Drawing2D.GraphicsPath();
-                l_path.AddArc(l_rect, (float)startAngle, (float)sweepAngle);
-                l_path.Flatten(null, 1);
-                PointF[] l_points = l_path.PathPoints;
+            System.Drawing.Drawing2D.GraphicsPath l_path = new System.Drawing.Drawing2D.GraphicsPath();
+            l_path.AddArc(l_rect, (float)startAngle, (float)sweepAngle);
+            l_path.Flatten(null, 1);
+            PointF[] l_points = l_path.PathPoints;
 
-                DrawPoly l_polyArc = new DrawPoly(Shape.polyline);
-                foreach (PointF l_pointF in l_points)
-                { 
-                    l_polyArc.AddPoint(Point.Truncate(l_pointF));
-                }
-                l_polyArc.m_objProps.m_logpen.m_color = drawRect.m_objProps.m_logpen.m_color;
-                l_polyArc.m_objProps.m_logpen.m_width = drawRect.m_objProps.m_logpen.m_width;
-                l_polyArc.m_objProps.m_logpen.m_style = 0;            //prevent this line from drawing arrow, this is just the arc
-
-                ExportPolyline(a_coll, l_polyArc, ab_block);
+            DrawPoly l_polyArc = new DrawPoly(Shape.polyline);
+            foreach (PointF l_pointF in l_points)
+            { 
+                l_polyArc.AddPoint(Point.Truncate(l_pointF));
             }
+            l_polyArc.m_objProps.m_logpen.m_color = drawRect.m_objProps.m_logpen.m_color;
+            l_polyArc.m_objProps.m_logpen.m_width = drawRect.m_objProps.m_logpen.m_width;
+            l_polyArc.m_objProps.m_logpen.m_style = 0;            //prevent this line from drawing arrow, this is just the arc
+
+            ExportPolyline(a_coll, l_polyArc, ab_block);
+            
             
 
             Point l_centerPoint = DxfNet.Helper.GetRectCenterPoint(l_rect);
@@ -1331,7 +1325,7 @@ namespace Loader
 
             System.Drawing.Drawing2D.GraphicsPath l_path = new System.Drawing.Drawing2D.GraphicsPath();
             l_path.AddArc(drawRect.m_position, (float)startAngle, (float)sweepAngle);
-            float lf_flatness = 0.01f;
+            float lf_flatness = 1f;
             l_path.Flatten(null, lf_flatness);
             PointF[] l_points;
             try // 2012-10-01 ver 2.6
