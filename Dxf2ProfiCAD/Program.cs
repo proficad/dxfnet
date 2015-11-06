@@ -24,7 +24,7 @@ namespace Dxf2ProfiCAD
             
 //            string ls_path = @"C:\down\ProfiCAD1.dxf";
 //            const string ls_path = @"H:\f\dxf\Grundriss.dwg";
-            const string ls_path = @"H:\2014.dwg";
+            const string ls_path = @"H:\AutoCAD_symbols\2_kruhy.dwg";
             
 
             //string ls_path = @"H:\temp\PES_MCOE_proj_2.dxf";
@@ -34,7 +34,7 @@ namespace Dxf2ProfiCAD
             DxfModel model = DwgReader.Read(ls_path);
 
             //try to convert using the WireFrameGraphicsFactory
-            Covert_To_ProfiCAD_Lines(model, @"H:\lines.sxe");
+            //Covert_To_ProfiCAD_Lines(model, @"H:\lines.sxe");
 
             
             double ld_smallest_font_size = PrintStats(model);

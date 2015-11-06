@@ -189,7 +189,9 @@ namespace Loader
                         l_page.Orientation = int.Parse(ls_ori);
                     }
 
-
+                    // page scale
+                    int li_scale = XmlAttrToInt(l_node.Attributes["scale"]);
+                    l_page.Scale = li_scale;
 
                     //nastavit ptbPosition
                     LoadPtb(l_page, l_node);

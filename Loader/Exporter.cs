@@ -19,6 +19,9 @@ using System.IO;
 
 namespace Loader
 {
+
+
+
     internal static class Exporter
     {
         public static readonly int REVERSE_Y = -1;
@@ -28,7 +31,7 @@ namespace Loader
         internal static void Export(PCadDoc a_doc, string as_pathDxf)
         {
             DxfModel model = new DxfModel(DxfVersion.Dxf21);//2012-12-02 vracime se k dxf21
-
+            
 
             //add layers
             foreach (Layer l_layer in a_doc.m_layers)
@@ -71,10 +74,26 @@ namespace Loader
             vport.Height = 3000;
             model.VPorts.Add(vport);
 
+            AdjustScale(a_doc, model);
 
-// obsolete 2010-05-11            DxfWriter.WriteDxf(as_pathDxf, model, false);
+            // obsolete 2010-05-11            DxfWriter.WriteDxf(as_pathDxf, model, false);
             DxfWriter.Write(as_pathDxf, model, false);
             System.Diagnostics.Trace.WriteLine("done");
+        }
+
+        private static void AdjustScale(PCadDoc a_doc, DxfModel model)
+        {
+            //SCALE to adjust the coordinates to the scale (Lehmann)
+            if (a_doc.Scale != 0)
+            {
+                double li_scale_factor = a_doc.Scale / 10d;
+                Matrix4D l_tr = Transformation4D.Scaling(li_scale_factor);
+                WW.Cad.Drawing.TransformConfig l_config = new WW.Cad.Drawing.TransformConfig();
+                foreach (DxfEntity l_entity in model.Entities)
+                {
+                    l_entity.TransformMe(l_config, l_tr);
+                }
+            }
         }
 
         private static void ExportQImageDesc(DxfImageDefCollection a_coll, QImageDesc a_imgDesc, HybridDictionary a_dictRepo)
@@ -977,26 +996,9 @@ namespace Loader
 
 //            dxfEllipse. =  .DefaultStartWidth = drawRect.m_objProps.m_logpen.m_width;
 
-            //Lineweight may not be larger than 211. (2012-11-05)
-            //pozor, síla čáry smí mít jen některé hodnoty !!!
-            // http://www.woutware.com/doc/cadlib3.5/html/77645917-cadd-ddfa-f10b-57fbbaaf64ae.htm
-            // http://knowledge.autodesk.com/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2015/ENU/AutoCAD-Core/files/GUID-969FE4A6-C30D-44DE-AFD4-A81B53F175F6-htm.html
+          
 
-            const int li_maximum_thickness = 14;
-            a_drawRect.m_objProps.m_logpen.m_width = Math.Min(a_drawRect.m_objProps.m_logpen.m_width, li_maximum_thickness);
-
-            const int li_minimum_thickness = 2;
-            a_drawRect.m_objProps.m_logpen.m_width = Math.Max(a_drawRect.m_objProps.m_logpen.m_width, li_minimum_thickness);
-
-            if (a_drawRect.m_objProps.m_logpen.m_width == 11)
-            {
-                a_drawRect.m_objProps.m_logpen.m_width = 10;
-            }
-            if (a_drawRect.m_objProps.m_logpen.m_width == 13)
-            {
-                a_drawRect.m_objProps.m_logpen.m_width = 12;
-            }
-
+            a_drawRect.m_objProps.m_logpen.m_width = Calculate_Line_Thickness_Ellipse(a_drawRect.m_objProps.m_logpen.m_width);
 
             dxfEllipse.LineWeight = (short)(10 * a_drawRect.m_objProps.m_logpen.m_width);
             //99 dxfEllipse.ColorSource = AttributeSource.This;
@@ -1010,6 +1012,33 @@ namespace Loader
             a_coll.Add(dxfEllipse);
 
             ExportTextInRect(a_coll, l_center, a_drawRect.m_text, a_drawRect.m_efont);
+        }
+
+        private static int Calculate_Line_Thickness_Ellipse(int ai_width)
+        {
+            //Lineweight may not be larger than 211. (2012-11-05)
+            //pozor, síla čáry smí mít jen některé hodnoty !!!
+            // http://www.woutware.com/doc/cadlib3.5/html/77645917-cadd-ddfa-f10b-57fbbaaf64ae.htm
+            // http://knowledge.autodesk.com/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2015/ENU/AutoCAD-Core/files/GUID-969FE4A6-C30D-44DE-AFD4-A81B53F175F6-htm.html
+
+           
+
+            const int li_maximum_thickness = 14;
+            ai_width = Math.Min(ai_width, li_maximum_thickness);
+
+            const int li_minimum_thickness = 2;
+            ai_width = Math.Max(ai_width, li_minimum_thickness);
+
+            if (ai_width == 11)
+            {
+                ai_width = 10;
+            }
+            if (ai_width == 13)
+            {
+                ai_width = 12;
+            }
+
+            return ai_width;
         }
 
         private static void ExportTextInRect(DxfEntityCollection a_coll, Point3D l_center, string as_text, EFont a_efont)
@@ -1157,48 +1186,89 @@ namespace Loader
             double endAngle = System.Math.Atan2(drawRect.m_arcBegin.Height, drawRect.m_arcBegin.Width);
             double startAngle = System.Math.Atan2(drawRect.m_arcEnd.Height, drawRect.m_arcEnd.Width);
 
+
             if (endAngle == startAngle)
             {
                 return;//2012-04-03
             }
 
-            startAngle  *= 180 / Math.PI;
-            endAngle    *= 180 / Math.PI;
-         
-            double sweepAngle =  endAngle - startAngle;
+            startAngle *= 180 / Math.PI;
+            endAngle *= 180 / Math.PI;
+
+            double sweepAngle = endAngle - startAngle;
             if (sweepAngle < 0)
             {
                 sweepAngle += 360;
             }
 
+
             RectangleF l_rect = drawRect.m_position;
             Helper.FixRectangle(ref l_rect);
-            System.Drawing.Drawing2D.GraphicsPath l_path = new System.Drawing.Drawing2D.GraphicsPath();
-            l_path.AddArc(l_rect, (float)startAngle, (float)sweepAngle);
-            l_path.Flatten(null, 1);
-            PointF[] l_points = l_path.PathPoints;
 
-            DrawPoly l_polyArc = new DrawPoly(Shape.polyline);
-            foreach (PointF l_pointF in l_points)
-            { 
-                l_polyArc.AddPoint(Point.Truncate(l_pointF));
+            if (l_rect.Width == l_rect.Height)
+            {
+                ExportSquareArc(a_coll, drawRect, ab_block, startAngle, endAngle);
             }
-            l_polyArc.m_objProps.m_logpen.m_color = drawRect.m_objProps.m_logpen.m_color;
-            l_polyArc.m_objProps.m_logpen.m_width = drawRect.m_objProps.m_logpen.m_width;
-            l_polyArc.m_objProps.m_logpen.m_style = 0;            //prevent this line from drawing arrow, this is just the arc
+            else
+            {
+               
+                System.Drawing.Drawing2D.GraphicsPath l_path = new System.Drawing.Drawing2D.GraphicsPath();
+                l_path.AddArc(l_rect, (float)startAngle, (float)sweepAngle);
+                l_path.Flatten(null, 1);
+                PointF[] l_points = l_path.PathPoints;
 
+                DrawPoly l_polyArc = new DrawPoly(Shape.polyline);
+                foreach (PointF l_pointF in l_points)
+                { 
+                    l_polyArc.AddPoint(Point.Truncate(l_pointF));
+                }
+                l_polyArc.m_objProps.m_logpen.m_color = drawRect.m_objProps.m_logpen.m_color;
+                l_polyArc.m_objProps.m_logpen.m_width = drawRect.m_objProps.m_logpen.m_width;
+                l_polyArc.m_objProps.m_logpen.m_style = 0;            //prevent this line from drawing arrow, this is just the arc
 
-
-
-
-            ExportPolyline(a_coll, l_polyArc, ab_block);
+                ExportPolyline(a_coll, l_polyArc, ab_block);
+            }
+            
 
             Point l_centerPoint = DxfNet.Helper.GetRectCenterPoint(l_rect);
             Point l_arcBegin = l_centerPoint + drawRect.m_arcBegin;
             Point l_arcEnd = l_centerPoint + drawRect.m_arcEnd;
 
-            ExportArcArrow(a_coll, drawRect, l_rect, l_centerPoint, l_arcBegin, l_arcEnd, 1, 1, l_polyArc.m_objProps.m_logpen.m_color, ab_block);
+            ExportArcArrow(a_coll, drawRect, l_rect, l_centerPoint, l_arcBegin, l_arcEnd, 1, 1, drawRect.m_objProps.m_logpen.m_color, ab_block);
         }
+
+
+        private static void ExportSquareArc(DxfEntityCollection a_coll, DrawRect a_drawRect, bool ab_block, double startAngle, double endAngle)
+        {
+            Point3D l_center = GetRectCenterPoint(a_drawRect.m_position);
+
+            l_center.Y *= REVERSE_Y;
+            float l_radius = a_drawRect.m_position.Width / 2;
+
+
+            a_drawRect.m_arcBegin.Height *= REVERSE_Y;
+            a_drawRect.m_arcEnd.Height *= REVERSE_Y;
+
+
+            double l_startAngle = System.Math.Atan2(a_drawRect.m_arcBegin.Height, a_drawRect.m_arcBegin.Width);
+            double l_endAngle = System.Math.Atan2(a_drawRect.m_arcEnd.Height, a_drawRect.m_arcEnd.Width);
+
+
+            DxfArc l_arc = new DxfArc(l_center, l_radius, l_startAngle, l_endAngle);
+            l_arc.Layer = ExportContext.Current.Layer;
+
+            a_drawRect.m_objProps.m_logpen.m_width = Calculate_Line_Thickness_Ellipse(a_drawRect.m_objProps.m_logpen.m_width);
+
+            l_arc.LineWeight = (short)(10 * a_drawRect.m_objProps.m_logpen.m_width);
+            l_arc.Thickness = 10 * a_drawRect.m_objProps.m_logpen.m_width;
+
+            //99 dxfEllipse.ColorSource = AttributeSource.This;
+            l_arc.Color = Helper.MakeEntityColorByBlock(a_drawRect.m_objProps.m_logpen.m_color, ab_block);
+
+
+            a_coll.Add(l_arc);
+        }
+
 
         private static void ExportArcArrow(DxfEntityCollection a_coll, DrawRect a_drawRect, RectangleF a_rect, Point a_centerPoint, Point a_arcBegin, Point a_arcEnd, double a_scaleX, double a_scaleY, System.Drawing.Color a_color, bool ab_block)
         {
@@ -1258,9 +1328,11 @@ namespace Loader
             }
 
 
+
             System.Drawing.Drawing2D.GraphicsPath l_path = new System.Drawing.Drawing2D.GraphicsPath();
             l_path.AddArc(drawRect.m_position, (float)startAngle, (float)sweepAngle);
-            l_path.Flatten(null, 1);
+            float lf_flatness = 0.01f;
+            l_path.Flatten(null, lf_flatness);
             PointF[] l_points;
             try // 2012-10-01 ver 2.6
             {

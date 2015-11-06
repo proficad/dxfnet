@@ -254,6 +254,18 @@ namespace Loader
             }
         }
 
+        public static void FixSize(ref Size a_size)
+        {
+            if (a_size.Width < 0)
+            {
+                a_size.Width = -a_size.Width;
+            }
+            if (a_size.Height < 0)
+            {
+                a_size.Height = -a_size.Height;
+            }
+        }
+
         public static float ParseScale(System.Xml.XmlAttribute a_attr)
         {
 	        if (a_attr == null)
