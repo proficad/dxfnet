@@ -119,7 +119,8 @@ namespace Loader
             list = xmlDoc.GetElementsByTagName("summary");
             XmlNode node = list[0];
 
-
+            XmlNode l_node_ref_grid = xmlDoc.SelectSingleNode("document/RefGridSettings");
+            LoadRefGrid(l_collPages.m_ref_grid, l_node_ref_grid);
 
 
             XmlNode nodePrintSettings = xmlDoc.SelectSingleNode("/document/PrintSettings");
@@ -209,6 +210,21 @@ namespace Loader
 
             System.Diagnostics.Trace.WriteLine("loaded doc {0}", as_path);
             return l_collPages;
+        }
+
+        private static void LoadRefGrid(RefGridSettings m_ref_grid, XmlNode a_node)
+        {
+            if(a_node == null)
+            {
+                return;
+            }
+
+            m_ref_grid.Left     = XmlAttrToBool(a_node.Attributes["GridLeft"]);
+            m_ref_grid.Top      = XmlAttrToBool(a_node.Attributes["GridTop"]);
+            m_ref_grid.Right    = XmlAttrToBool(a_node.Attributes["GridRight"]);
+            m_ref_grid.Bottom   = XmlAttrToBool(a_node.Attributes["GridBottom"]);
+
+            m_ref_grid.FieldSize = XmlAttrToInt(a_node.Attributes["FieldSize"]);
         }
 
         private static void LoadNumberingWireSettings(global::DxfNet.SettingsWireNumbering settingsPage, XmlNode a_node, CollPages a_collPages)

@@ -89,6 +89,7 @@
     <Compile Include="QLin.cs" />
     <Compile Include="QPivot.cs" />
     <Compile Include="QSummInfo.cs" />
+    <Compile Include="RefGrid.cs" />
     <Compile Include="Repo.cs" />
     <Compile Include="SettingsPage.cs" />
     <Compile Include="SettingsWireNumbering.cs" />

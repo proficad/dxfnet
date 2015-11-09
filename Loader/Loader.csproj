@@ -83,6 +83,7 @@
     <Compile Include="ExporterGate.cs" />
     <Compile Include="ExporterQic.cs" />
     <Compile Include="Helper.cs" />
+    <Compile Include="HelperRefGrid.cs" />
     <Compile Include="Loader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
