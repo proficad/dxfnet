@@ -22,7 +22,7 @@ namespace Loader
 
 
 
-    internal static class Exporter
+    public static class Exporter
     {
         public static readonly int REVERSE_Y = -1;
         static int m_trafoName = 1;
@@ -1014,16 +1014,20 @@ namespace Loader
             ExportTextInRect(a_coll, l_center, a_drawRect.m_text, a_drawRect.m_efont);
         }
 
-        private static int Calculate_Line_Thickness_Ellipse(int ai_width)
+        public static int Calculate_Line_Thickness_Ellipse(int ai_width)
         {
             //Lineweight may not be larger than 211. (2012-11-05)
             //pozor, síla čáry smí mít jen některé hodnoty !!!
             // http://www.woutware.com/doc/cadlib3.5/html/77645917-cadd-ddfa-f10b-57fbbaaf64ae.htm
             // http://knowledge.autodesk.com/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2015/ENU/AutoCAD-Core/files/GUID-969FE4A6-C30D-44DE-AFD4-A81B53F175F6-htm.html
 
-           
 
-            const int li_maximum_thickness = 14;
+
+            //int[] l_weights = new int[] { 0, 5, 9, 13, 15, 18, 20, 25, 30, 35, 40, 50, 53, 60, 70, 80, 90, 100, 106, 120, 140, 158, 200, 211 };
+
+         
+
+            const int li_maximum_thickness = 21;
             ai_width = Math.Min(ai_width, li_maximum_thickness);
 
             const int li_minimum_thickness = 2;
@@ -1031,12 +1035,21 @@ namespace Loader
 
             if (ai_width == 11)
             {
-                ai_width = 10;
+                return 10;
             }
             if (ai_width == 13)
             {
-                ai_width = 12;
+                return 12;
             }
+            if ((ai_width >= 15) && (ai_width <= 17))
+            {
+                return 14;
+            }
+            if ((ai_width >= 18) && (ai_width <= 20))
+            {
+                return 20;
+            }
+
 
             return ai_width;
         }
@@ -1405,8 +1418,8 @@ namespace Loader
 
                 dxfPolyline.DefaultStartWidth = drawPoly.m_objProps.m_logpen.m_width;
                 dxfPolyline.DefaultEndWidth = drawPoly.m_objProps.m_logpen.m_width;
-                
-                if(drawPoly.m_nShape == Shape.poly)
+
+                if (drawPoly.m_nShape == Shape.poly)
                 {
                     dxfPolyline.Closed = true;
                 }
