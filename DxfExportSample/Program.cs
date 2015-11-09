@@ -90,7 +90,7 @@ namespace DxfExportSample
                         model,
                         graphics,
                         Matrix4D.Identity,
-                        Color.Black,
+                        System.Drawing.Color.Black,
                         maxSize
                     );
                 
