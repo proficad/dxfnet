@@ -72,6 +72,10 @@ namespace Export2Dxf
                 {
                     WriteToLogFileXml(ls_log, ls_error, null);
                 }
+                else
+                {
+                    Console.Write(ls_error);
+                }
                 return;
             }
 

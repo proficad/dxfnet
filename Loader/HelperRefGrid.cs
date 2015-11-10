@@ -304,8 +304,9 @@ namespace Loader
 
             Point3D l_point = new Point3D(ai_x, ai_y, 0);
             double ld_font_size = 20;
-            DxfText l_dxf_text = new DxfText(as_what, l_point, ld_font_size);
-            l_dxf_text.AlignmentPoint2 = l_point;
+            DxfMText l_dxf_text = new DxfMText(as_what, l_point, ld_font_size);
+            //l_dxf_text.AlignmentPoint2 = l_point;
+            l_dxf_text.AttachmentPoint = AttachmentPoint.MiddleCenter;
 
             a_coll.Add(l_dxf_text);
         }
