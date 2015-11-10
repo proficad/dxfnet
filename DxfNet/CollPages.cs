@@ -38,6 +38,7 @@ namespace DxfNet
             m_summInfo = new Hashtable();
             m_printSettings = new PrintSettings();
             m_settingsPage = new SettingsPage();
+            m_ref_grid = new RefGridSettings();
         }
 
         public Size GetSize()

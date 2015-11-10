@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 
 using DxfNet;
+using WW.Math;
 using WW.Cad.Model.Entities;
 
 
@@ -20,7 +21,7 @@ namespace Loader
         enum TypeOfEdge { rgEdgeLeft, rgEdgeTop, rgEdgeRight, rgEdgeBottom };
 
 
-        static public void DrawRefGridForSheets(DxfEntityCollection a_coll, MyRect a_rect, RefGridSettings a_settings)
+        static public void DrawRefGridForSheets(DxfEntityCollection a_coll, System.Drawing.Rectangle a_rect, RefGridSettings a_settings)
         {
             int li_fieldSize_tenth_mm = 10 * a_settings.FieldSize;
             if ((li_fieldSize_tenth_mm < FIELD_SIZE_MIN) || (li_fieldSize_tenth_mm > FIELD_SIZE_MAX))
@@ -73,8 +74,8 @@ namespace Loader
 
         private static void DrawEdge(DxfEntityCollection a_coll, TypeOfEdge a_edge, int ai_outer, int ai_start, int ai_end, bool ab_start, bool ab_end, int ai_fieldSize)
         {
-            const int LINE_THIN = 30;
-            const int LINE_THICK = 70;
+            const int LINE_THIN = 3;
+            const int LINE_THICK = 7;
 
 
             if ((ai_fieldSize < FIELD_SIZE_MIN) || (ai_fieldSize > FIELD_SIZE_MAX))
@@ -131,7 +132,7 @@ namespace Loader
 
 
             int li_steps = 0;
-            string ls_letter;
+            string ls_letter = string.Empty;
 
             while ((li_remainder - li_startAltered) > (ai_fieldSize + li_min_field_size))
             {
@@ -141,22 +142,22 @@ namespace Loader
                 LineHor(a_coll, lb_turn, li_center - li_distanceFromCenter, ai_outer, li_inner, LINE_THIN);
                 LineHor(a_coll, lb_turn, li_center + li_distanceFromCenter, ai_outer, li_inner, LINE_THIN);
 
-                Translate2Letters(li_numberOfFieldsHalved - li_steps, ls_letter, !lb_turn);
-                QUtilsDraw::LetterInRefGrid(pDC, lb_turn, li_posTextX, li_center - li_distanceFromCenter + (ai_fieldSize / 2), ls_letter);
-                Translate2Letters(li_numberOfFieldsHalved + li_steps + 1, ls_letter, !lb_turn);
-                QUtilsDraw::LetterInRefGrid(pDC, lb_turn, li_posTextX, li_center + li_distanceFromCenter - (ai_fieldSize / 2), ls_letter);
+                Translate2Letters(li_numberOfFieldsHalved - li_steps, ref ls_letter, !lb_turn);
+                LetterInRefGrid(a_coll, lb_turn, li_posTextX, li_center - li_distanceFromCenter + (ai_fieldSize / 2), ls_letter);
+                Translate2Letters(li_numberOfFieldsHalved + li_steps + 1, ref ls_letter, !lb_turn);
+                LetterInRefGrid(a_coll, lb_turn, li_posTextX, li_center + li_distanceFromCenter - (ai_fieldSize / 2), ls_letter);
                 ++li_steps;
             }
 
             //last letter up
             int li_posFromEnd = (li_center - li_distanceFromCenter - li_startAltered) / 2;
             int li_lastLetter = li_startAltered + li_posFromEnd;
-            Translate2Letters(li_numberOfFieldsHalved - li_steps, ls_letter, !lb_turn);
-            QUtilsDraw::LetterInRefGrid(pDC, lb_turn, li_posTextX, li_lastLetter, ls_letter);
+            Translate2Letters(li_numberOfFieldsHalved - li_steps, ref ls_letter, !lb_turn);
+            LetterInRefGrid(a_coll, lb_turn, li_posTextX, li_lastLetter, ls_letter);
             //last letter down
             li_lastLetter = ai_end - li_posFromEnd;
-            Translate2Letters(li_numberOfFieldsHalved + li_steps + 1, ls_letter, !lb_turn);
-            QUtilsDraw::LetterInRefGrid(pDC, lb_turn, li_posTextX, li_lastLetter, ls_letter);
+            Translate2Letters(li_numberOfFieldsHalved + li_steps + 1, ref ls_letter, !lb_turn);
+            LetterInRefGrid(a_coll, lb_turn, li_posTextX, li_lastLetter, ls_letter);
 
         }
 
@@ -173,24 +174,71 @@ namespace Loader
             return li_numberOfFieldsHalved;
         }
 
-        private static void LineHor(DxfEntityCollection a_coll, bool lb_turn, int ai_outer, int ai_start, int ai_end, int ai_thickness)
+        private static void LineHor(DxfEntityCollection a_coll, bool ab_turn, int ai_outer, int ai_start, int ai_end, int ai_thickness)
         {
-            throw new NotImplementedException();
+            Point2D[] l_arrPoints;
+
+            if(ab_turn)
+            {
+                l_arrPoints = new Point2D[] {
+                    new Point2D(ai_outer, Exporter.REVERSE_Y * ai_start),
+                    new Point2D(ai_outer, Exporter.REVERSE_Y * ai_end)
+                };
+
+            }
+            else
+            {
+                l_arrPoints = new Point2D[] {
+                    new Point2D(ai_start, Exporter.REVERSE_Y * ai_outer),
+                    new Point2D(ai_end  , Exporter.REVERSE_Y * ai_outer)
+                };
+            }
+
+
+            DxfPolyline2D l_line = new DxfPolyline2D(l_arrPoints);
+            l_line.DefaultStartWidth = ai_thickness;
+            l_line.DefaultEndWidth = ai_thickness;
+            a_coll.Add(l_line);
         }
 
-        private static void LineVer(DxfEntityCollection a_coll, bool lb_turn, int ai_outer, int ai_start, int ai_end, int ai_thickness)
+
+        private static void LineVer(DxfEntityCollection a_coll, bool ab_turn, int ai_outer, int ai_start, int ai_end, int ai_thickness)
         {
-            throw new NotImplementedException();
+            Point2D[] l_arrPoints;
+
+            if (ab_turn)
+            {
+                l_arrPoints = new Point2D[] {
+                    new Point2D(ai_start, Exporter.REVERSE_Y * ai_outer),
+                    new Point2D(ai_end,   Exporter.REVERSE_Y * ai_outer)
+                };
+
+            }
+            else
+            {
+                l_arrPoints = new Point2D[] {
+                    new Point2D(ai_outer, Exporter.REVERSE_Y * ai_start),
+                    new Point2D(ai_outer, Exporter.REVERSE_Y * ai_end)
+                };
+            }
+
+
+            DxfPolyline2D l_line = new DxfPolyline2D(l_arrPoints);
+            l_line.DefaultStartWidth = ai_thickness;
+            l_line.DefaultEndWidth = ai_thickness;
+            a_coll.Add(l_line);
         }
 
 
-        void Translate2Letters(int ai_input, ref string as_letters, bool ab_translate)
+        private static void Translate2Letters(int ai_input, ref string as_letters, bool ab_translate)
         {
             if (!ab_translate)
             {
                 as_letters = Int2String(ai_input);
                 return;
             }
+
+            as_letters = string.Empty;
 
             --ai_input;
 
@@ -210,21 +258,21 @@ namespace Loader
             if (l_druha > 0)
             {
                 char fst = Convert.ToChar(GetCharSkipped(l_druha - 1) + l_start);
-                char snd = Convert.ToChar(GetCharSkipped(l_prvni) + l_start));
+                char snd = Convert.ToChar(GetCharSkipped(l_prvni) + l_start);
                 as_letters += fst;
                 as_letters += snd; 
                 return;
             }
-            as_letters += Convert.ToChar(GetCharSkipped(l_prvni) + l_start));
+            as_letters += Convert.ToChar(GetCharSkipped(l_prvni) + l_start);
 
         }
 
-        private string Int2String(int ai_input)
+        private static string Int2String(int ai_input)
         {
             return ai_input.ToString();
         }
 
-        int GetCharSkipped(int ai_input)
+        private static int GetCharSkipped(int ai_input)
         {
             //skip I and O
             const int li_I = 8;
@@ -242,6 +290,25 @@ namespace Loader
             return ai_input;
         }
 
+        private static void LetterInRefGrid(DxfEntityCollection a_coll, bool ab_turn, int ai_x, int ai_y, string as_what)
+        {
+	        if (ab_turn)
+	        {
+                //swap
+                int li_temp = ai_x;
+                ai_x = ai_y;
+                ai_y = li_temp;
+	        }
+
+            ai_y *= Exporter.REVERSE_Y;
+
+            Point3D l_point = new Point3D(ai_x, ai_y, 0);
+            double ld_font_size = 20;
+            DxfText l_dxf_text = new DxfText(as_what, l_point, ld_font_size);
+            l_dxf_text.AlignmentPoint2 = l_point;
+
+            a_coll.Add(l_dxf_text);
+        }
 
 
         //---------------------------------------

@@ -386,5 +386,12 @@ namespace DxfNet
             }
         }
 
+        public Rectangle GetRect()
+        {
+            Size l_size = GetSize();
+            Rectangle l_rect = new Rectangle(0, 0, l_size.Width, l_size.Height);
+            return l_rect;
+        }
+
     }
 }

@@ -58,6 +58,7 @@ namespace Loader
             }
             ExportDrawDoc(model.Entities, a_doc, l_dictRepo, false);
 
+
             if (ExportContext.Current.PCadDocument.Parent.m_ptbPosition.m_useTb)
             {
                 ExportTb(model.Entities);
@@ -68,6 +69,7 @@ namespace Loader
                 ExportFrame(model.Entities);
             }
 
+            HelperRefGrid.DrawRefGridForSheets(model.Entities, a_doc.GetRect(), a_doc.Parent.m_ref_grid);
 
             //fix 2010-03-17
             DxfVPort vport = DxfVPort.CreateActiveVPort();
