@@ -56,6 +56,7 @@
   <ItemGroup>
     <Compile Include="Attribute.cs" />
     <Compile Include="CableSymbol.cs" />
+    <Compile Include="Class1.cs" />
     <Compile Include="CollPages.cs" />
     <Compile Include="DrawDoc.cs" />
     <Compile Include="DrawObj.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="RefGrid.cs" />
     <Compile Include="Repo.cs" />
     <Compile Include="SettingsPage.cs" />
+    <Compile Include="SettingsPrinter.cs" />
     <Compile Include="SettingsWireNumbering.cs" />
     <Compile Include="Trafo.cs" />
     <Compile Include="TrafoWinding.cs" />

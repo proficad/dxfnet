@@ -45,5 +45,13 @@ namespace DxfNet
             return new Point(li_x, li_y);
         }
 
+        public static void Swap<T>(ref T x, ref T y)
+        {
+            T t = y;
+            y = x;
+            x = t;
+        }
+
+
     }
 }
