@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace DxfNet
 {
-    class SettingsPrinter
+    public class SettingsPrinter
     {
         public Size PaperSize { get; set; }
         public Point PhysicalOffsetTenthsMm { get; set; }

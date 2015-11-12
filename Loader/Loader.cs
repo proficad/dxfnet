@@ -129,6 +129,9 @@ namespace Loader
             XmlNode nodePageSettings = xmlDoc.SelectSingleNode("/document/PageSettings");
             LoadPageSettings(l_collPages.m_settingsPage, nodePageSettings, l_collPages);
 
+            XmlNode nodePrinterSettings = xmlDoc.SelectSingleNode("/document/PrinterSettings");
+            LoadPrinterSettings(l_collPages.m_settingsPrinter, nodePrinterSettings, l_collPages);
+
             XmlNode nodeNumberingWireSettings = xmlDoc.SelectSingleNode("/document/NumberingWire");
             LoadNumberingWireSettings(l_collPages.m_settingsWireNumbering, nodeNumberingWireSettings, l_collPages);
 
@@ -212,6 +215,29 @@ namespace Loader
             return l_collPages;
         }
 
+        private static void LoadPrinterSettings(SettingsPrinter a_settingsPrinter, XmlNode a_nodePrinterSettings, CollPages a_collPages)
+        {
+            if (a_settingsPrinter == null)
+            {
+                return;
+            }
+            if(a_nodePrinterSettings == null)
+            {
+                return;
+            }
+
+            int li_width  = int.Parse(a_nodePrinterSettings.Attributes["PaperSizeX"].Value);
+            int li_height = int.Parse(a_nodePrinterSettings.Attributes["PaperSizeY"].Value);
+
+            a_settingsPrinter.PaperSize = new Size(li_width, li_height);
+
+            int li_x = int.Parse(a_nodePrinterSettings.Attributes["PhysicalOffestTenthMm_X"].Value);
+            int li_y = int.Parse(a_nodePrinterSettings.Attributes["PhysicalOffestTenthMm_Y"].Value);
+
+            a_settingsPrinter.PhysicalOffsetTenthsMm = new Point(li_x, li_y);
+
+        }
+
         private static void LoadRefGrid(RefGridSettings m_ref_grid, XmlNode a_node)
         {
             if(a_node == null)
@@ -250,6 +276,23 @@ namespace Loader
 
             string ls_drawFrame = nodePageSettings.Attributes["frame"].Value;
             settingsPage.DrawFrame = (ls_drawFrame == "YES");
+
+            string ls_pageMargins = nodePageSettings.Attributes["pageMargins"].Value;
+//            string[] ls_margins = ls_pageMargins.Split(', ');
+            string[] ls_margins = System.Text.RegularExpressions.Regex.Split(ls_pageMargins, ", ");
+            if (ls_margins.Length == 4)
+            {
+                int li_left, li_top, li_right, li_bottom;
+
+                int.TryParse(ls_margins[0], out li_left);
+                int.TryParse(ls_margins[1], out li_top);
+                int.TryParse(ls_margins[2], out li_right);
+                int.TryParse(ls_margins[3], out li_bottom);
+
+                settingsPage.PageMargins = new MyRect { Left = li_left, Top = li_top, Right = li_right, Bottom = li_bottom };
+            }
+            
+
 
         }
 

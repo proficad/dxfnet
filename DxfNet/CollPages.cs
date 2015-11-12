@@ -17,6 +17,7 @@ namespace DxfNet
 
         public PrintSettings m_printSettings;
         public SettingsPage m_settingsPage;
+        public SettingsPrinter m_settingsPrinter;
         public SettingsWireNumbering m_settingsWireNumbering;
         public RefGridSettings m_ref_grid;
 
@@ -40,6 +41,7 @@ namespace DxfNet
             m_summInfo = new Hashtable();
             m_printSettings = new PrintSettings();
             m_settingsPage = new SettingsPage();
+            m_settingsPrinter = new SettingsPrinter();
             m_ref_grid = new RefGridSettings();
         }
 
@@ -51,10 +53,23 @@ namespace DxfNet
             }
             else
             {
-                return new Size(10 * m_settingsPage.PagesHor * m_printSettings.SheetSizeX, 10 * m_settingsPage.PagesVer * m_printSettings.SheetSizeY);
+                Rectangle l_rect_result = new Rectangle();
+                Point l_point = new Point();
+                bool lb_landscape = IsLandscape();
+                Get_Intersection_PA_DA(out l_rect_result, l_point, 
+                    m_settingsPage, m_printSettings, m_settingsPrinter, lb_landscape, false);
+
+                return new Size(
+                    m_settingsPage.PagesHor * l_rect_result.Width, 
+                    m_settingsPage.PagesVer * l_rect_result.Height
+                );
             }
         }
 
+        private bool IsLandscape()
+        {
+            return m_printSettings.IsLandscape();
+        }
 
         void Get_Intersection_PA_DA(out Rectangle a_rectResult,
                                 System.Drawing.Point a_origin,

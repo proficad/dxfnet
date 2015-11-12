@@ -56,7 +56,6 @@
   <ItemGroup>
     <Compile Include="Attribute.cs" />
     <Compile Include="CableSymbol.cs" />
-    <Compile Include="Class1.cs" />
     <Compile Include="CollPages.cs" />
     <Compile Include="DrawDoc.cs" />
     <Compile Include="DrawObj.cs" />
