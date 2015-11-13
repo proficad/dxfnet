@@ -60,7 +60,7 @@ namespace Export2Dxf
             StringCollection l_coll = new StringCollection();
             try
             {
-                Loader.Loader.Sxe2Dxf(ls_in, ls_out, l_coll);
+                Loader.Loader.Sxe2Dxf(ls_in, ls_out, l_coll, true);
             }
             catch (System.Exception ex)
             {

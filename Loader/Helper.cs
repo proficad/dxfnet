@@ -278,6 +278,11 @@ namespace Loader
 
         public static EntityColor MakeEntityColorByBlock(System.Drawing.Color a_color, bool ab_block)
         {
+            if(ExportContext.Current.BlackByLayer && ColorsAreSame(a_color, System.Drawing.Color.Black))
+            {
+                return EntityColor.ByLayer;
+            }
+
             if (ab_block)
             {
                 return EntityColor.CreateFromRgb(ColorType.ByBlock, a_color.R, a_color.G, a_color.B);
@@ -286,6 +291,24 @@ namespace Loader
             {
                 return EntityColor.CreateFrom(a_color);
             }
+        }
+
+        private static bool ColorsAreSame(System.Drawing.Color a_color_1, System.Drawing.Color a_color_2)
+        {
+            if(a_color_1.R != a_color_2.R)
+            {
+                return false;
+            }
+            if (a_color_1.G != a_color_2.G)
+            {
+                return false;
+            }
+            if (a_color_1.B != a_color_2.B)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         //--------------------------------

@@ -688,23 +688,12 @@ namespace Loader
             
 
             DxfMText dxfText = new DxfMText(ls_text, l_leftTop, li_height);
-            /*
-            if (freeText.m_isInTb)
-            {
-                dxfText.AttachmentPoint = AttachmentPoint.MiddleLeft;
-            }
-            else
-            {
-                dxfText.AttachmentPoint = AttachmentPoint.MiddleCenter;
-                dxfText.AttachmentPoint = GetAttachementPoint(freeText);
-
-            }
-            */
+           
             dxfText.AttachmentPoint = GetAttachementPoint(freeText.m_alignment);//2012-11-2
             dxfText.XAxis = TurnsToVector3D(freeText.m_turns);
 
             dxfText.Layer = ExportContext.Current.Layer;
-            dxfText.Color = EntityColor.CreateFrom(freeText.m_efont.m_color);
+            dxfText.Color = Helper.MakeEntityColorByBlock(freeText.m_efont.m_color, false);
             a_coll.Add(dxfText);
         }
 
@@ -756,7 +745,7 @@ namespace Loader
                 a_insert.m_hor ? (- a_insert.m_scaleY) : (a_insert.m_scaleY),
                 1);
 
-            l_insert.Color = EntityColor.CreateFrom(a_insert.m_color);
+            l_insert.Color = Helper.MakeEntityColorByBlock(a_insert.m_color, false);
 
             l_insert.Rotation = (Math.PI * a_insert.m_turns) / 4;
 
@@ -1441,14 +1430,8 @@ namespace Loader
 //2013-01-18                dxfPolyline.Color = (drawPoly.m_objProps.m_logpen.m_color == Color.Black) ? Color.White : drawPoly.m_objProps.m_logpen.m_color;
 
 
-                if (ab_block)
-                {
-                    dxfPolyline.Color = Helper.MakeEntityColorByBlock(drawPoly.m_objProps.m_logpen.m_color, ab_block);
-                }
-                else
-                {
-                    dxfPolyline.Color = EntityColor.CreateFrom(drawPoly.m_objProps.m_logpen.m_color);
-                }
+              
+                dxfPolyline.Color = Helper.MakeEntityColorByBlock(drawPoly.m_objProps.m_logpen.m_color, ab_block);
 
 
 

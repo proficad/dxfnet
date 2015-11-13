@@ -17,7 +17,7 @@ namespace Loader
     public static class Loader
     {
        
-        public static void Sxe2Dxf(string as_in, string as_out, StringCollection a_coll)
+        public static void Sxe2Dxf(string as_in, string as_out, StringCollection a_coll, bool ab_black_by_layer)
         {
             string ls_path = Path.GetDirectoryName(as_out);
             string ls_filename = Path.GetFileNameWithoutExtension(as_out);
@@ -27,7 +27,8 @@ namespace Loader
 
             // doc.SetupWireStatusConnected();
 
-
+            
+            ExportContext.Current.BlackByLayer = ab_black_by_layer;
 
             if (doc != null)
             {
