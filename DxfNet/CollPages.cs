@@ -53,16 +53,25 @@ namespace DxfNet
             }
             else
             {
-                Rectangle l_rect_result = new Rectangle();
-                Point l_point = new Point();
-                bool lb_landscape = IsLandscape();
-                Get_Intersection_PA_DA(out l_rect_result, l_point, 
-                    m_settingsPage, m_printSettings, m_settingsPrinter, lb_landscape, false);
+                if (m_settingsPage.IncludeMargins)
+                {
+                    Rectangle l_rect_result = new Rectangle();
+                    Point l_point = new Point();
+                    bool lb_landscape = IsLandscape();
+                    Get_Intersection_PA_DA(out l_rect_result, l_point, 
+                        m_settingsPage, m_printSettings, m_settingsPrinter, lb_landscape, false);
 
-                return new Size(
-                    m_settingsPage.PagesHor * l_rect_result.Width, 
-                    m_settingsPage.PagesVer * l_rect_result.Height
-                );
+
+                    return new Size(
+                        m_settingsPage.PagesHor * l_rect_result.Width,
+                        m_settingsPage.PagesVer * l_rect_result.Height
+                    );
+                }
+                else
+                {
+                    return new Size(10 * m_settingsPage.PagesHor * m_printSettings.SheetSizeX, 10 * m_settingsPage.PagesVer * m_printSettings.SheetSizeY);
+                }
+               
             }
         }
 

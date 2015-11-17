@@ -11,5 +11,6 @@ namespace DxfNet
         public int PagesVer { get; set; }
         public bool DrawFrame { get; set; }
         public MyRect PageMargins { get; set; }
+        public bool IncludeMargins { get; set; }
     }
 }

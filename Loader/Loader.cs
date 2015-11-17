@@ -17,7 +17,7 @@ namespace Loader
     public static class Loader
     {
        
-        public static void Sxe2Dxf(string as_in, string as_out, StringCollection a_coll, bool ab_black_by_layer)
+        public static void Sxe2Dxf(string as_in, string as_out, StringCollection a_coll/*, bool ab_black_by_layer*/)
         {
             string ls_path = Path.GetDirectoryName(as_out);
             string ls_filename = Path.GetFileNameWithoutExtension(as_out);
@@ -28,7 +28,7 @@ namespace Loader
             // doc.SetupWireStatusConnected();
 
             
-            ExportContext.Current.BlackByLayer = ab_black_by_layer;
+            ExportContext.Current.BlackByLayer = true;
 
             if (doc != null)
             {
@@ -36,9 +36,6 @@ namespace Loader
                 {
                      Exporter.Export(doc.m_pages[0], as_out);
                      a_coll.Add(as_out);
-
-
-
                 } 
                 else
                 {
@@ -292,9 +289,9 @@ namespace Loader
                 int.TryParse(ls_margins[3], out li_bottom);
 
                 settingsPage.PageMargins = new MyRect { Left = li_left, Top = li_top, Right = li_right, Bottom = li_bottom };
-            }
-            
 
+                settingsPage.IncludeMargins = nodePageSettings.Attributes["includeMargins"].Value == "YES";
+            }
 
         }
 
@@ -330,6 +327,7 @@ namespace Loader
 
             printSettings.CustomSizeX = int.Parse(a_nodePrintSettings.Attributes["CustomSizeX"].Value);
             printSettings.CustomSizeY = int.Parse(a_nodePrintSettings.Attributes["CustomSizeY"].Value);
+
 
         }
 

@@ -13,6 +13,7 @@ namespace DxfNet
         public int CustomSizeX { get; set; }
         public int CustomSizeY { get; set; }
 
+
         public bool IsLandscape()
         {
             return SheetSizeX > SheetSizeY;
