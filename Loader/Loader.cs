@@ -152,6 +152,7 @@ namespace Loader
 
             XmlNode summaryNode = xmlDoc.SelectSingleNode("/document/summary");
             LoadSummary(l_collPages.m_summInfo, summaryNode);
+            
 
             //setup layers
             if (ld_version < 7)
@@ -208,9 +209,9 @@ namespace Loader
                 }
             }
 
+            l_collPages.m_summInfo["_pc"] = l_collPages.m_pages.Count.ToString();
+
             ContextP2A.Current.CurrentLayer = null;
-
-
 
             System.Diagnostics.Trace.WriteLine("loaded doc {0}", as_path);
             return l_collPages;
