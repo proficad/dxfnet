@@ -303,7 +303,7 @@ namespace Loader
             {
                 string ls_nodeName = l_node.Attributes["name"].Value;
                 Layer l_layer = new Layer();
-                l_layer.Name = ls_nodeName;
+                l_layer.Name = Helper.SanitizeLayerName(ls_nodeName);
                 l_page.m_layers.Add(l_layer);
 
                 //setup current layer, any object added to a doc will be set to that layer

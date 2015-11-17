@@ -311,6 +311,24 @@ namespace Loader
             return true;
         }
 
+        internal static string SanitizeLayerName(string as_nodeName)
+        {
+            string ls_result = string.Empty;
+            foreach(char l_char in as_nodeName)
+            {
+                if(char.IsLetterOrDigit(l_char) || l_char == '-')
+                {
+                    ls_result += l_char;
+                }
+                else
+                {
+                    ls_result += " ";
+                }
+            }
+
+            return ls_result.Trim();
+        }
+
         //--------------------------------
     }
 }
