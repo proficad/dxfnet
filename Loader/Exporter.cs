@@ -796,7 +796,7 @@ namespace Loader
             l_center3D.Y *= REVERSE_Y;
 
             DxfMText dxfText = new DxfMText(ls_text, l_center3D, li_height);
-            dxfText.Color = EntityColor.CreateFrom(l_efont.m_color);
+            dxfText.Color = Helper.MakeEntityColorByBlock(l_efont.m_color, false);
 
             dxfText.AttachmentPoint = GetAttachementPoint(a_sat.m_alignment);
             dxfText.XAxis = TurnsToVector3D(a_sat.m_turns);
