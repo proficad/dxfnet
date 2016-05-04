@@ -289,7 +289,7 @@ namespace Loader
             }
             else
             {
-                return EntityColor.CreateFrom(a_color);
+                return EntityColor.CreateFrom((WW.Drawing.ArgbColor)a_color);
             }
         }
 
