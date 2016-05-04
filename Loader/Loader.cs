@@ -214,6 +214,7 @@ namespace Loader
             return l_collPages;
         }
 
+
         private static void LoadPrinterSettings(SettingsPrinter a_settingsPrinter, XmlNode a_nodePrinterSettings, CollPages a_collPages)
         {
             if (a_settingsPrinter == null)
@@ -252,6 +253,7 @@ namespace Loader
             m_ref_grid.FieldSize = XmlAttrToInt(a_node.Attributes["FieldSize"]);
         }
 
+
         private static void LoadNumberingWireSettings(global::DxfNet.SettingsNumberingWire a_setting, XmlNode a_node, CollPages a_collPages)
         {
             a_setting.Enabled       = XmlAttrToBool(a_node.Attributes[SettingsNumberingWire.Attr_Enabled]);
@@ -265,6 +267,7 @@ namespace Loader
             a_setting.WireLabelDist_C = XmlAttrToInt(a_node.Attributes[SettingsNumberingWire.Attr_WireLabelDist_c]);
 
         }
+
 
         private static void LoadPageSettings(global::DxfNet.SettingsPage settingsPage, XmlNode nodePageSettings, CollPages a_collPages)
         {
@@ -322,6 +325,7 @@ namespace Loader
             }
         }
 
+
         private static void LoadPrintSettings(PrintSettings printSettings, XmlNode a_nodePrintSettings)
         {
             if (a_nodePrintSettings == null)
@@ -339,6 +343,7 @@ namespace Loader
 
 
         }
+
 
         private static void LoadSummary(Hashtable a_hashTable, XmlNode a_node)
         {
@@ -380,6 +385,7 @@ namespace Loader
             }
         }
 
+
         private static void LoadFonts(QFontsCollection a_fontsCollection, XmlNode nodeFonts)
         {
             string ls_letter = nodeFonts.Attributes["letter"].Value;
@@ -400,6 +406,7 @@ namespace Loader
 
 
         }
+
 
         private static void AddArcPieChord(DrawDoc doc, XmlNode nodeElement)
         {

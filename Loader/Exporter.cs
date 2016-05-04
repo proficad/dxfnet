@@ -563,40 +563,40 @@ namespace Loader
             }
 
 
-            ExportWireLabels(a_wire);
+            ExportWireLabels(a_coll, a_pCadDoc.m_parent.m_settingsNumberingWire, a_wire);
         }
 
 
 
-        private static void ExportWireLabels(DxfNet.Wire a_wire)
+        private static void ExportWireLabels(DxfEntityCollection a_coll, SettingsNumberingWire pSettings, DxfNet.Wire a_wire)
         {
             if ( string.IsNullOrEmpty(a_wire.GetName()))
             {
                 return;
             }
-	/*
-		QSettingsNumberingWire* pSettings = GetSettingsNumberingWire();
-		if(pSettings)
-		{
-			QSettingsNumberingWire::ShowWireNumbers l_swn = pSettings->GetShowWireNumbers();
-			if (l_swn != QSettingsNumberingWire::swn_no)
+
+
+            SettingsNumberingWire.EnumShowWireNumbers l_swn = pSettings.ShowWireNumbers;
+			if (l_swn != SettingsNumberingWire.EnumShowWireNumbers.swn_no)
 			{
-				if ((!m_is_connected_first) || l_swn == QSettingsNumberingWire::swn_both)
+                if ((!a_wire.Is_connected_first) || l_swn == SettingsNumberingWire.EnumShowWireNumbers.swn_both)
 				{
-					DrawWireLabel(pDC, true);
+					ExportWireLabel(a_coll, a_wire, true, pSettings.WireLabelDist_A, pSettings.WireLabelDist_B);
 				}
-				if ((!m_is_connected_last) || l_swn == QSettingsNumberingWire::swn_both)
+				if ((!a_wire.Is_connected_last) || l_swn == SettingsNumberingWire.EnumShowWireNumbers.swn_both)
 				{
-					DrawWireLabel(pDC, false);
+					ExportWireLabel(a_coll, a_wire, false, pSettings.WireLabelDist_A, pSettings.WireLabelDist_B);
 				}
 			}
-		}
-     */
-
 	
         }
+        
 
-
+        private static void ExportWireLabel(DxfEntityCollection a_coll, DxfNet.Wire wire, bool ab_first, int ai_a, int ai_b)
+        {
+            throw new NotImplementedException();
+        }
+        
 
         private static void ExportJoint(DxfEntityCollection a_coll, Point a_point, System.Drawing.Color a_color)
         {
