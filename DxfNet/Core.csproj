@@ -93,7 +93,7 @@
     <Compile Include="Repo.cs" />
     <Compile Include="SettingsPage.cs" />
     <Compile Include="SettingsPrinter.cs" />
-    <Compile Include="SettingsWireNumbering.cs" />
+    <Compile Include="SettingsNumberingWire.cs" />
     <Compile Include="Trafo.cs" />
     <Compile Include="TrafoWinding.cs" />
     <Compile Include="Wire.cs" />

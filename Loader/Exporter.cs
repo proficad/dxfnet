@@ -570,7 +570,7 @@ namespace Loader
 
         private static void ExportWireLabels(DxfNet.Wire a_wire)
         {
-            if (a_wire.GetName().Length == 0)
+            if ( string.IsNullOrEmpty(a_wire.GetName()))
             {
                 return;
             }

@@ -15,34 +15,26 @@ namespace DxfNet
         public List<PCadDoc> m_pages = new List<PCadDoc>();
 
 
-        public PrintSettings m_printSettings;
-        public SettingsPage m_settingsPage;
-        public SettingsPrinter m_settingsPrinter;
-        public SettingsWireNumbering m_settingsWireNumbering;
-        public RefGridSettings m_ref_grid;
+        public PrintSettings m_printSettings = new PrintSettings();
+        public SettingsPage m_settingsPage = new SettingsPage();
+        public SettingsPrinter m_settingsPrinter = new SettingsPrinter();
+        public SettingsNumberingWire m_settingsNumberingWire = new SettingsNumberingWire();
+        public RefGridSettings m_ref_grid = new RefGridSettings();
 
         public Color m_paperColor;
 
-        public Hashtable m_summInfo;
-        public QFontsCollection m_fonts;
+        public Hashtable m_summInfo = new Hashtable();
+        public QFontsCollection m_fonts = new QFontsCollection();
 
-        public Repo m_repo;
+        public Repo m_repo = new Repo();
         public string m_path;
-        public PtbPosition m_ptbPosition;
+        public PtbPosition m_ptbPosition = new PtbPosition();
         public bool m_show_types;
         public bool m_show_values;
         public int Version;
 
         public CollPages()
         {
-            m_repo = new Repo();
-            m_fonts = new QFontsCollection();
-            m_ptbPosition = new PtbPosition();
-            m_summInfo = new Hashtable();
-            m_printSettings = new PrintSettings();
-            m_settingsPage = new SettingsPage();
-            m_settingsPrinter = new SettingsPrinter();
-            m_ref_grid = new RefGridSettings();
         }
 
         public Size GetSize()

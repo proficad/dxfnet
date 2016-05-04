@@ -131,7 +131,7 @@ namespace Loader
             LoadPrinterSettings(l_collPages.m_settingsPrinter, nodePrinterSettings, l_collPages);
 
             XmlNode nodeNumberingWireSettings = xmlDoc.SelectSingleNode("/document/NumberingWire");
-            LoadNumberingWireSettings(l_collPages.m_settingsWireNumbering, nodeNumberingWireSettings, l_collPages);
+            LoadNumberingWireSettings(l_collPages.m_settingsNumberingWire, nodeNumberingWireSettings, l_collPages);
 
 
             XmlNode nodeFonts = xmlDoc.SelectSingleNode("/document/fonts");
@@ -252,8 +252,17 @@ namespace Loader
             m_ref_grid.FieldSize = XmlAttrToInt(a_node.Attributes["FieldSize"]);
         }
 
-        private static void LoadNumberingWireSettings(global::DxfNet.SettingsWireNumbering settingsPage, XmlNode a_node, CollPages a_collPages)
-        { 
+        private static void LoadNumberingWireSettings(global::DxfNet.SettingsNumberingWire a_setting, XmlNode a_node, CollPages a_collPages)
+        {
+            a_setting.Enabled       = XmlAttrToBool(a_node.Attributes[SettingsNumberingWire.Attr_Enabled]);
+            a_setting.Vertically    = XmlAttrToBool(a_node.Attributes[SettingsNumberingWire.Attr_Vertically]);
+
+            int li_show_wire_numbers = XmlAttrToInt(a_node.Attributes[SettingsNumberingWire.Attr_ShowWireName]);
+            a_setting.ShowWireNumbers = (SettingsNumberingWire.EnumShowWireNumbers)li_show_wire_numbers;
+
+            a_setting.WireLabelDist_A = XmlAttrToInt(a_node.Attributes[SettingsNumberingWire.Attr_WireLabelDist_a]);
+            a_setting.WireLabelDist_B = XmlAttrToInt(a_node.Attributes[SettingsNumberingWire.Attr_WireLabelDist_b]);
+            a_setting.WireLabelDist_C = XmlAttrToInt(a_node.Attributes[SettingsNumberingWire.Attr_WireLabelDist_c]);
 
         }
 
