@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Drawing;
 
 namespace DxfNet
 {
@@ -75,6 +76,11 @@ namespace DxfNet
             {
                 Is_connected_last = true;
             }
+        }
+
+        public Point GetLastButOne()
+        {
+            return m_points[m_points.Count - 2];
         }
 
         //-------------------------

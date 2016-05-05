@@ -251,7 +251,7 @@ namespace DxfNet
 
         public string Name { get; set; }
 
-        public CollPages m_parent;
+        private CollPages m_parent;
         public int Scale;
         public CollPages Parent
         {

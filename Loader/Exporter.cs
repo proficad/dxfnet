@@ -563,40 +563,123 @@ namespace Loader
             }
 
 
-            ExportWireLabels(a_coll, a_pCadDoc.m_parent.m_settingsNumberingWire, a_wire);
+            ExportWireLabels(a_coll, a_pCadDoc.Parent.m_fonts.m_fontValue, a_pCadDoc.Parent.m_settingsNumberingWire, a_wire);
         }
 
 
 
-        private static void ExportWireLabels(DxfEntityCollection a_coll, SettingsNumberingWire pSettings, DxfNet.Wire a_wire)
+        private static void ExportWireLabels(DxfEntityCollection a_coll, EFont a_efont, SettingsNumberingWire pSettings, DxfNet.Wire a_wire)
         {
             if ( string.IsNullOrEmpty(a_wire.GetName()))
             {
                 return;
             }
 
+            
 
             SettingsNumberingWire.EnumShowWireNumbers l_swn = pSettings.ShowWireNumbers;
 			if (l_swn != SettingsNumberingWire.EnumShowWireNumbers.swn_no)
 			{
                 if ((!a_wire.Is_connected_first) || l_swn == SettingsNumberingWire.EnumShowWireNumbers.swn_both)
 				{
-					ExportWireLabel(a_coll, a_wire, true, pSettings.WireLabelDist_A, pSettings.WireLabelDist_B);
+					ExportWireLabel(a_coll, a_wire, true, a_efont, 
+                        pSettings.WireLabelDist_A, pSettings.WireLabelDist_B, pSettings.Vertically);
 				}
 				if ((!a_wire.Is_connected_last) || l_swn == SettingsNumberingWire.EnumShowWireNumbers.swn_both)
 				{
-					ExportWireLabel(a_coll, a_wire, false, pSettings.WireLabelDist_A, pSettings.WireLabelDist_B);
+					ExportWireLabel(a_coll, a_wire, false, a_efont, 
+                        pSettings.WireLabelDist_A, pSettings.WireLabelDist_B, pSettings.Vertically);
 				}
 			}
 	
         }
         
 
-        private static void ExportWireLabel(DxfEntityCollection a_coll, DxfNet.Wire wire, bool ab_first, int ai_a, int ai_b)
+
+        private static void ExportWireLabel(DxfEntityCollection a_coll, DxfNet.Wire a_wire, bool ab_first, EFont a_efont, int ai_a, int ai_b, bool ab_vertically)
         {
-            throw new NotImplementedException();
+            Point l_point_nearest, l_point_next;
+            if (ab_first)
+            {
+                l_point_nearest = a_wire.m_points[0];
+                l_point_next = a_wire.m_points[1];
+            }
+            else
+            {
+                l_point_nearest = a_wire.m_points.Last();
+                l_point_next = a_wire.GetLastButOne();
+            }
+
+            UtilsMath.cardinal_directions l_cd = UtilsMath.GetDirection(l_point_nearest, l_point_next);
+            if (l_cd == UtilsMath.cardinal_directions.cd_none)
+            {
+                return;
+            }
+
+            DrawWireLabelInternal(a_coll, a_wire.GetName(), a_efont, l_cd, l_point_nearest, ai_a, ai_b, ab_vertically);
         }
-        
+
+
+
+        private static void DrawWireLabelInternal(DxfEntityCollection a_coll, string as_name, EFont a_efont, UtilsMath.cardinal_directions a_cd, Point a_point_nearest, int ai_a, int ai_b, bool ab_vertically)
+        {
+            if ((a_cd == UtilsMath.cardinal_directions.cd_west) || (a_cd == UtilsMath.cardinal_directions.cd_east))
+            {
+
+                Point3D l_anchor = new Point3D(a_point_nearest.X, a_point_nearest.Y - ai_a, 0);
+                l_anchor.Y *= REVERSE_Y;
+                int li_height = GetFontAscentSize(a_efont);
+
+                DxfMText dxfText = new DxfMText(as_name, l_anchor, li_height);
+                dxfText.Color = Helper.MakeEntityColorByBlock(a_efont.m_color, false);
+
+                dxfText.AttachmentPoint = 
+                                a_cd == UtilsMath.cardinal_directions.cd_east ? 
+                                AttachmentPoint.BottomLeft : 
+                                AttachmentPoint.BottomRight;
+
+                dxfText.XAxis = TurnsToVector3D(0);
+
+                a_coll.Add(dxfText);
+
+            }
+
+            else if ((a_cd == UtilsMath.cardinal_directions.cd_north) || (a_cd == UtilsMath.cardinal_directions.cd_south))
+            {
+              
+
+                if (ab_vertically)
+                {
+                    Point3D l_anchor = new Point3D(a_point_nearest.X, a_point_nearest.Y, 0);
+                    int li_height = GetFontAscentSize(a_efont);
+
+                    DxfMText dxfText = new DxfMText(as_name, l_anchor, li_height);
+                    dxfText.Color = Helper.MakeEntityColorByBlock(a_efont.m_color, false);
+
+                    dxfText.AttachmentPoint = GetAttachementPoint(QTextAlignment.AL_LM);
+                    dxfText.XAxis = TurnsToVector3D(2);
+
+                    a_coll.Add(dxfText);
+
+                }
+                else
+                {
+                    Point3D l_anchor = new Point3D(a_point_nearest.X, a_point_nearest.Y, 0);
+                    int li_height = GetFontAscentSize(a_efont);
+
+                    DxfMText dxfText = new DxfMText(as_name, l_anchor, li_height);
+                    dxfText.Color = Helper.MakeEntityColorByBlock(a_efont.m_color, false);
+
+                    dxfText.AttachmentPoint = GetAttachementPoint(QTextAlignment.AL_LM);
+                    dxfText.XAxis = TurnsToVector3D(0);
+
+                    a_coll.Add(dxfText);
+                }
+
+            }
+        }
+
+
 
         private static void ExportJoint(DxfEntityCollection a_coll, Point a_point, System.Drawing.Color a_color)
         {
@@ -681,7 +764,7 @@ namespace Loader
 
             ls_text = ls_text.Replace("\r\n", @"\P");
             ls_text = ls_text.Replace("\n", @"\P");
-            //Point3D l_center3D = GetRectCenterPoint(freeText.m_position);
+            
             Point3D l_leftTop = new Point3D(freeText.m_position.X, freeText.m_position.Y, 0);
             l_leftTop.Y *= REVERSE_Y;
             int li_height = GetFontAscentSize(freeText.m_efont);

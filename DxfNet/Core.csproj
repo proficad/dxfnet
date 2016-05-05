@@ -96,6 +96,7 @@
     <Compile Include="SettingsNumberingWire.cs" />
     <Compile Include="Trafo.cs" />
     <Compile Include="TrafoWinding.cs" />
+    <Compile Include="UtilsMath.cs" />
     <Compile Include="Wire.cs" />
   </ItemGroup>
   <ItemGroup>
