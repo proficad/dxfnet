@@ -210,6 +210,8 @@ namespace Loader
 
             ContextP2A.Current.CurrentLayer = null;
 
+            l_collPages.SetupWireStatusConnected();
+
             System.Diagnostics.Trace.WriteLine("loaded doc {0}", as_path);
             return l_collPages;
         }
