@@ -620,63 +620,77 @@ namespace Loader
         }
 
 
-
+        // a = distance from wire
+        // b = distance from end of wire
         private static void DrawWireLabelInternal(DxfEntityCollection a_coll, string as_name, EFont a_efont, UtilsMath.cardinal_directions a_cd, Point a_point_nearest, int ai_a, int ai_b, bool ab_vertically)
         {
+
+            AttachmentPoint l_attachment_point = AttachmentPoint.MiddleCenter;
+            Vector3D l_axis = TurnsToVector3D(0);
+
+
             if ((a_cd == UtilsMath.cardinal_directions.cd_west) || (a_cd == UtilsMath.cardinal_directions.cd_east))
             {
+                a_point_nearest.Y -= ai_a;
+                if(a_cd == UtilsMath.cardinal_directions.cd_west)
+                {
+                    a_point_nearest.X -= ai_b;
+                }
+                else
+                {
+                    a_point_nearest.X += ai_b;
+                }
 
-                Point3D l_anchor = new Point3D(a_point_nearest.X, a_point_nearest.Y - ai_a, 0);
-                l_anchor.Y *= REVERSE_Y;
-                int li_height = GetFontAscentSize(a_efont);
-
-                DxfMText dxfText = new DxfMText(as_name, l_anchor, li_height);
-                dxfText.Color = Helper.MakeEntityColorByBlock(a_efont.m_color, false);
-
-                dxfText.AttachmentPoint = 
+                l_attachment_point = 
                                 a_cd == UtilsMath.cardinal_directions.cd_east ? 
                                 AttachmentPoint.BottomLeft : 
                                 AttachmentPoint.BottomRight;
-
-                dxfText.XAxis = TurnsToVector3D(0);
-
-                a_coll.Add(dxfText);
-
+                l_axis = TurnsToVector3D(0);
             }
 
             else if ((a_cd == UtilsMath.cardinal_directions.cd_north) || (a_cd == UtilsMath.cardinal_directions.cd_south))
             {
-              
-
-                if (ab_vertically)
+                a_point_nearest.X -= ai_a;
+                if (a_cd == UtilsMath.cardinal_directions.cd_north)
                 {
-                    Point3D l_anchor = new Point3D(a_point_nearest.X, a_point_nearest.Y, 0);
-                    int li_height = GetFontAscentSize(a_efont);
-
-                    DxfMText dxfText = new DxfMText(as_name, l_anchor, li_height);
-                    dxfText.Color = Helper.MakeEntityColorByBlock(a_efont.m_color, false);
-
-                    dxfText.AttachmentPoint = GetAttachementPoint(QTextAlignment.AL_LM);
-                    dxfText.XAxis = TurnsToVector3D(2);
-
-                    a_coll.Add(dxfText);
-
+                    a_point_nearest.Y -= ai_b;
                 }
                 else
                 {
-                    Point3D l_anchor = new Point3D(a_point_nearest.X, a_point_nearest.Y, 0);
-                    int li_height = GetFontAscentSize(a_efont);
+                    a_point_nearest.Y += ai_b;
+                }
 
-                    DxfMText dxfText = new DxfMText(as_name, l_anchor, li_height);
-                    dxfText.Color = Helper.MakeEntityColorByBlock(a_efont.m_color, false);
-
-                    dxfText.AttachmentPoint = GetAttachementPoint(QTextAlignment.AL_LM);
-                    dxfText.XAxis = TurnsToVector3D(0);
-
-                    a_coll.Add(dxfText);
+                if (ab_vertically)
+                {
+                    l_attachment_point =
+                                    a_cd == UtilsMath.cardinal_directions.cd_north ?
+                                    AttachmentPoint.BottomLeft :
+                                    AttachmentPoint.BottomRight;
+                    l_axis = TurnsToVector3D(2);
+                }
+                else
+                {
+                    l_attachment_point =
+                                    a_cd == UtilsMath.cardinal_directions.cd_north ?
+                                    AttachmentPoint.BottomRight :
+                                    AttachmentPoint.TopRight;
+                    l_axis = TurnsToVector3D(0);
                 }
 
             }
+
+
+            Point3D l_anchor = new Point3D(a_point_nearest.X, a_point_nearest.Y, 0);
+            l_anchor.Y *= REVERSE_Y;
+            int li_height = GetFontAscentSize(a_efont);
+
+            DxfMText dxfText = new DxfMText(as_name, l_anchor, li_height);
+            dxfText.Color = Helper.MakeEntityColorByBlock(a_efont.m_color, false);
+
+            dxfText.AttachmentPoint = l_attachment_point;
+            dxfText.XAxis = l_axis;
+
+            a_coll.Add(dxfText);
         }
 
 
