@@ -404,7 +404,9 @@ namespace Loader
             {
                 a_fontsCollection.m_fontType = EFont.StringToEfont(nodeFonts.Attributes["refs"].Value);
                 a_fontsCollection.m_fontValue = EFont.StringToEfont(nodeFonts.Attributes["type"].Value);
-             }
+                a_fontsCollection.m_fontCrossRef = EFont.StringToEfont(nodeFonts.Attributes["cross_refs"].Value);
+                a_fontsCollection.m_fontOutlets = EFont.StringToEfont(nodeFonts.Attributes["outlets"].Value);
+            }
 
 
         }

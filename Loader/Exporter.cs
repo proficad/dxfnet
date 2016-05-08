@@ -563,7 +563,7 @@ namespace Loader
             }
 
 
-            ExportWireLabels(a_coll, a_pCadDoc.Parent.m_fonts.m_fontValue, a_pCadDoc.Parent.m_settingsNumberingWire, a_wire);
+            ExportWireLabels(a_coll, a_pCadDoc.Parent.m_fonts.m_fontType, a_pCadDoc.Parent.m_settingsNumberingWire, a_wire);
         }
 
 
@@ -872,7 +872,7 @@ namespace Loader
             string ls_text = a_sat.m_value;
 
             EFont l_efont = null;
-            if ((a_sat.m_name == "_type") || (a_sat.m_name == "_ref"))
+            if (a_sat.m_name == "_ref")
             {
                 l_efont = a_pCadDoc.Parent.m_fonts.m_fontType;
             }

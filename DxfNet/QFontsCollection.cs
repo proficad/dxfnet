@@ -11,5 +11,8 @@ namespace DxfNet
         public EFont m_fontText = new EFont();
         public EFont m_fontType = new EFont();
         public EFont m_fontValue = new EFont();
+        public EFont m_fontCrossRef = new EFont();
+        public EFont m_fontOutlets = new EFont();
+
     }
 }
