@@ -362,13 +362,17 @@ namespace DxfNet
                 Point l_center_point = Helper.GetRectCenterPoint(l_insert.m_position);
 
                 PpdDoc l_ppd = FindPpdDocInRepo(l_insert.m_lG);
-                foreach(Point l_vyvod in l_ppd.Vyvody)
+                if(l_ppd != null)
                 {
-                    Point l_point = l_vyvod;
-                    l_point.X += l_center_point.X;
-                    l_point.Y += l_center_point.Y;
-                    a_vyvody.Add(l_insert.RecalculatePoint(l_point));
+                    foreach(Point l_vyvod in l_ppd.Vyvody)
+                    {
+                        Point l_point = l_vyvod;
+                        l_point.X += l_center_point.X;
+                        l_point.Y += l_center_point.Y;
+                        a_vyvody.Add(l_insert.RecalculatePoint(l_point));
+                    }
                 }
+
 	        } 
 
         }
