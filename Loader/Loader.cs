@@ -131,7 +131,10 @@ namespace Loader
             LoadPrinterSettings(l_collPages.m_settingsPrinter, nodePrinterSettings, l_collPages);
 
             XmlNode nodeNumberingWireSettings = xmlDoc.SelectSingleNode("/document/NumberingWire");
+            if(nodeNumberingWireSettings != null)
+            {
             LoadNumberingWireSettings(l_collPages.m_settingsNumberingWire, nodeNumberingWireSettings, l_collPages);
+            }
 
 
             XmlNode nodeFonts = xmlDoc.SelectSingleNode("/document/fonts");
@@ -397,15 +400,15 @@ namespace Loader
 
             if (null == nodeFonts.Attributes["refs"]) //before version 7
             {
-                a_fontsCollection.m_fontType = EFont.StringToEfont(nodeFonts.Attributes["type"].Value);
-                a_fontsCollection.m_fontValue = EFont.StringToEfont(nodeFonts.Attributes["value"].Value);
+                a_fontsCollection.m_fontType = EFont.StringToEfont(XmlAttrToString(nodeFonts.Attributes["type"]));
+                a_fontsCollection.m_fontValue = EFont.StringToEfont(XmlAttrToString(nodeFonts.Attributes["value"]));
             }
             else
             {
-                a_fontsCollection.m_fontType = EFont.StringToEfont(nodeFonts.Attributes["refs"].Value);
-                a_fontsCollection.m_fontValue = EFont.StringToEfont(nodeFonts.Attributes["type"].Value);
-                a_fontsCollection.m_fontCrossRef = EFont.StringToEfont(nodeFonts.Attributes["cross_refs"].Value);
-                a_fontsCollection.m_fontOutlets = EFont.StringToEfont(nodeFonts.Attributes["outlets"].Value);
+                a_fontsCollection.m_fontType = EFont.StringToEfont(XmlAttrToString(nodeFonts.Attributes["refs"]));
+                a_fontsCollection.m_fontValue = EFont.StringToEfont(XmlAttrToString(nodeFonts.Attributes["type"]));
+                a_fontsCollection.m_fontCrossRef = EFont.StringToEfont(XmlAttrToString(nodeFonts.Attributes["cross_refs"]));
+                a_fontsCollection.m_fontOutlets = EFont.StringToEfont(XmlAttrToString(nodeFonts.Attributes["outlets"]));
             }
 
 

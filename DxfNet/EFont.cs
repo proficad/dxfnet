@@ -23,6 +23,12 @@ namespace DxfNet
         public static EFont StringToEfont(string as_input)
         {
             EFont l_efont = new EFont();
+
+            if (string.IsNullOrWhiteSpace(as_input))
+            {
+                return l_efont;
+            }
+
             string[] l_array    = as_input.Split(new char[] { ',' });
             l_efont.m_size      = int.Parse(l_array[0]);
             l_efont.m_bold      = l_array[1].Equals("1");
