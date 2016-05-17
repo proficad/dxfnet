@@ -287,7 +287,7 @@ namespace Dxf2ProfiCAD
 
 
             EFont l_efont = new EFont();
-            l_efont.m_size = (int)(l_efont.m_size * l_dxgMText.Height * 0.6);
+            l_efont.m_size = (int)(l_efont.m_size * l_dxgMText.Height * 0.06);
             l_efont.m_size = MyScaleX(l_efont.m_size);
 
             Rectangle l_rect = new Rectangle(MyShiftScaleX(l_dxgMText.AlignmentPoint1.X), MyShiftScaleY(l_dxgMText.AlignmentPoint1.Y), 0, 0);
@@ -303,7 +303,7 @@ namespace Dxf2ProfiCAD
         {
             DxfMText l_dxfMText = a_entity as DxfMText;
             EFont l_efont = new EFont();
-            l_efont.m_size = (int)(l_efont.m_size * l_dxfMText.Height * 0.6);
+            l_efont.m_size = (int)(l_efont.m_size * l_dxfMText.Height * 0.06);
             l_efont.m_size = MyScaleX(l_efont.m_size);
 
             Rectangle l_rect = new Rectangle(MyShiftScaleX(l_dxfMText.InsertionPoint.X), MyShiftScaleY(l_dxfMText.InsertionPoint.Y), 0, 0);
