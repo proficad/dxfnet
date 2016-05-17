@@ -13,6 +13,7 @@ using WW.Cad.Model;
 using WW.Cad.Model.Entities;
 using WW.Cad.Drawing;
 using DxfNet;
+using System.IO;
 
 namespace Dxf2ProfiCAD
 {
@@ -24,16 +25,29 @@ namespace Dxf2ProfiCAD
             
 //            string ls_path = @"C:\down\ProfiCAD1.dxf";
 //            const string ls_path = @"H:\f\dxf\Grundriss.dwg";
-            const string ls_path = @"H:\f3\IKEA.dxf";
-            
+            const string ls_path = @"H:\f3\aku.dxf";
 
+            if (!System.IO.File.Exists(ls_path))
+            {
+                throw new Exception("input path does not exist");
+            }
 
 
             //string ls_path = @"H:\temp\PES_MCOE_proj_2.dxf";
-//            string ls_path = @"C:\temp\elektronický gong.dxf";
+            //            string ls_path = @"C:\temp\elektronický gong.dxf";
             const string ls_outputPath = @"H:\f3\output.sxe";
 
-            DxfModel model = DxfReader.Read(ls_path);
+            DxfModel model = null;
+            string extension = Path.GetExtension(ls_path);
+            if (string.Compare(extension, ".dwg", true) == 0)
+            {
+                model = DwgReader.Read(ls_path);
+            }
+            else
+            {
+                model = DxfReader.Read(ls_path);
+            }
+
 
             //try to convert using the WireFrameGraphicsFactory
             //Covert_To_ProfiCAD_Lines(model, @"H:\lines.sxe");
