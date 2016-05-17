@@ -24,14 +24,16 @@ namespace Dxf2ProfiCAD
             
 //            string ls_path = @"C:\down\ProfiCAD1.dxf";
 //            const string ls_path = @"H:\f\dxf\Grundriss.dwg";
-            const string ls_path = @"H:\AutoCAD_symbols\2_kruhy.dwg";
+            const string ls_path = @"H:\f3\IKEA.dxf";
             
+
+
 
             //string ls_path = @"H:\temp\PES_MCOE_proj_2.dxf";
 //            string ls_path = @"C:\temp\elektronický gong.dxf";
-            const string ls_outputPath = @"H:\output.sxe";
+            const string ls_outputPath = @"H:\f3\output.sxe";
 
-            DxfModel model = DwgReader.Read(ls_path);
+            DxfModel model = DxfReader.Read(ls_path);
 
             //try to convert using the WireFrameGraphicsFactory
             //Covert_To_ProfiCAD_Lines(model, @"H:\lines.sxe");
@@ -46,7 +48,7 @@ namespace Dxf2ProfiCAD
             Size l_size_target = AdjustShiftReturnSize(model, ld_scale);
 */
 
-            const int li_size = 30000;
+            const int li_size = 2800;
             Size l_size_target = new Size(li_size, li_size);
             AdjustScaleAndShift(model, l_size_target);
             
@@ -131,9 +133,9 @@ namespace Dxf2ProfiCAD
             Converter.SetScale(li_scale);
 
             int li_shift_x = (int)(-l_bounds3D.Corner1.X);
-            int li_shift_y = (int)(-l_bounds3D.Corner1.Y);
+            int li_shift_y = (int)(-l_bounds3D.Corner2.Y);
 //            Converter.SetShift(li_shift_x, li_shift_y, a_size_target.Height);
-            Converter.SetShift(li_shift_x, li_shift_y, 20000);
+            Converter.SetShift(li_shift_x, li_shift_y, 0);
         }
 
         private static void ConvertRepo(PCadDoc l_pcadDoc, DxfModel model)
@@ -283,6 +285,7 @@ namespace Dxf2ProfiCAD
             }
         }
 
+/*
         private static void Covert_To_ProfiCAD_Lines(DxfModel model, String as_path)
         {
             List<Polyline2D> collectedPolylines = PolygonWireframeGraphicsFactory.ConvertModelToPolylines(model, GraphicsConfig.BlackBackground);
@@ -345,7 +348,7 @@ namespace Dxf2ProfiCAD
             l_pcadDoc.Save(as_path);
             
         }
-
+*/
         static DrawObj Convert(Polyline2D a_line, double a_ratio, double ai_min_x, double ai_min_y)
         {
             DrawPoly l_drawPoly = new DrawPoly(Shape.polyline);

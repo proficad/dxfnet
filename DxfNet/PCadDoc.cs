@@ -88,7 +88,7 @@ namespace DxfNet
             l_xmlWriter.Close();
         }
 
-        internal void WriteElements(XmlWriter a_xmlWriter)
+        internal new void WriteElements(XmlWriter a_xmlWriter)
         {
             a_xmlWriter.WriteStartElement("pages");
             a_xmlWriter.WriteStartElement("page");

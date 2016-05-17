@@ -12,7 +12,7 @@ namespace DxfNet
         public EFont m_efont;
         public int m_turns;
         public bool m_isInTb;
-        bool m_bTurnWithSymbol;
+        bool m_bTurnWithSymbol = false;
         public QTextAlignment m_alignment;
         
         public FreeText(string as_text, EFont a_efont, Rectangle a_rect, int ai_turns) : base(Shape.text, a_rect)
