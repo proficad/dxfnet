@@ -1198,7 +1198,7 @@ namespace Loader
                 }
             }
 
-
+            l_hatch.Layer = ExportContext.Current.Layer;
             a_dxfEntityCollection.Add(l_hatch);
         }
 
@@ -1609,12 +1609,12 @@ namespace Loader
                 ExportPolygonSolid(a_coll, a_points, a_objProps, false, ab_block);
             }
 
-            if (a_objProps.m_hatchtype == HatchType.NONE)
+            if (a_objProps.m_hatchtype != HatchType.NONE)
             {
-                return;
+                ExportPolygonSolid(a_coll, a_points, a_objProps, true, ab_block);
             }
-            ExportPolygonSolid(a_coll, a_points, a_objProps, true, ab_block);
         }
+
 
         private static void ExportPolygonSolid(DxfEntityCollection a_coll, Point2D[] a_points, ObjProps a_objProps, bool ab_hatch, bool ab_block)
         {
@@ -1623,16 +1623,6 @@ namespace Loader
                 return;
             }
             DxfHatch l_hatch = new DxfHatch();
-            if (!ab_hatch)
-            {
-                l_hatch.Color = Helper.MakeEntityColorByBlock(a_objProps.m_logbrush.m_color, ab_block);
-            
-            }
- 
-            DxfHatch.BoundaryPath boundaryPath1 = new DxfHatch.BoundaryPath();
-            boundaryPath1.Type = BoundaryPathType.Outermost;
-            l_hatch.BoundaryPaths.Add(boundaryPath1);
-
 
             if (ab_hatch)
             {
@@ -1645,6 +1635,15 @@ namespace Loader
                     }
                 }
             }
+            else
+            {
+                l_hatch.Color = Helper.MakeEntityColorByBlock(a_objProps.m_logbrush.m_color, ab_block);
+            }
+ 
+            DxfHatch.BoundaryPath boundaryPath1 = new DxfHatch.BoundaryPath();
+            boundaryPath1.Type = BoundaryPathType.Outermost;
+            l_hatch.BoundaryPaths.Add(boundaryPath1);
+
 
             Point2D l_pointOld = new Point2D(a_points[0].X, a_points[0].Y);
             for (int li_i = 1; li_i < a_points.Length; li_i++)
