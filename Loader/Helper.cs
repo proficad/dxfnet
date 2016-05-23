@@ -184,18 +184,7 @@ namespace Loader
 
         public static GraphicsPath GetRoundedRect(RectangleF baseRect, float radiusX, float radiusY)
         {
-            /*
-            if (baseRect.Width < 0)
-            {
-                baseRect.X = baseRect.X + baseRect.Width;
-                baseRect.Width = -baseRect.Width;
-            }
-            if (baseRect.Height < 0)
-            {
-                baseRect.Y = baseRect.Y + baseRect.Height;
-                baseRect.Height = -baseRect.Height;
-            }
-            */
+           
             FixRectangle(ref baseRect);
 
             // if corner radius is less than or equal to zero, 
