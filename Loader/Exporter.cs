@@ -842,7 +842,7 @@ namespace Loader
                 a_insert.m_hor ? (- a_insert.m_scaleY) : (a_insert.m_scaleY),
                 1);
 
-            l_insert.Color = Helper.MakeEntityColorByBlock(a_insert.m_color, false);
+            l_insert.Color = Helper.MakeEntityColorByBlock(a_insert.m_color_border, false);
 
             l_insert.Rotation = (Math.PI * a_insert.m_turns) / 4;
 
@@ -967,12 +967,8 @@ namespace Loader
                 }
             }
 
-            
-
-             
-                
-
         }
+
 
         private static void ExportRect(DxfEntityCollection a_coll, DrawRect a_drawRect, bool ab_block)
         {
@@ -989,12 +985,7 @@ namespace Loader
             l_arrPoints[3].X = a_drawRect.m_position.Left;
             l_arrPoints[3].Y = a_drawRect.m_position.Top * REVERSE_Y;
 
-            if (a_drawRect.m_objProps.m_bBrush)
-            {
-                ExportPolygonSolid(a_coll, l_arrPoints, a_drawRect.m_objProps, false, ab_block);
-                //ExportRectFilled(a_coll, l_arrPoints, a_drawRect);
-            }
-            ExportPolygonSolid(a_coll, l_arrPoints, a_drawRect.m_objProps, true, ab_block);
+            ExportPolygonFilled(a_coll, l_arrPoints, a_drawRect.m_objProps, ab_block);
 
             DxfPolyline2D dxfPolyline = new DxfPolyline2D(l_arrPoints);
             dxfPolyline.Closed = true;

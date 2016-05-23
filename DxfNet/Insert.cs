@@ -47,7 +47,7 @@ namespace DxfNet
         public bool m_hor;//horizontal
         public bool m_ver;//vertical
         public int m_turns;
-        public Color m_color;
+        public Color m_color_border;
         public float m_scaleX;
         public float m_scaleY;
         public List<Satelite> m_satelites = new List<Satelite>();

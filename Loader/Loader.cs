@@ -893,7 +893,7 @@ namespace Loader
             string ls_linecolor = XmlAttrToString(a_node.Attributes["c"]);
             if (ls_linecolor.Length > 0)
             {
-                a_insert.m_color = System.Drawing.ColorTranslator.FromHtml("#" + ls_linecolor);
+                a_insert.m_color_border = System.Drawing.ColorTranslator.FromHtml("#" + ls_linecolor);
             }
 
             foreach (XmlNode nodeElement in a_node)
