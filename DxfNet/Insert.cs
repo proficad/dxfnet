@@ -48,6 +48,7 @@ namespace DxfNet
         public bool m_ver;//vertical
         public int m_turns;
         public Color m_color_border;
+        public Color m_color_fill;
         public float m_scaleX;
         public float m_scaleY;
         public List<Satelite> m_satelites = new List<Satelite>();
@@ -60,10 +61,6 @@ namespace DxfNet
 
             m_scaleX = af_scaleX;
             m_scaleY = af_scaleY;
-
-            //m_position.Left = m_position.Right = a_x;
-            //m_position.Top = m_position.Bottom = a_y;
-
         }
 
         public void SetPpdDoc(PpdDoc a_ppdDoc) 

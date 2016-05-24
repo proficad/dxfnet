@@ -896,6 +896,18 @@ namespace Loader
                 a_insert.m_color_border = System.Drawing.ColorTranslator.FromHtml("#" + ls_linecolor);
             }
 
+            string ls_fill_color = XmlAttrToString(a_node.Attributes["op-fc"]);
+            if(!string.IsNullOrWhiteSpace(ls_fill_color))
+            {
+                int li_color;
+                if(int.TryParse(ls_fill_color, out li_color))
+                {
+                    a_insert.m_color_fill = Color.FromArgb(li_color);
+                }
+                
+            }
+
+
             foreach (XmlNode nodeElement in a_node)
             {
                 if (nodeElement.NodeType == XmlNodeType.Element)
