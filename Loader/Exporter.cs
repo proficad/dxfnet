@@ -1173,7 +1173,7 @@ namespace Loader
             ellipseEdge.MajorAxisEndPoint = Helper.Vector3DTo2D(l_longAxis);
             ellipseEdge.MinorToMajorRatio = ld_ratio;
             ellipseEdge.StartAngle = 0;
-            ellipseEdge.EndAngle = 0;
+            ellipseEdge.EndAngle = System.Math.PI * 2d;
 
             l_boundaryPath.Edges.Add(ellipseEdge);
 
