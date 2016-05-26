@@ -74,11 +74,11 @@ namespace Loader
             return l_vecResult;
         }
 
-        public static void My_Bezier(DxfEntityCollection a_coll, PositionAspect a_aspect, Point a_begin, Point a_a1, Point a_a2, Point a_end, int ai_thickness, System.Drawing.Color a_color, Insert a_insert)
+        public static void My_Bezier(DxfEntityCollection a_coll, PositionAspect a_aspect, Point a_begin, Point a_a1, Point a_a2, Point a_end, int ai_thickness, System.Drawing.Color a_color, bool ab_block)
         {
             Point[] points = { Helper.PrevodBodu(a_begin, a_aspect), Helper.PrevodBodu(a_a1, a_aspect), Helper.PrevodBodu(a_a2, a_aspect), Helper.PrevodBodu(a_end, a_aspect) };
             DrawPoly l_bezi = new DrawPoly(Shape.bezier, ai_thickness, a_color, points);
-            Exporter.ExportBezier(a_coll, l_bezi, a_insert);
+            Exporter.ExportBezier(a_coll, l_bezi, ab_block);
         }
 
         public static int MyHypot(int a, int b)
@@ -87,7 +87,7 @@ namespace Loader
             return (int)Math.Sqrt(sumOfSquares);
         }
 
-        public static void ExportPolylineAux(DxfEntityCollection coll, DrawPoly drawPoly, Insert a_insert)
+        public static void ExportPolylineAux(DxfEntityCollection coll, DrawPoly drawPoly, bool ab_block)
         {
             int li_arrSize = drawPoly.m_points.Count;
             Point2D[] l_arrPoints = new Point2D[li_arrSize];
@@ -103,13 +103,13 @@ namespace Loader
             dxfPolyline.DefaultEndWidth = drawPoly.m_objProps.m_logpen.m_width;
 
             //99 dxfPolyline.ColorSource = AttributeSource.This;
-            dxfPolyline.Color = Helper.MakeEntityColorByBlock(drawPoly.m_objProps.m_logpen.m_color, a_insert);
+            dxfPolyline.Color = Helper.MakeEntityColorByBlock(drawPoly.m_objProps.m_logpen.m_color, ab_block);
 
             coll.Add(dxfPolyline);
         }
 
 
-        public static void ExportRectangleAux(DxfEntityCollection coll, Point a_leftTop, Point a_rightBottom, int ai_lineThickness, System.Drawing.Color a_lineColor, Insert a_insert)
+        public static void ExportRectangleAux(DxfEntityCollection coll, Point a_leftTop, Point a_rightBottom, int ai_lineThickness, System.Drawing.Color a_lineColor, bool ab_block)
         {
             Point2D[] l_arrPoints = new Point2D[4];
 
@@ -132,7 +132,7 @@ namespace Loader
             dxfPolyline.DefaultEndWidth = ai_lineThickness;
 
             //99 dxfPolyline.ColorSource = AttributeSource.This;
-            dxfPolyline.Color = Helper.MakeEntityColorByBlock(a_lineColor, a_insert);
+            dxfPolyline.Color = Helper.MakeEntityColorByBlock(a_lineColor, ab_block);
 
             dxfPolyline.Closed = true;
             coll.Add(dxfPolyline);
@@ -265,14 +265,14 @@ namespace Loader
             return float.Parse(a_attr.Value, fp);
         }
 
-        public static EntityColor MakeEntityColorByBlock(System.Drawing.Color a_color, Insert a_insert)
+        public static EntityColor MakeEntityColorByBlock(System.Drawing.Color a_color, bool ab_block)
         {
             if(ExportContext.Current.BlackByLayer && ColorsAreSame(a_color, System.Drawing.Color.Black))
             {
                 return EntityColor.ByLayer;
             }
 
-            if (a_insert != null)
+            if (ab_block)
             {
                 return EntityColor.CreateFromRgb(ColorType.ByBlock, a_color.R, a_color.G, a_color.B);
             }

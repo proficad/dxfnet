@@ -217,21 +217,21 @@ namespace Loader
                 Point l_from = Helper.PrevodBodu(new Point(li_left + 44, li_top), l_posAspect);
                 Point l_to = Helper.PrevodBodu(new Point(li_left + 44, li_bottom), l_posAspect);
                 DrawPoly l_poly = new DrawPoly(Shape.polyline, 2, l_penColor, l_from, l_to);
-                Helper.ExportPolylineAux(a_coll, l_poly, a_ic);
+                Helper.ExportPolylineAux(a_coll, l_poly, true);
             }
             if (a_ic.m_ver_right)
             {
                 Point l_from = Helper.PrevodBodu(new Point(li_right - 44, li_top), l_posAspect);
                 Point l_to = Helper.PrevodBodu(new Point(li_right - 44, li_bottom), l_posAspect);
                 DrawPoly l_poly = new DrawPoly(Shape.polyline, 2, l_penColor, l_from, l_to);
-                Helper.ExportPolylineAux(a_coll, l_poly, a_ic);
+                Helper.ExportPolylineAux(a_coll, l_poly, true);
             }
             //vykrojení
             if (a_ic.m_mark)
             {
                 int stred = (li_left + li_right) / 2;
                 Helper.My_Bezier(a_coll, l_posAspect, new Point(stred - 11, li_top), new Point(stred - 10, li_top + 12)
-                    , new Point(stred + 10, li_top + 12), new Point(stred + 11, li_top), 2, l_penColor, a_ic);
+                    , new Point(stred + 10, li_top + 12), new Point(stred + 11, li_top), 2, l_penColor, true);
             }
             // ========================   vodorovné oddělovače   ================================
             if (a_ic.m_pos_hor != null)
@@ -254,7 +254,7 @@ namespace Loader
                         Point l_from = Helper.PrevodBodu(new Point(li_left, li_top + ((li_cislo + 1) * QIC.INT_VYV) + QIC.INT_VYV / 2), l_posAspect);
                         Point l_to = Helper.PrevodBodu(new Point(li_left + 44, li_top + ((li_cislo + 1) * QIC.INT_VYV) + QIC.INT_VYV / 2), l_posAspect);
                         DrawPoly l_poly = new DrawPoly(Shape.polyline, 2, l_penColor, l_from, l_to);
-                        Helper.ExportPolylineAux(a_coll, l_poly, a_ic);
+                        Helper.ExportPolylineAux(a_coll, l_poly, true);
                     }
                     if ((li_cislo > a_ic.m_numberOfOutletsVer + a_ic.m_numberOfOutletsHor + 1) && (li_cislo <= (a_ic.m_numberOfOutletsVer + a_ic.m_numberOfOutletsHor + a_ic.m_numberOfOutletsVer)))
                     {
@@ -262,7 +262,7 @@ namespace Loader
                         Point l_from = Helper.PrevodBodu(new Point(li_right - 44, li_top + ((2 + a_ic.m_numberOfOutletsVer - li_cislo) * QIC.INT_VYV) + QIC.INT_VYV / 2), l_posAspect);
                         Point l_to = Helper.PrevodBodu(new Point(li_right, li_top + ((2 + a_ic.m_numberOfOutletsVer - li_cislo) * QIC.INT_VYV) + QIC.INT_VYV / 2), l_posAspect);
                         DrawPoly l_poly = new DrawPoly(Shape.polyline, 2, l_penColor, l_from, l_to);
-                        Helper.ExportPolylineAux(a_coll, l_poly, a_ic);
+                        Helper.ExportPolylineAux(a_coll, l_poly, true);
                     }
                 }
             }
@@ -274,7 +274,7 @@ namespace Loader
             Point l_rightTop = Helper.PrevodBodu(new Point(li_right, li_top), l_posAspect);
 
             DrawPoly l_body = new DrawPoly(Shape.polyline, 2, l_penColor, new Point[] { l_leftTop, l_leftBottom, l_rightBottom, l_rightTop, l_leftTop });
-            Helper.ExportPolylineAux(a_coll, l_body, a_ic);
+            Helper.ExportPolylineAux(a_coll, l_body, true);
 
 
             foreach (Insert.Satelite l_sat in a_ic.m_satelites)

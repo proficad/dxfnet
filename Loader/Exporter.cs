@@ -56,7 +56,7 @@ namespace Loader
             {
                 ExportQImageDesc(model.Images, l_imgDesc, l_dictRepo);
             }
-            ExportDrawDoc(model.Entities, a_doc, l_dictRepo, null);
+            ExportDrawDoc(model.Entities, a_doc, l_dictRepo, false);
 
 
             if (ExportContext.Current.PCadDocument.Parent.m_ptbPosition.m_useTb)
@@ -170,7 +170,7 @@ namespace Loader
             l_frame.m_objProps.m_bBrush = false;
             l_frame.m_objProps.m_logpen.m_width = 5;
 
-            ExportRect(a_coll, l_frame, null);
+            ExportRect(a_coll, l_frame, false);
 
         }
 
@@ -215,7 +215,7 @@ namespace Loader
             {
                 ExportQImageDesc(ExportContext.Current.Model.Images, l_imgDesc, l_dictRepo);
             }
-            ExportDrawDoc(l_block.Entities, l_ptbPosition.m_pPtb, l_dictRepo, null);
+            ExportDrawDoc(l_block.Entities, l_ptbPosition.m_pPtb, l_dictRepo, false);
 
 
 
@@ -262,7 +262,7 @@ namespace Loader
             a_coll.Add(l_insert);
         }
 
-        private static void ExportDrawDoc(DxfEntityCollection a_coll, DrawDoc a_doc, HybridDictionary a_dictRepo, Insert a_insert)
+        private static void ExportDrawDoc(DxfEntityCollection a_coll, DrawDoc a_doc, HybridDictionary a_dictRepo, bool ab_block)
         {
             foreach (DrawObj obj in a_doc.m_objects)
             {
@@ -320,16 +320,16 @@ namespace Loader
 
                 switch (obj.m_nShape)
                 {
-                    case Shape.poly:            ExportPolygon(a_coll, obj as DrawPoly, a_insert); break;
-                    case Shape.polyline:        ExportPolyline  (a_coll, obj as DrawPoly, a_insert); break;
+                    case Shape.poly:            ExportPolygon(a_coll, obj as DrawPoly, ab_block); break;
+                    case Shape.polyline:        ExportPolyline  (a_coll, obj as DrawPoly, ab_block); break;
                     case Shape.spoj:            ExportWire      (a_coll, obj as DxfNet.Wire, a_doc as PCadDoc); break;
-                    case Shape.bezier:          ExportBezier(a_coll, obj as DrawPoly, a_insert); break;
-                    case Shape.ellipse:         ExportEllipse   (a_coll, obj as DrawRect, a_insert); break;
+                    case Shape.bezier:          ExportBezier(a_coll, obj as DrawPoly, ab_block); break;
+                    case Shape.ellipse:         ExportEllipse   (a_coll, obj as DrawRect, ab_block); break;
                     case Shape.pie:
-                    case Shape.chord:           ExportPieChord(a_coll, obj as DrawRect, a_insert); break;
-                    case Shape.arc:             ExportArc       (a_coll, obj as DrawRect, a_insert); break;
-                    case Shape.rectangle:       ExportRect      (a_coll, obj as DrawRect, a_insert); break;
-                    case Shape.roundRectangle:  ExportRoundRect (a_coll, obj as DrawRect, a_insert); break;
+                    case Shape.chord:           ExportPieChord(a_coll, obj as DrawRect, ab_block); break;
+                    case Shape.arc:             ExportArc       (a_coll, obj as DrawRect, ab_block); break;
+                    case Shape.rectangle:       ExportRect      (a_coll, obj as DrawRect, ab_block); break;
+                    case Shape.roundRectangle:  ExportRoundRect (a_coll, obj as DrawRect, ab_block); break;
                     case Shape.text:            ExportFreeText(a_coll, obj as FreeText); break;
                     case Shape.cable: ExportCable(a_coll, obj as CableSymbol, a_doc as PCadDoc); break;
                 }
@@ -408,7 +408,7 @@ namespace Loader
         }
 
 
-        private static void ExportRoundRect(DxfEntityCollection a_coll, DrawRect a_drawRect, Insert a_insert)
+        private static void ExportRoundRect(DxfEntityCollection a_coll, DrawRect a_drawRect, bool ab_block)
         {
             System.Drawing.Drawing2D.GraphicsPath l_path = Helper.GetRoundedRect(a_drawRect.m_position, a_drawRect.m_rX, a_drawRect.m_rY);
             l_path.Flatten(null, 1);
@@ -423,8 +423,8 @@ namespace Loader
 
             l_polyArc.m_objProps = a_drawRect.m_objProps;
             
-            ExportPolyline(a_coll, l_polyArc, a_insert);
-            ExportPolygon(a_coll, l_polyArc, a_insert);
+            ExportPolyline(a_coll, l_polyArc, ab_block);
+            ExportPolygon(a_coll, l_polyArc, ab_block);
 
             Point3D l_center = GetRectCenterPoint(a_drawRect.m_position);
             l_center.Y = -l_center.Y;
@@ -465,7 +465,7 @@ namespace Loader
             l_poly.AddPoint(start.X, start.Y);
             l_poly.AddPoint(cil.X, cil.Y);
 
-            ExportPolyline(a_coll, l_poly, null);
+            ExportPolyline(a_coll, l_poly, true);
 
         }
 
@@ -542,7 +542,7 @@ namespace Loader
                 l_bezier.AddPoint(l_aux2.X, l_aux2.Y);
                 l_bezier.AddPoint(l_cil.X, l_cil.Y);
 
-                ExportBezier(a_coll, l_bezier, null);
+                ExportBezier(a_coll, l_bezier, true);
 
                 ai_y -= Trafo.VYSKA_OBLOUKU;
             }
@@ -550,7 +550,7 @@ namespace Loader
 
         private static void ExportWire(DxfEntityCollection a_coll, DxfNet.Wire a_wire, PCadDoc a_pCadDoc)
         {
-            ExportPolyline(a_coll, a_wire, null);
+            ExportPolyline(a_coll, a_wire, false);
 
             if (a_wire.GetDrop1())
             {
@@ -685,7 +685,7 @@ namespace Loader
             int li_height = GetFontAscentSize(a_efont);
 
             DxfMText dxfText = new DxfMText(as_name, l_anchor, li_height);
-            dxfText.Color = Helper.MakeEntityColorByBlock(a_efont.m_color, null);
+            dxfText.Color = Helper.MakeEntityColorByBlock(a_efont.m_color, false);
 
             dxfText.AttachmentPoint = l_attachment_point;
             dxfText.XAxis = l_axis;
@@ -703,7 +703,7 @@ namespace Loader
             DrawRect l_ellipse = new DrawRect(Shape.ellipse, l_rect);
             l_ellipse.m_objProps.m_bBrush = true;
             l_ellipse.m_objProps.m_logbrush.m_color = a_color;
-            ExportEllipse(a_coll, l_ellipse, null);
+            ExportEllipse(a_coll, l_ellipse, false);
         }
 
         public static int GetFontAscentSize(EFont a_efont)
@@ -790,7 +790,7 @@ namespace Loader
             dxfText.XAxis = TurnsToVector3D(freeText.m_turns);
 
             dxfText.Layer = ExportContext.Current.Layer;
-            dxfText.Color = Helper.MakeEntityColorByBlock(freeText.m_efont.m_color, null);
+            dxfText.Color = Helper.MakeEntityColorByBlock(freeText.m_efont.m_color, false);
             a_coll.Add(dxfText);
         }
 
@@ -842,7 +842,7 @@ namespace Loader
                 a_insert.m_hor ? (- a_insert.m_scaleY) : (a_insert.m_scaleY),
                 1);
 
-            l_insert.Color = Helper.MakeEntityColorByBlock(a_insert.m_color_border, null);
+            l_insert.Color = Helper.MakeEntityColorByBlock(a_insert.m_color_border, false);
 
             l_insert.Rotation = (Math.PI * a_insert.m_turns) / 4;
 
@@ -893,7 +893,7 @@ namespace Loader
             l_center3D.Y *= REVERSE_Y;
 
             DxfMText dxfText = new DxfMText(ls_text, l_center3D, li_height);
-            dxfText.Color = Helper.MakeEntityColorByBlock(l_efont.m_color, null);
+            dxfText.Color = Helper.MakeEntityColorByBlock(l_efont.m_color, false);
 
             dxfText.AttachmentPoint = GetAttachementPoint(a_sat.m_alignment);
             dxfText.XAxis = TurnsToVector3D(a_sat.m_turns);
@@ -956,7 +956,7 @@ namespace Loader
            
 
                 dxfBlockCollection.Add(l_block);
-                ExportDrawDoc(l_block.Entities, ppdDoc, a_dict, null);
+                ExportDrawDoc(l_block.Entities, ppdDoc, a_dict, true);
                 a_dict[ppdDoc.m_lG] = l_block;
             }
             else 
@@ -970,7 +970,7 @@ namespace Loader
         }
 
 
-        private static void ExportRect(DxfEntityCollection a_coll, DrawRect a_drawRect, Insert a_insert)
+        private static void ExportRect(DxfEntityCollection a_coll, DrawRect a_drawRect, bool ab_block)
         {
             //prepare points
             int li_arrSize = 4;
@@ -985,7 +985,7 @@ namespace Loader
             l_arrPoints[3].X = a_drawRect.m_position.Left;
             l_arrPoints[3].Y = a_drawRect.m_position.Top * REVERSE_Y;
 
-            ExportPolygonFilled(a_coll, l_arrPoints, a_drawRect.m_objProps, a_insert);
+            ExportPolygonFilled(a_coll, l_arrPoints, a_drawRect.m_objProps, ab_block);
 
             DxfPolyline2D dxfPolyline = new DxfPolyline2D(l_arrPoints);
             dxfPolyline.Closed = true;
@@ -995,7 +995,7 @@ namespace Loader
 
             //99dxfPolyline.ColorSource = AttributeSource.This;
             //99 dxfPolyline.Color = EntityColor.CreateFrom(a_drawRect.m_objProps.m_logpen.m_color);
-            dxfPolyline.Color = Helper.MakeEntityColorByBlock(a_drawRect.m_objProps.m_logpen.m_color, a_insert);
+            dxfPolyline.Color = Helper.MakeEntityColorByBlock(a_drawRect.m_objProps.m_logpen.m_color, ab_block);
 
             DxfLineType l_lineType = GetLineTypeFromObjProps(a_drawRect.m_objProps);
             dxfPolyline.LineType = l_lineType;
@@ -1028,7 +1028,7 @@ namespace Loader
             a_coll.Add(hatch);
         }
 */
-        private static void ExportEllipse(DxfEntityCollection a_coll, DrawRect a_drawRect, Insert a_insert)
+        private static void ExportEllipse(DxfEntityCollection a_coll, DrawRect a_drawRect, bool ab_block)
         {
             //need center, long axis and min/maj ratio
             Point3D l_center = GetRectCenterPoint(a_drawRect.m_position);
@@ -1066,9 +1066,9 @@ namespace Loader
 
             if (a_drawRect.m_objProps.m_bBrush)
             {
-                ExportEllipseSolid(a_coll, l_center, l_longAxis, ld_ratio, a_drawRect.m_objProps, false, a_insert);
+                ExportEllipseSolid(a_coll, l_center, l_longAxis, ld_ratio, a_drawRect.m_objProps, false, ab_block);
             }
-            ExportEllipseSolid(a_coll, l_center, l_longAxis, ld_ratio, a_drawRect.m_objProps, true, a_insert);
+            ExportEllipseSolid(a_coll, l_center, l_longAxis, ld_ratio, a_drawRect.m_objProps, true, ab_block);
    
             DxfEllipse dxfEllipse = new DxfEllipse(l_center, l_longAxis, ld_ratio);
 
@@ -1081,7 +1081,7 @@ namespace Loader
 
             dxfEllipse.LineWeight = (short)(10 * a_drawRect.m_objProps.m_logpen.m_width);
             //99 dxfEllipse.ColorSource = AttributeSource.This;
-            dxfEllipse.Color = Helper.MakeEntityColorByBlock(a_drawRect.m_objProps.m_logpen.m_color, a_insert);
+            dxfEllipse.Color = Helper.MakeEntityColorByBlock(a_drawRect.m_objProps.m_logpen.m_color, ab_block);
 
             DxfLineType l_lineType = GetLineTypeFromObjProps(a_drawRect.m_objProps);
             dxfEllipse.LineType = l_lineType;
@@ -1150,7 +1150,7 @@ namespace Loader
             a_coll.Add(dxfText);
         }
 
-        private static void ExportEllipseSolid(DxfEntityCollection a_dxfEntityCollection, Point3D l_center, Vector3D l_longAxis, double ld_ratio, ObjProps a_objProps, bool ab_hatch, Insert a_insert)
+        private static void ExportEllipseSolid(DxfEntityCollection a_dxfEntityCollection, Point3D l_center, Vector3D l_longAxis, double ld_ratio, ObjProps a_objProps, bool ab_hatch, bool ab_block)
         {
             if (ab_hatch && (a_objProps.m_hatchtype == HatchType.NONE))
             {
@@ -1159,7 +1159,7 @@ namespace Loader
             DxfHatch l_hatch = new DxfHatch();
             if (!ab_hatch)
             {
-                l_hatch.Color = Helper.MakeEntityColorByBlock(a_objProps.m_logbrush.m_color, a_insert);
+                l_hatch.Color = Helper.MakeEntityColorByBlock(a_objProps.m_logbrush.m_color, ab_block);
                 //99l_hatch.ColorSource = AttributeSource.This;
             }
 
@@ -1268,7 +1268,7 @@ namespace Loader
             return l_patternLine1;
         }
 
-        private static void ExportArc(DxfEntityCollection a_coll, DrawRect drawRect, Insert a_insert)
+        private static void ExportArc(DxfEntityCollection a_coll, DrawRect drawRect, bool ab_block)
         {
             if ((drawRect.m_position.Width == 0) || (drawRect.m_position.Height == 0))//fix 2009-2-6
             {
@@ -1299,7 +1299,7 @@ namespace Loader
 
             if (l_rect.Width == l_rect.Height)
             {
-                ExportSquareArc(a_coll, drawRect, a_insert, startAngle, endAngle);
+                ExportSquareArc(a_coll, drawRect, ab_block, startAngle, endAngle);
             }
             else
             {
@@ -1317,7 +1317,7 @@ namespace Loader
                 l_polyArc.m_objProps.m_logpen.m_width = drawRect.m_objProps.m_logpen.m_width;
                 l_polyArc.m_objProps.m_logpen.m_style = 0;            //prevent this line from drawing arrow, this is just the arc
 
-                ExportPolyline(a_coll, l_polyArc, a_insert);
+                ExportPolyline(a_coll, l_polyArc, ab_block);
             }
             
 
@@ -1325,11 +1325,11 @@ namespace Loader
             Point l_arcBegin = l_centerPoint + drawRect.m_arcBegin;
             Point l_arcEnd = l_centerPoint + drawRect.m_arcEnd;
 
-            ExportArcArrow(a_coll, drawRect, l_rect, l_centerPoint, l_arcBegin, l_arcEnd, 1, 1, drawRect.m_objProps.m_logpen.m_color, a_insert);
+            ExportArcArrow(a_coll, drawRect, l_rect, l_centerPoint, l_arcBegin, l_arcEnd, 1, 1, drawRect.m_objProps.m_logpen.m_color, ab_block);
         }
 
 
-        private static void ExportSquareArc(DxfEntityCollection a_coll, DrawRect a_drawRect, Insert a_insert, double startAngle, double endAngle)
+        private static void ExportSquareArc(DxfEntityCollection a_coll, DrawRect a_drawRect, bool ab_block, double startAngle, double endAngle)
         {
             Point3D l_center = GetRectCenterPoint(a_drawRect.m_position);
 
@@ -1354,14 +1354,14 @@ namespace Loader
             l_arc.Thickness = 10 * a_drawRect.m_objProps.m_logpen.m_width;
 
             //99 dxfEllipse.ColorSource = AttributeSource.This;
-            l_arc.Color = Helper.MakeEntityColorByBlock(a_drawRect.m_objProps.m_logpen.m_color, a_insert);
+            l_arc.Color = Helper.MakeEntityColorByBlock(a_drawRect.m_objProps.m_logpen.m_color, ab_block);
 
 
             a_coll.Add(l_arc);
         }
 
 
-        private static void ExportArcArrow(DxfEntityCollection a_coll, DrawRect a_drawRect, RectangleF a_rect, Point a_centerPoint, Point a_arcBegin, Point a_arcEnd, double a_scaleX, double a_scaleY, System.Drawing.Color a_color, Insert a_insert)
+        private static void ExportArcArrow(DxfEntityCollection a_coll, DrawRect a_drawRect, RectangleF a_rect, Point a_centerPoint, Point a_arcBegin, Point a_arcEnd, double a_scaleX, double a_scaleY, System.Drawing.Color a_color, bool ab_block)
         {
             if (0 == a_drawRect.m_objProps.m_logpen.m_style)
             {
@@ -1388,12 +1388,12 @@ namespace Loader
             Point l_point_begin = Helper.RotatePoint(a_arcBegin, -90 + li_coef_angle, l_stred_kruhu);
             int li_thinckness = 1;
 
-            ExportSipkaWithoutStem(a_coll, l_arrowType, l_point_ending, a_arcEnd, a_color, false, !a_drawRect.m_arrow_flipped, a_scaleX, a_scaleY, li_thinckness, a_insert);
-            ExportSipkaWithoutStem(a_coll, l_arrowType, l_point_begin, a_arcBegin, a_color, false, a_drawRect.m_arrow_flipped, a_scaleX, a_scaleY, li_thinckness, a_insert);
+            ExportSipkaWithoutStem(a_coll, l_arrowType, l_point_ending, a_arcEnd, a_color, false, !a_drawRect.m_arrow_flipped, a_scaleX, a_scaleY, li_thinckness, ab_block);
+            ExportSipkaWithoutStem(a_coll, l_arrowType, l_point_begin, a_arcBegin, a_color, false, a_drawRect.m_arrow_flipped, a_scaleX, a_scaleY, li_thinckness, ab_block);
 
         }
 
-        private static void ExportPieChord(DxfEntityCollection a_coll, DrawRect drawRect, Insert a_insert)
+        private static void ExportPieChord(DxfEntityCollection a_coll, DrawRect drawRect, bool ab_block)
         {
             if ((drawRect.m_position.Width == 0) || (drawRect.m_position.Height == 0))//2008-12-20
             {
@@ -1454,7 +1454,7 @@ namespace Loader
                 l_polyArc.AddPoint(Point.Truncate(l_pointF));
             }
             l_polyArc.m_objProps = drawRect.m_objProps;
-            ExportPolygon(a_coll, l_polyArc, a_insert);
+            ExportPolygon(a_coll, l_polyArc, ab_block);
 
         }
 
@@ -1476,7 +1476,7 @@ namespace Loader
             return l_result;
         }
 
-        private static void ExportPolyline(DxfEntityCollection a_coll, DrawPoly drawPoly, Insert a_insert)
+        private static void ExportPolyline(DxfEntityCollection a_coll, DrawPoly drawPoly, bool ab_block)
         {
             int li_arrSize = drawPoly.m_points.Count;
             ArrowType l_arrowType = (ArrowType)drawPoly.m_objProps.m_logpen.m_style;
@@ -1524,7 +1524,7 @@ namespace Loader
 
 
               
-                dxfPolyline.Color = Helper.MakeEntityColorByBlock(drawPoly.m_objProps.m_logpen.m_color, a_insert);
+                dxfPolyline.Color = Helper.MakeEntityColorByBlock(drawPoly.m_objProps.m_logpen.m_color, ab_block);
 
 
 
@@ -1532,7 +1532,7 @@ namespace Loader
                 dxfPolyline.Layer = ExportContext.Current.Layer;
                 a_coll.Add(dxfPolyline);
 
-                ExportPolylineArrowWithoutStem(a_coll, drawPoly, l_arrowType, drawPoly.m_objProps.m_logpen.m_color, 1, 1, 1, a_insert);
+                ExportPolylineArrowWithoutStem(a_coll, drawPoly, l_arrowType, drawPoly.m_objProps.m_logpen.m_color, 1, 1, 1, ab_block);
 
             }
             /*
@@ -1547,7 +1547,7 @@ namespace Loader
             */
         }
 
-        private static void ExportPolylineArrowWithoutStem(DxfEntityCollection a_coll, DrawPoly a_drawPoly, ArrowType a_typ, System.Drawing.Color a_color, double a_scaleX, double a_scaleY, int ai_thickness, Insert a_insert)
+        private static void ExportPolylineArrowWithoutStem(DxfEntityCollection a_coll, DrawPoly a_drawPoly, ArrowType a_typ, System.Drawing.Color a_color, double a_scaleX, double a_scaleY, int ai_thickness, bool ab_block)
         {
             int li_points_count = a_drawPoly.m_points.Count;
             if (li_points_count < 2)
@@ -1555,11 +1555,11 @@ namespace Loader
                 return;
             }
 
-            ExportSipkaWithoutStem(a_coll, a_typ, a_drawPoly.m_points[li_points_count - 2], a_drawPoly.m_points[li_points_count - 1], a_color, false, true, a_scaleX, a_scaleY, ai_thickness, a_insert);
-            ExportSipkaWithoutStem(a_coll, a_typ, a_drawPoly.m_points[1], a_drawPoly.m_points[0], a_color, false, false, a_scaleX, a_scaleY, ai_thickness, a_insert);
+            ExportSipkaWithoutStem(a_coll, a_typ, a_drawPoly.m_points[li_points_count - 2], a_drawPoly.m_points[li_points_count - 1], a_color, false, true, a_scaleX, a_scaleY, ai_thickness, ab_block);
+            ExportSipkaWithoutStem(a_coll, a_typ, a_drawPoly.m_points[1], a_drawPoly.m_points[0], a_color, false, false, a_scaleX, a_scaleY, ai_thickness, ab_block);
         }
 
-        private static void ExportPolygon(DxfEntityCollection a_coll, DrawPoly a_drawPoly, Insert a_insert)
+        private static void ExportPolygon(DxfEntityCollection a_coll, DrawPoly a_drawPoly, bool ab_block)
         {
             int li_arrSize = a_drawPoly.m_points.Count;
 
@@ -1572,7 +1572,7 @@ namespace Loader
 
             DxfPolyline2D dxfPolyline = new DxfPolyline2D(l_arrPoints);
 
-            ExportPolygonFilled(a_coll, l_arrPoints, a_drawPoly.m_objProps, a_insert);
+            ExportPolygonFilled(a_coll, l_arrPoints, a_drawPoly.m_objProps, ab_block);
 
             dxfPolyline.DefaultStartWidth = a_drawPoly.m_objProps.m_logpen.m_width;
             dxfPolyline.DefaultEndWidth = a_drawPoly.m_objProps.m_logpen.m_width;
@@ -1587,27 +1587,27 @@ namespace Loader
             //9 dxfPolyline.LineTypeSource = AttributeSource.This;
 
             //99dxfPolyline.ColorSource = AttributeSource.This;
-            dxfPolyline.Color = Helper.MakeEntityColorByBlock(a_drawPoly.m_objProps.m_logpen.m_color, a_insert);
+            dxfPolyline.Color = Helper.MakeEntityColorByBlock(a_drawPoly.m_objProps.m_logpen.m_color, ab_block);
 
             dxfPolyline.Layer = ExportContext.Current.Layer;
             a_coll.Add(dxfPolyline);
         }
 
-        private static void ExportPolygonFilled(DxfEntityCollection a_coll, Point2D[] a_points, ObjProps a_objProps, Insert a_insert)
+        private static void ExportPolygonFilled(DxfEntityCollection a_coll, Point2D[] a_points, ObjProps a_objProps, bool ab_block)
         {
             if (a_objProps.m_bBrush)
             {
-                ExportPolygonSolid(a_coll, a_points, a_objProps, false, a_insert);
+                ExportPolygonSolid(a_coll, a_points, a_objProps, false, ab_block);
             }
 
             if (a_objProps.m_hatchtype != HatchType.NONE)
             {
-                ExportPolygonSolid(a_coll, a_points, a_objProps, true, a_insert);
+                ExportPolygonSolid(a_coll, a_points, a_objProps, true, ab_block);
             }
         }
 
 
-        private static void ExportPolygonSolid(DxfEntityCollection a_coll, Point2D[] a_points, ObjProps a_objProps, bool ab_hatch, Insert a_insert)
+        private static void ExportPolygonSolid(DxfEntityCollection a_coll, Point2D[] a_points, ObjProps a_objProps, bool ab_hatch, bool ab_block)
         {
             if (ab_hatch && (a_objProps.m_hatchtype == HatchType.NONE))
             {
@@ -1628,7 +1628,7 @@ namespace Loader
             }
             else
             {
-                l_hatch.Color = Helper.MakeEntityColorByBlock(a_objProps.m_logbrush.m_color, a_insert);
+                l_hatch.Color = Helper.MakeEntityColorByBlock(a_objProps.m_logbrush.m_color, ab_block);
             }
  
             DxfHatch.BoundaryPath boundaryPath1 = new DxfHatch.BoundaryPath();
@@ -1708,7 +1708,7 @@ namespace Loader
             return Double.Parse(ls_corrected, System.Globalization.CultureInfo.InvariantCulture);
         }
 
-        public static void ExportBezier(DxfEntityCollection a_coll, DrawPoly drawPoly, Insert a_insert)
+        public static void ExportBezier(DxfEntityCollection a_coll, DrawPoly drawPoly, bool ab_block)
         {
             int li_arrSize = drawPoly.m_points.Count;
             Point2D[] l_arrPoints = new Point2D[li_arrSize];
@@ -1726,7 +1726,7 @@ namespace Loader
             dxfPolyline.DefaultEndWidth = drawPoly.m_objProps.m_logpen.m_width;
 
             //99dxfPolyline.ColorSource = AttributeSource.This;
-            dxfPolyline.Color = Helper.MakeEntityColorByBlock(drawPoly.m_objProps.m_logpen.m_color, a_insert);
+            dxfPolyline.Color = Helper.MakeEntityColorByBlock(drawPoly.m_objProps.m_logpen.m_color, ab_block);
             dxfPolyline.Closed = false;
 
             DxfLineType l_lineType = GetLineTypeFromObjProps(drawPoly.m_objProps);
@@ -1751,7 +1751,7 @@ namespace Loader
         }
 
 
-        private static void ExportSipka(DxfEntityCollection a_coll, ArrowType a_typ, Point a_start, Point a_cil, int ai_thickness, System.Drawing.Color a_color, Insert a_insert)
+        private static void ExportSipka(DxfEntityCollection a_coll, ArrowType a_typ, Point a_start, Point a_cil, int ai_thickness, System.Drawing.Color a_color, bool ab_block)
         {
             int li_coef = 2;//shown in drawing
             int li_len = Helper.MyHypot(a_start.X - a_cil.X, a_start.Y - a_cil.Y);
@@ -1770,8 +1770,8 @@ namespace Loader
                     Point l_point2 = Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - 12 * li_coef, a_start.Y + 5 * li_coef));
                     l_poly2.AddPoint(l_point2);
 
-                    Helper.ExportPolylineAux(a_coll, l_poly, a_insert);
-                    Helper.ExportPolylineAux(a_coll, l_poly2, a_insert);
+                    Helper.ExportPolylineAux(a_coll, l_poly, ab_block);
+                    Helper.ExportPolylineAux(a_coll, l_poly2, ab_block);
                     return;
                 }
 
@@ -1789,8 +1789,8 @@ namespace Loader
                     l_poly2.AddPoint(pointA);
                     l_poly2.AddPoint(pointB);
                     l_poly2.AddPoint(a_cil);
-                    Helper.ExportPolylineAux(a_coll, l_poly, a_insert);
-                    Helper.ExportPolylineAux(a_coll, l_poly2, a_insert);
+                    Helper.ExportPolylineAux(a_coll, l_poly, ab_block);
+                    Helper.ExportPolylineAux(a_coll, l_poly2, ab_block);
                     return;
 			    }
 		
@@ -1803,7 +1803,7 @@ namespace Loader
                 l_poly.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - 12 * li_coef, a_start.Y - 3 * li_coef)));
                 l_poly.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - 12 * li_coef, a_start.Y + 3 * li_coef)));
                 l_poly.AddPoint(a_cil);
-                Helper.ExportPolylineAux(a_coll, l_poly, a_insert);
+                Helper.ExportPolylineAux(a_coll, l_poly, ab_block);
              
                 return;
             
@@ -1828,10 +1828,10 @@ namespace Loader
                 l_poly4.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + 12 * li_coef, a_start.Y)));
                 l_poly4.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X, a_start.Y + 3 * li_coef)));
 
-                Helper.ExportPolylineAux(a_coll, l_poly, a_insert);
-                Helper.ExportPolylineAux(a_coll, l_poly2, a_insert);
-                Helper.ExportPolylineAux(a_coll, l_poly3, a_insert);
-                Helper.ExportPolylineAux(a_coll, l_poly4, a_insert);
+                Helper.ExportPolylineAux(a_coll, l_poly, ab_block);
+                Helper.ExportPolylineAux(a_coll, l_poly2, ab_block);
+                Helper.ExportPolylineAux(a_coll, l_poly3, ab_block);
+                Helper.ExportPolylineAux(a_coll, l_poly4, ab_block);
                 return;
             }
            
@@ -1854,10 +1854,10 @@ namespace Loader
                 l_poly4.AddPoint(a_start);
                 l_poly4.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + 20 * li_coef, a_start.Y + 5 * li_coef)));
 
-                Helper.ExportPolylineAux(a_coll, l_poly, a_insert);
-                Helper.ExportPolylineAux(a_coll, l_poly2, a_insert);
-                Helper.ExportPolylineAux(a_coll, l_poly3, a_insert);
-                Helper.ExportPolylineAux(a_coll, l_poly4, a_insert);
+                Helper.ExportPolylineAux(a_coll, l_poly, ab_block);
+                Helper.ExportPolylineAux(a_coll, l_poly2, ab_block);
+                Helper.ExportPolylineAux(a_coll, l_poly3, ab_block);
+                Helper.ExportPolylineAux(a_coll, l_poly4, ab_block);
                 return;
             }
          
@@ -1880,10 +1880,10 @@ namespace Loader
                 l_poly4.AddPoint(a_start);
                 l_poly4.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + 12 * li_coef, a_start.Y + 5 * li_coef)));
 
-                Helper.ExportPolylineAux(a_coll, l_poly, a_insert);
-                Helper.ExportPolylineAux(a_coll, l_poly2, a_insert);
-                Helper.ExportPolylineAux(a_coll, l_poly3, a_insert);
-                Helper.ExportPolylineAux(a_coll, l_poly4, a_insert);
+                Helper.ExportPolylineAux(a_coll, l_poly, ab_block);
+                Helper.ExportPolylineAux(a_coll, l_poly2, ab_block);
+                Helper.ExportPolylineAux(a_coll, l_poly3, ab_block);
+                Helper.ExportPolylineAux(a_coll, l_poly4, ab_block);
                 return;
             }
      
@@ -1909,11 +1909,11 @@ namespace Loader
                 l_poly5.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + (80 * li_coef), a_start.Y)));
                 l_poly5.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + (60 * li_coef), a_start.Y + 5 * li_coef)));
 
-                Helper.ExportPolylineAux(a_coll, l_poly, a_insert);
-                Helper.ExportPolylineAux(a_coll, l_poly2, a_insert);
-                Helper.ExportPolylineAux(a_coll, l_poly3, a_insert);
-                Helper.ExportPolylineAux(a_coll, l_poly4, a_insert);
-                Helper.ExportPolylineAux(a_coll, l_poly5, a_insert);
+                Helper.ExportPolylineAux(a_coll, l_poly, ab_block);
+                Helper.ExportPolylineAux(a_coll, l_poly2, ab_block);
+                Helper.ExportPolylineAux(a_coll, l_poly3, ab_block);
+                Helper.ExportPolylineAux(a_coll, l_poly4, ab_block);
+                Helper.ExportPolylineAux(a_coll, l_poly5, ab_block);
                 return;
             }
             
@@ -1925,7 +1925,7 @@ namespace Loader
                 DrawPoly l_poly = new DrawPoly(Shape.polyline, ai_thickness, a_color);
                 l_poly.AddPoint(a_start);
                 l_poly.AddPoint(a_cil);
-                Helper.ExportPolylineAux(a_coll, l_poly, a_insert);
+                Helper.ExportPolylineAux(a_coll, l_poly, ab_block);
 
             }
             break;
@@ -1933,7 +1933,7 @@ namespace Loader
 		}	
     }
 
-        static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, Point a_start, Point a_cil, System.Drawing.Color a_color, bool ab_drawStem, bool ab_is_ending, double a_scaleX, double a_scaleY, int ai_thickness, Insert a_insert)
+        static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, Point a_start, Point a_cil, System.Drawing.Color a_color, bool ab_drawStem, bool ab_is_ending, double a_scaleX, double a_scaleY, int ai_thickness, bool ab_block)
 {
 	int li_coef_x_12 = (int) ((12.0 * a_scaleX) + 0.499);
 	int li_coef_x_24 = (int) ((24.0 * a_scaleX) + 0.499);
@@ -1952,7 +1952,7 @@ namespace Loader
             l_poly.AddPoint(l_point1);
             l_poly.AddPoint(a_cil);
             l_poly.AddPoint(l_point2);
-            Helper.ExportPolylineAux(a_coll, l_poly, a_insert);
+            Helper.ExportPolylineAux(a_coll, l_poly, ab_block);
 		}
 		break;
 
@@ -1970,7 +1970,7 @@ namespace Loader
                 l_poly2.AddPoint(pointA);
                 l_poly2.AddPoint(pointB);
                 l_poly2.AddPoint(a_cil);
-                Helper.ExportPolylineAux(a_coll, l_poly2, a_insert);
+                Helper.ExportPolylineAux(a_coll, l_poly2, ab_block);
 			}
 		}
 		break;
@@ -1983,7 +1983,7 @@ namespace Loader
             l_poly.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - 12 * li_coef, a_start.Y - 3 * li_coef)));
             l_poly.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - 12 * li_coef, a_start.Y + 3 * li_coef)));
             l_poly.AddPoint(a_cil);
-            Helper.ExportPolylineAux(a_coll, l_poly, a_insert);
+            Helper.ExportPolylineAux(a_coll, l_poly, ab_block);
 		}
 		break;
 	case ArrowType.at_sip3://malá s ocasem
@@ -1993,7 +1993,7 @@ namespace Loader
             l_poly.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - li_coef_x_12 * li_coef, a_start.Y - 3 * li_coef)));
             l_poly.AddPoint(a_cil);
             l_poly.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - li_coef_x_12 * li_coef, a_start.Y + 3 * li_coef)));
-            Helper.ExportPolylineAux(a_coll, l_poly, a_insert);
+            Helper.ExportPolylineAux(a_coll, l_poly, ab_block);
 		}
 		else
 		{
@@ -2001,7 +2001,7 @@ namespace Loader
             l_poly.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len + li_coef_x_24, a_start.Y - 3 * li_coef)));
             l_poly.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len, a_start.Y)));
             l_poly.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len + li_coef_x_24, a_start.Y + 3 * li_coef)));
-            Helper.ExportPolylineAux(a_coll, l_poly, a_insert);
+            Helper.ExportPolylineAux(a_coll, l_poly, ab_block);
 		}
 
 		break;
@@ -2010,14 +2010,14 @@ namespace Loader
         l_poly_sip4.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - 20 * li_coef, a_start.Y - li_coef_y_5 * li_coef)));
         l_poly_sip4.AddPoint(a_cil);
         l_poly_sip4.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - 20 * li_coef, a_start.Y + li_coef_y_5 * li_coef)));
-        Helper.ExportPolylineAux(a_coll, l_poly_sip4, a_insert);
+        Helper.ExportPolylineAux(a_coll, l_poly_sip4, ab_block);
 		break;
 	case ArrowType.at_sip5://malá oboustranná
         DrawPoly l_poly_sip5 = new DrawPoly(Shape.polyline, ai_thickness, a_color);
         l_poly_sip5.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - li_coef_x_12 * li_coef, a_start.Y - li_coef_y_5 * li_coef)));
         l_poly_sip5.AddPoint(a_cil);
         l_poly_sip5.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - li_coef_x_12 * li_coef, a_start.Y + li_coef_y_5 * li_coef)));
-        Helper.ExportPolylineAux(a_coll, l_poly_sip5, a_insert);
+        Helper.ExportPolylineAux(a_coll, l_poly_sip5, ab_block);
 		break;
 
 	}	

@@ -54,38 +54,38 @@ namespace Loader
 	        {
             case GateShapeType.gst_inv:
 		        My_Kruh(a_coll, new Point(X + 30,Y), 8);
-                ExportBud(a_coll, X, Y, l_penColor, a_gate);
+                ExportBud(a_coll, X, Y, l_penColor);
     	        break;
             case GateShapeType.gst_bud:
-                ExportBud(a_coll, X, Y, l_penColor, a_gate);
+                ExportBud(a_coll, X, Y, l_penColor);
     	        break;
             case GateShapeType.gst_nand:
 		        My_Kruh(a_coll, new Point(X + 79,Y), 8);
-                ExportAnd(a_coll, X, Y, li_lineThickness, l_penColor, a_gate);
+                ExportAnd(a_coll, X, Y, li_lineThickness, l_penColor);
                 break;
             case GateShapeType.gst_and:
-                ExportAnd(a_coll, X, Y, li_lineThickness, l_penColor, a_gate);
+                ExportAnd(a_coll, X, Y, li_lineThickness, l_penColor);
     	        break;
             case GateShapeType.gst_nor:
 		        My_Kruh(a_coll, new Point(X + 84,Y), 8);
-                ExportOr(a_coll, X, Y, l_penColor, a_gate);
+                ExportOr(a_coll, X, Y, l_penColor);
                 break;
             case GateShapeType.gst_or:
-                ExportOr(a_coll, X, Y, l_penColor, a_gate);
+                ExportOr(a_coll, X, Y, l_penColor);
     	        break;
             case GateShapeType.gst_exnor:
 		        My_Kruh(a_coll, new Point(X + 98,Y), 8);
-                ExportExOr(a_coll, X, Y, li_lineThickness, l_penColor, a_gate);
+                ExportExOr(a_coll, X, Y, li_lineThickness, l_penColor);
                 break;
             case GateShapeType.gst_exor:
-                ExportExOr(a_coll, X, Y, li_lineThickness, l_penColor, a_gate);
+                ExportExOr(a_coll, X, Y, li_lineThickness, l_penColor);
     	        break;
             }//switch
 	        }//if
 	        else{//ČSN
-                Helper.ExportRectangleAux(a_coll, new Point(X - 36, Y - 71), new Point(X + 36, Y + 71), li_lineThickness, l_penColor, a_gate);
+                Helper.ExportRectangleAux(a_coll, new Point(X - 36, Y - 71), new Point(X + 36, Y + 71), li_lineThickness, l_penColor, true);
                 l_pouzdro = new DrawPoly(Shape.polyline, li_lineThickness, l_penColor, new Point(X + 36, Y), new Point(X + 51, Y));
-                Helper.ExportPolylineAux(a_coll, l_pouzdro, a_gate);
+                Helper.ExportPolylineAux(a_coll, l_pouzdro, true);
                 if (
                     (a_gate.m_tvar == GateShapeType.gst_exnor) ||
                     (a_gate.m_tvar == GateShapeType.gst_nor) ||
@@ -94,7 +94,7 @@ namespace Loader
                 )
                 {
                     DrawPoly l_vyvod = new DrawPoly(Shape.polyline, li_lineThickness, l_penColor, new Point(X + 36, Y - 10), new Point(X + 51, Y));
-                    Helper.ExportPolylineAux(a_coll, l_vyvod, a_gate);
+                    Helper.ExportPolylineAux(a_coll, l_vyvod, true);
                 }
 
 	        }//else
@@ -103,9 +103,9 @@ namespace Loader
             if (!a_gate.m_stesnat)
             {//ne stěsnaně
                 l_pouzdro = new DrawPoly(Shape.polyline, li_lineThickness, l_penColor, new Point(X - 36, Y - 36), new Point(X - 36, Y - 80));
-                Helper.ExportPolylineAux(a_coll, l_pouzdro, a_gate);
+                Helper.ExportPolylineAux(a_coll, l_pouzdro, true);
                 l_pouzdro = new DrawPoly(Shape.polyline, li_lineThickness, l_penColor, new Point(X - 36, Y + 36), new Point(X - 36, Y + 80));
-                Helper.ExportPolylineAux(a_coll, l_pouzdro, a_gate);
+                Helper.ExportPolylineAux(a_coll, l_pouzdro, true);
 	        }
         	    
 	        //nakreslit vývody
@@ -341,7 +341,7 @@ namespace Loader
 
         }
 
-        private static void ExportBud(WW.Cad.Model.Entities.DxfEntityCollection a_coll, int ai_x, int ai_y, System.Drawing.Color l_penColor, QGate a_gate)
+        private static void ExportBud(WW.Cad.Model.Entities.DxfEntityCollection a_coll, int ai_x, int ai_y, System.Drawing.Color l_penColor)
         {
             DrawPoly l_pouzdro = new DrawPoly(Shape.poly, 2, l_penColor, new Point[] {
             new Point(ai_x - 36, ai_y + 36),
@@ -349,10 +349,10 @@ namespace Loader
             new Point(ai_x + 25, ai_y),
             new Point(ai_x - 36, ai_y + 36),
             });
-            Helper.ExportPolylineAux(a_coll, l_pouzdro, a_gate);
+            Helper.ExportPolylineAux(a_coll, l_pouzdro, true);
         }
 
-        private static void ExportAnd(WW.Cad.Model.Entities.DxfEntityCollection a_coll, int ai_x, int ai_y, int ai_lineThickness, System.Drawing.Color l_penColor, QGate a_gate)
+        private static void ExportAnd(WW.Cad.Model.Entities.DxfEntityCollection a_coll, int ai_x, int ai_y, int ai_lineThickness, System.Drawing.Color l_penColor)
         {
             DrawPoly l_pouzdro = new DrawPoly(Shape.poly, 2, l_penColor, new Point[] {
                     new Point(ai_x + 36, ai_y + 36),
@@ -360,7 +360,7 @@ namespace Loader
                     new Point(ai_x - 36, ai_y - 36),
                     new Point(ai_x + 36, ai_y - 36),
                 });
-            Helper.ExportPolylineAux(a_coll, l_pouzdro, a_gate);
+            Helper.ExportPolylineAux(a_coll, l_pouzdro, true);
             Helper.My_Bezier(
                                 a_coll,
                                 new PositionAspect(),
@@ -368,30 +368,30 @@ namespace Loader
                                 new Point(36 + 42, 27),
                                 new Point(36 + 42, -27),
                                 new Point(36, -36),
-                                ai_lineThickness, l_penColor, a_gate);
+                                ai_lineThickness, l_penColor, true);
 
         }
 
-        private static void ExportOr(WW.Cad.Model.Entities.DxfEntityCollection a_coll, int ai_x, int ai_y, System.Drawing.Color l_penColor, QGate a_gate)
+        private static void ExportOr(WW.Cad.Model.Entities.DxfEntityCollection a_coll, int ai_x, int ai_y, System.Drawing.Color l_penColor)
         {
             DrawPoly l_pouzdro = new DrawPoly(Shape.poly, 2, l_penColor, new Point[] {
                     new Point(ai_x + 20, ai_y + 36),
                     new Point(ai_x - 36, ai_y + 36)
                 });
-            Helper.ExportPolylineAux(a_coll, l_pouzdro, a_gate);
+            Helper.ExportPolylineAux(a_coll, l_pouzdro, true);
 
             l_pouzdro = new DrawPoly(Shape.poly, 2, l_penColor, new Point[] {
                     new Point(ai_x + 20, ai_y - 36),
                     new Point(ai_x - 36, ai_y - 36),
                 });
-            Helper.ExportPolylineAux(a_coll, l_pouzdro, a_gate);
+            Helper.ExportPolylineAux(a_coll, l_pouzdro, true);
 
-            ExportSpicatyZadek(a_coll, 2, l_penColor, a_gate);
+            ExportSpicatyZadek(a_coll, 2, l_penColor);
     
 
         }
 
-        private static void ExportSpicatyZadek(WW.Cad.Model.Entities.DxfEntityCollection a_coll, int ai_lineThickness, System.Drawing.Color a_penColor, QGate a_gate)
+        private static void ExportSpicatyZadek(WW.Cad.Model.Entities.DxfEntityCollection a_coll, int ai_lineThickness, System.Drawing.Color a_penColor)
         {
             PositionAspect l_posAspect = new PositionAspect();
             Point[] body = new Point[4];
@@ -399,32 +399,32 @@ namespace Loader
             body[2] = new Point(-25, + 25);
             body[1] = new Point(-25, - 25);
             body[0] = new Point(-36, - 36);
-            Helper.My_Bezier(a_coll, l_posAspect, body[0], body[1], body[2], body[3], ai_lineThickness, a_penColor, a_gate);
+            Helper.My_Bezier(a_coll, l_posAspect, body[0], body[1], body[2], body[3], ai_lineThickness, a_penColor, true);
             body[3] = new Point(20, 36);
             body[2] = new Point(51, 28);
             body[1] = new Point(71, 10);
             body[0] = new Point(79, 0);
-            Helper.My_Bezier(a_coll, l_posAspect, body[0], body[1], body[2], body[3], ai_lineThickness, a_penColor, a_gate);
+            Helper.My_Bezier(a_coll, l_posAspect, body[0], body[1], body[2], body[3], ai_lineThickness, a_penColor, true);
             body[3] = new Point(20, - 36);
             body[2] = new Point(51, - 28);
             body[1] = new Point(71, - 10);
             body[0] = new Point(79, 0);
-            Helper.My_Bezier(a_coll, l_posAspect, body[0], body[1], body[2], body[3], ai_lineThickness, a_penColor, a_gate);
+            Helper.My_Bezier(a_coll, l_posAspect, body[0], body[1], body[2], body[3], ai_lineThickness, a_penColor, true);
         }
 
-        private static void ExportExOr(WW.Cad.Model.Entities.DxfEntityCollection a_coll, int ai_x, int ai_y, int ai_lineThickness, System.Drawing.Color a_penColor, QGate a_gate)
+        private static void ExportExOr(WW.Cad.Model.Entities.DxfEntityCollection a_coll, int ai_x, int ai_y, int ai_lineThickness, System.Drawing.Color a_penColor)
         {
             DrawPoly l_pouzdro = new DrawPoly(Shape.polyline, ai_lineThickness, a_penColor,
             new Point(ai_x + 20, ai_y + 36),
             new Point(ai_x - 25, ai_y + 36)
             );
-            Helper.ExportPolylineAux(a_coll, l_pouzdro, a_gate);
+            Helper.ExportPolylineAux(a_coll, l_pouzdro, true);
 
             l_pouzdro = new DrawPoly(Shape.polyline, ai_lineThickness, a_penColor,
             new Point(ai_x + 20, ai_y - 36),
             new Point(ai_x - 25, ai_y - 36)
             );
-            Helper.ExportPolylineAux(a_coll, l_pouzdro, a_gate);
+            Helper.ExportPolylineAux(a_coll, l_pouzdro, true);
             PositionAspect l_posAspect = new PositionAspect();
 
             Point[] body = new Point[4];
@@ -432,9 +432,9 @@ namespace Loader
             body[2] = Helper.PrevodBodu(new Point(-15, 25), l_posAspect);
             body[1] = Helper.PrevodBodu(new Point(-15, - 25), l_posAspect);
             body[0] = Helper.PrevodBodu(new Point(-25, - 36), l_posAspect);
-            Helper.My_Bezier(a_coll, l_posAspect, body[0], body[1], body[2], body[3], ai_lineThickness, a_penColor, a_gate);
+            Helper.My_Bezier(a_coll, l_posAspect, body[0], body[1], body[2], body[3], ai_lineThickness, a_penColor, true);
 
-            ExportSpicatyZadek(a_coll, ai_lineThickness, a_penColor, a_gate);
+            ExportSpicatyZadek(a_coll, ai_lineThickness, a_penColor);
             
         }
 
@@ -447,7 +447,7 @@ namespace Loader
             else
             {
                 DrawPoly l_poly = new DrawPoly(Shape.polyline, ai_lineThickness, l_penColor, new Point(ai_x, ai_y), new Point(ai_x - 15, ai_y));
-                Helper.ExportPolylineAux(a_coll, l_poly, null);
+                Helper.ExportPolylineAux(a_coll, l_poly, true);
             }
         }
         /*
