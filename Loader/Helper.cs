@@ -272,6 +272,8 @@ namespace Loader
                 return EntityColor.ByLayer;
             }
 
+            return EntityColor.CreateFrom((WW.Drawing.ArgbColor)a_color);
+            /*
             if (ab_block)
             {
                 return EntityColor.CreateFromRgb(ColorType.ByBlock, a_color.R, a_color.G, a_color.B);
@@ -280,6 +282,7 @@ namespace Loader
             {
                 return EntityColor.CreateFrom((WW.Drawing.ArgbColor)a_color);
             }
+            */
         }
 
         private static bool ColorsAreSame(System.Drawing.Color a_color_1, System.Drawing.Color a_color_2)

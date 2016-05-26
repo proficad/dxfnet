@@ -1159,7 +1159,7 @@ namespace Loader
             DxfHatch l_hatch = new DxfHatch();
             if (!ab_hatch)
             {
-                l_hatch.Color = Helper.MakeEntityColorByBlock(a_objProps.m_logbrush.m_color, ab_block);
+                l_hatch.Color = EntityColor.CreateFrom((WW.Drawing.ArgbColor)a_objProps.m_logbrush.m_color);
                 //99l_hatch.ColorSource = AttributeSource.This;
             }
 
@@ -1628,7 +1628,7 @@ namespace Loader
             }
             else
             {
-                l_hatch.Color = Helper.MakeEntityColorByBlock(a_objProps.m_logbrush.m_color, ab_block);
+                l_hatch.Color = EntityColor.CreateFrom((WW.Drawing.ArgbColor)a_objProps.m_logbrush.m_color); 
             }
  
             DxfHatch.BoundaryPath boundaryPath1 = new DxfHatch.BoundaryPath();
