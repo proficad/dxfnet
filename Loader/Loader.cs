@@ -140,14 +140,15 @@ namespace Loader
             XmlNode nodeFonts = xmlDoc.SelectSingleNode("/document/fonts");
             LoadFonts(l_collPages.m_fonts, nodeFonts);
 
+
+            XmlNode nodeRepo = xmlDoc.SelectSingleNode("/document/repo");
+            LoadRepo(l_collPages.m_repo, nodeRepo);
+
             XmlNode nodePtb = xmlDoc.SelectSingleNode("/document/tb");
             if (nodePtb != null)
             {
                 LoadTb(l_collPages.m_ptbPosition, nodePtb);
             }
-
-            XmlNode nodeRepo = xmlDoc.SelectSingleNode("/document/repo");
-            LoadRepo(l_collPages.m_repo, nodeRepo);
 
 
             XmlNode summaryNode = xmlDoc.SelectSingleNode("/document/summary");
@@ -206,6 +207,12 @@ namespace Loader
                     LoadSummary(l_page.m_summInfo, l_summaryNode);
                     XmlNodeList layerNodes = l_node.SelectNodes("layers/layer[@v='1']");
                     LoadLayers(layerNodes, l_page);
+
+                    XmlNode l_node_page_ptb = l_node.SelectSingleNode("tb");
+                    if (l_node_page_ptb != null)
+                    {
+                        LoadTb(l_page.m_ptbPosition, l_node_page_ptb);
+                    }
                 }
             }
 
@@ -368,8 +375,9 @@ namespace Loader
             a_ptbPosition.Path = XmlAttrToString(a_node.Attributes["name"]);
 
             a_ptbPosition.m_pPtb = new PtbDoc();
+             
 
-            XmlNode nodeRepo = a_node.SelectSingleNode("repo");
+            XmlNode nodeRepo = a_node.SelectSingleNode("/document/repo");
             if (nodeRepo != null)
             {
                 LoadRepo(a_ptbPosition.m_pPtb.m_repo, nodeRepo);
@@ -1037,7 +1045,7 @@ namespace Loader
             //create a ppd
             PtbDoc doc = new PtbDoc();
             doc.Path = XmlAttrToString(nodeElement.Attributes["path"]);
-
+            doc.Path = Exporter.Sanitize(doc.Path);
 
             XmlNode nodeRepo = nodeElement.SelectSingleNode("repo");
             if (nodeRepo != null)

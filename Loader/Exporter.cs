@@ -56,18 +56,42 @@ namespace Loader
             {
                 ExportQImageDesc(model.Images, l_imgDesc, l_dictRepo);
             }
+            foreach (PtbDoc l_ptb in a_doc.Parent.m_repo.m_listPtb)
+            {
+                ExportTitleBlocks(model.Blocks, l_ptb, l_dictRepo);
+            }
             ExportDrawDoc(model.Entities, a_doc, l_dictRepo, false);
 
 
-            if (ExportContext.Current.PCadDocument.Parent.m_ptbPosition.m_useTb)
+
+
+            // title block
+            if (ExportContext.Current.PCadDocument.Parent.Version > 7)
             {
-                ExportTb(model.Entities);
+                if (ExportContext.Current.PCadDocument.m_ptbPosition.m_useTb)//page level switch
+                {
+                    if(!string.IsNullOrWhiteSpace(ExportContext.Current.PCadDocument.m_ptbPosition.Path))//page level path
+                    {
+                        ExportTbInsert(model.Entities, ExportContext.Current.PCadDocument.m_ptbPosition, l_dictRepo);//page TB
+                    }
+                    else
+                    {
+                        ExportTbInsert(model.Entities, ExportContext.Current.PCadDocument.Parent.m_ptbPosition, l_dictRepo);//global TB
+                    }
+                }
             }
+            else
+            {   // old version had only global TB
+                ExportTb(model.Entities, ExportContext.Current.PCadDocument.Parent.m_ptbPosition);//global TB
+            }
+
+
 
             if (ExportContext.Current.PCadDocument.Parent.m_settingsPage.DrawFrame)
             {
                 ExportFrame(model.Entities);
             }
+
 
             HelperRefGrid.DrawRefGridForSheets(model.Entities, a_doc.GetRect(), a_doc.Parent.m_ref_grid);
 
@@ -174,48 +198,21 @@ namespace Loader
 
         }
 
-        private static void ExportTb(DxfEntityCollection a_coll)
+        private static void ExportTb(DxfEntityCollection a_coll, PtbPosition a_ptb_pos)
         {
             DxfBlock l_block = new DxfBlock("title_block");
             ExportContext.Current.BlockCollection.Add(l_block);
-            PtbPosition l_ptbPosition = ExportContext.Current.PCadDocument.Parent.m_ptbPosition;
-            bool lb_turn = l_ptbPosition.m_turn;
+           
+            bool lb_turn = a_ptb_pos.m_turn;
 
-            if (ExportContext.Current.PCadDocument.Parent.Version > 7)
-            {
-                string ls_path = ExportContext.Current.PCadDocument.m_ptbPosition.Path;
-
-                //if empty, grab the defa name from root of the doc
-                if (string.IsNullOrEmpty(ls_path))
-                {
-                    ls_path = ExportContext.Current.PCadDocument.Parent.m_ptbPosition.Path;
-                    if (string.IsNullOrEmpty(ls_path))
-                    {
-                        return;
-                    }
-                }
-                else //tb has name, so we take seriously the other attributes too //TODO maybe copy the m_ptbPosition if ours has name?
-                {
-                    lb_turn = ExportContext.Current.PCadDocument.m_ptbPosition.m_turn;
-                }
-
-                l_ptbPosition.m_pPtb = ExportContext.Current.PCadDocument.Parent.m_repo.GetPtb(ls_path);
-                if (l_ptbPosition.m_pPtb == null)
-                {
-                    return;
-                }
-
-             
-
-            }
-
+ 
 
             HybridDictionary l_dictRepo = new HybridDictionary();
-            foreach (QImageDesc l_imgDesc in l_ptbPosition.m_pPtb.m_repo.m_listImgDesc)
+            foreach (QImageDesc l_imgDesc in a_ptb_pos.m_pPtb.m_repo.m_listImgDesc)
             {
                 ExportQImageDesc(ExportContext.Current.Model.Images, l_imgDesc, l_dictRepo);
             }
-            ExportDrawDoc(l_block.Entities, l_ptbPosition.m_pPtb, l_dictRepo, false);
+            ExportDrawDoc(l_block.Entities, a_ptb_pos.m_pPtb, l_dictRepo, false);
 
 
 
@@ -227,7 +224,7 @@ namespace Loader
 
 
             //calc center point of the TB
-            Rectangle l_rectUsed = l_ptbPosition.m_pPtb.GetUsedRect();
+            Rectangle l_rectUsed = a_ptb_pos.m_pPtb.GetUsedRect();
 
             int li_tbBorderRight = l_rectUsed.Right;
             int li_tbBorderBottom = l_rectUsed.Bottom;
@@ -249,8 +246,8 @@ namespace Loader
             }
 
 
-            l_centerPoint.X -= l_ptbPosition.m_horDist;
-            l_centerPoint.Y -= l_ptbPosition.m_verDist;
+            l_centerPoint.X -= a_ptb_pos.m_horDist;
+            l_centerPoint.Y -= a_ptb_pos.m_verDist;
 
 
             l_centerPoint.Y *= REVERSE_Y;
@@ -261,6 +258,70 @@ namespace Loader
             l_insert.Layer = ExportContext.Current.Layer;
             a_coll.Add(l_insert);
         }
+
+        
+        private static void ExportTbInsert(DxfEntityCollection a_coll, PtbPosition a_ptb_pos, HybridDictionary a_dict)
+        {
+            string ls_name = a_ptb_pos.Path;
+            if(string.IsNullOrWhiteSpace(ls_name))
+            {
+                return;
+            }
+            ls_name = Sanitize(ls_name);
+
+
+
+            DxfBlock l_block = (DxfBlock)a_dict[ls_name];
+
+            bool lb_turn = a_ptb_pos.m_turn;
+            
+
+            //Size l_size = ExportContext.Current.PCadDocument.Parent.GetSize();
+            Size l_size = ExportContext.Current.PCadDocument.GetSize();
+
+
+            //calc center point of the TB
+            PtbDoc l_ptb_doc = ExportContext.Current.PCadDocument.GetRepo().GetPtb(ls_name);
+
+            Rectangle l_rectUsed = l_ptb_doc.GetUsedRect();
+
+
+
+            int li_tbBorderRight = l_rectUsed.Right;
+            int li_tbBorderBottom = l_rectUsed.Bottom;
+
+            Point3D l_centerPoint = new Point3D();
+            int li_turns = lb_turn ? 2 : 0;
+            if (li_turns == 2)
+            {
+                li_tbBorderRight = l_rectUsed.Bottom;
+                li_tbBorderBottom = -l_rectUsed.Left;
+
+                l_centerPoint.X = l_size.Width - li_tbBorderRight;
+                l_centerPoint.Y = l_rectUsed.Right;
+            }
+            else
+            {
+                l_centerPoint.X = l_size.Width - li_tbBorderRight;
+                l_centerPoint.Y = l_size.Height - li_tbBorderBottom;
+            }
+
+
+            l_centerPoint.X -= a_ptb_pos.m_horDist;
+            l_centerPoint.Y -= a_ptb_pos.m_verDist;
+
+
+            l_centerPoint.Y *= REVERSE_Y;
+
+            DxfInsert l_insert = new DxfInsert(l_block, l_centerPoint);
+
+            l_insert.Rotation = (Math.PI * li_turns) / 4;
+            l_insert.Layer = ExportContext.Current.Layer;
+            a_coll.Add(l_insert);
+            
+        }
+        
+
 
         private static void ExportDrawDoc(DxfEntityCollection a_coll, DrawDoc a_doc, HybridDictionary a_dictRepo, bool ab_block)
         {
@@ -901,7 +962,7 @@ namespace Loader
             a_dxfEntityCollection.Add(dxfText);
         }
 
-        private static string Sanitize(string as_input)
+        public static string Sanitize(string as_input)
         {
             string ls_out = as_input;
             ls_out = ls_out.Replace(' ', '_');
@@ -2038,6 +2099,45 @@ namespace Loader
             }
 
             return sb.ToString();
+        }
+
+        private static void ExportTitleBlocks(WW.Cad.Model.Tables.DxfBlockCollection dxfBlockCollection, PtbDoc a_ptb, HybridDictionary a_dict)
+        {
+            string ls_name = a_ptb.Path;
+            ls_name = Sanitize(ls_name);
+
+            if (ls_name.Length == 0)
+            {
+                return;
+            }
+
+
+            // 2011-08-10 changing name to lG because it must be unique
+            //DxfBlock l_block = new DxfBlock(ls_name);
+            DxfBlock l_block = new DxfBlock(ls_name);
+
+
+            if (l_block == null)
+            {
+                throw new Exception("l_block is null");
+            }
+            if (dxfBlockCollection.Contains(ls_name))
+            {
+                return;
+            }
+            //export images
+            //HybridDictionary l_dictRepo = new HybridDictionary();
+            foreach (QImageDesc l_imgDesc in a_ptb.m_repo.m_listImgDesc)
+            {
+                ExportQImageDesc(ExportContext.Current.Model.Images, l_imgDesc, a_dict);
+            }
+
+
+            dxfBlockCollection.Add(l_block);
+            ExportDrawDoc(l_block.Entities, a_ptb, a_dict, true);
+            a_dict[ls_name] = l_block;
+            
+       
         }
 
         //----------------------------------------
