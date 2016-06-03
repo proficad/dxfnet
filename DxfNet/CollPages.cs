@@ -54,6 +54,12 @@ namespace DxfNet
                         m_settingsPage, m_printSettings, m_settingsPrinter, lb_landscape, false);
 
 
+                    if((l_rect_result.Width == 0) || (l_rect_result.Height == 0))
+                    {
+                        return new Size(10 * m_settingsPage.PagesHor * m_printSettings.SheetSizeX, 10 * m_settingsPage.PagesVer * m_printSettings.SheetSizeY);
+                    }
+
+
                     return new Size(
                         m_settingsPage.PagesHor * l_rect_result.Width,
                         m_settingsPage.PagesVer * l_rect_result.Height

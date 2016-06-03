@@ -272,6 +272,8 @@ namespace DxfNet
         {
             Size l_size = Parent.GetSize();
 
+
+
             if (OriByPage)
             {
                 bool lb_global_landscape = l_size.Width > l_size.Height;
