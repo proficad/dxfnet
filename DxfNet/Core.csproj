@@ -8,8 +8,8 @@
     <ProjectGuid>{C2460D61-F733-48E4-A53A-6B875D647911}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DxfNet</RootNamespace>
-    <AssemblyName>DxfNet</AssemblyName>
+    <RootNamespace>Core</RootNamespace>
+    <AssemblyName>Core</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>

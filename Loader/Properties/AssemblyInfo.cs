@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ProfiCAD")]
 [assembly: AssemblyProduct("Loader")]
-[assembly: AssemblyCopyright("ProfiCAD ©  2012")]
+[assembly: AssemblyCopyright("ProfiCAD ©  2016")]
 [assembly: AssemblyTrademark("ProfiCAD")]
 [assembly: AssemblyCulture("")]
 
