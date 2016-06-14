@@ -999,6 +999,7 @@ namespace Loader
             a_repo.AddImgDesc(l_imgDesc);
         }
 
+
         private static void AddPpd(Repo a_repo, XmlNode nodeElement)
         {
             //create a ppd
@@ -1012,7 +1013,7 @@ namespace Loader
             doc.m_fG        = XmlAttrToString(nodeElement.Attributes["fG"]);
             doc.m_lG        = XmlAttrToString(nodeElement.Attributes["lG"]);
 
-
+            //repo in repo
             XmlNode nodeRepo = nodeElement.SelectSingleNode("repo");
             if (nodeRepo != null)
             {
@@ -1036,7 +1037,6 @@ namespace Loader
             }
 
             a_repo.AddPpd(doc);
-            //add it to coll
         }
 
 
@@ -1129,6 +1129,7 @@ namespace Loader
            
         }
 
+
         private static void AddInsert(DrawDoc doc, XmlNode a_node)
         {
             int li_x = int.Parse(a_node.Attributes["x"].Value);
@@ -1140,9 +1141,35 @@ namespace Loader
             Insert l_insert   = new Insert(Shape.soucastka, li_x, li_y, lf_scaleX, lf_scaleY);
             l_insert.m_lG     = XmlAttrToString(a_node.Attributes["lGuid"]);
 
+            XmlNode parametersNode = a_node.SelectSingleNode("parameters");
+            LoadParameters(l_insert.m_parameters, parametersNode);
 
             SetupInsertCommon(doc, a_node, l_insert);
         }
+
+
+        private static void LoadParameters(Hashtable a_hashTable, XmlNode a_node)
+        {
+            if(a_hashTable == null)
+            {
+                return;
+            }
+            if(a_node == null)
+            {
+                return;
+            }
+            XmlNodeList l_node_list = a_node.SelectNodes("parameter");
+            foreach (XmlNode l_node_param in l_node_list)
+            {
+                string ls_key = l_node_param.Attributes["name"].Value;
+                string ls_value = l_node_param.Attributes["value"].Value;
+                if(!string.IsNullOrWhiteSpace(ls_key) && !string.IsNullOrWhiteSpace(ls_value))
+                {
+                    a_hashTable.Add(ls_key, ls_value);
+                }
+            }
+        }
+
 
         private static void AddSateliteToInsert(Insert insert, XmlNode a_node)
         {

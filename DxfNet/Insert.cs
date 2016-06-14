@@ -53,6 +53,8 @@ namespace DxfNet
         public float m_scaleY;
         public List<Satelite> m_satelites = new List<Satelite>();
 
+        public System.Collections.Hashtable m_parameters = new System.Collections.Hashtable(2);
+
 
         public Insert(Shape a_shape, int a_x, int a_y, float af_scaleX, float af_scaleY) : base(a_shape)
         {
