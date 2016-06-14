@@ -16,6 +16,7 @@ using WW.Cad.Model.Tables;
 using DxfNet;
 using System.Globalization;
 using System.IO;
+using System.Collections;
 
 namespace Loader
 {
@@ -61,7 +62,6 @@ namespace Loader
                 ExportTitleBlocks(model.Blocks, l_ptb, l_dictRepo);
             }
             ExportDrawDoc(model.Entities, a_doc, l_dictRepo, false);
-
 
 
 
@@ -375,7 +375,7 @@ namespace Loader
                     {
                         throw new Exception("l_block is null");
                     }
-                    ExportInsert(a_coll, obj as Insert, a_doc as PCadDoc, l_block);
+                    ExportInsert(a_coll, obj as Insert, a_doc as PCadDoc, l_block, a_dictRepo);
                     continue;
                 }
 
@@ -500,7 +500,7 @@ namespace Loader
             m_trafoName++;
             ExportContext.Current.BlockCollection.Add(l_block);
             ExportTrafoInner(l_block.Entities, a_trafo);
-            ExportInsert(a_coll, a_trafo, a_pCadDoc, l_block);
+            ExportInsert(a_coll, a_trafo, a_pCadDoc, l_block, null);
         }
 
         private static void ExportTrafoInner(DxfEntityCollection a_coll, Trafo a_trafo)
@@ -892,10 +892,56 @@ namespace Loader
             }
         }
 
-        public static void ExportInsert(DxfEntityCollection a_dxfEntityCollection, Insert a_insert, PCadDoc a_pCadDoc, DxfBlock a_block)
+
+        public static void ExportInsert(DxfEntityCollection a_dxfEntityCollection, Insert a_insert, PCadDoc a_pCadDoc, DxfBlock a_block, HybridDictionary a_dict)
         {
             Point3D l_centerPoint = GetRectCenterPoint(a_insert.m_position);
             l_centerPoint.Y *= REVERSE_Y;
+
+
+            //if the insert is parametrized, we need to make a copy of the block
+            if(a_insert.m_parameters.Count > 0)
+            {
+                CloneContext cloneContext = new CloneContext(
+                    ExportContext.Current.Model, 
+                    ExportContext.Current.Model, 
+                    ReferenceResolutionType.CloneMissing);
+                DxfBlock l_new_block = (DxfBlock)a_block.Clone(cloneContext);
+                cloneContext.ResolveReferences();
+                a_block = l_new_block;
+
+
+                string ls_appendix = GetNameAppendix(a_insert.m_parameters);
+                a_block.Name += ls_appendix;
+                a_dict[a_block.Name] = a_block;
+                ExportContext.Current.Model.Blocks.Add(a_block);
+
+                foreach (DxfEntity l_entity in a_block.Entities)
+                {
+                    if(l_entity is DxfMText)
+                    {
+                        DxfMText l_text = l_entity as DxfMText;
+                        if(l_text != null)
+                        {
+                            if(IsTemplate(l_text.Text))
+                            {
+                                foreach(var ls_key in a_insert.m_parameters.Keys)
+                                {
+                                    string ls_keyWithBraces = string.Format("{0}", ls_key);
+                                    string ls_new_string = a_insert.m_parameters[ls_key].ToString();
+                                    l_text.Text = l_text.Text.Replace(ls_keyWithBraces, ls_new_string);
+                                }
+
+                                
+                            }
+                        }
+                    }
+                }
+
+
+            }
+            // end of parameters resolution
+
 
             DxfInsert l_insert = new DxfInsert(a_block, l_centerPoint);
             l_insert.ScaleFactor = new Vector3D(
@@ -926,7 +972,39 @@ namespace Loader
                     ExportSatelite(a_dxfEntityCollection, l_sat, a_pCadDoc);
                 }
             }
+            
         }
+
+        private static string GetNameAppendix(Hashtable m_parameters)
+        {
+            string ls_result = "-";
+            foreach(var ls_val in m_parameters.Values)
+            {
+                ls_result += ls_val + "-";
+            }
+            return ls_result;
+        }
+
+        private static bool IsTemplate(string as_text)
+        {
+            if (as_text.Length < 3)
+            {
+                return false;
+            }
+
+            int li_pos_1 = as_text.IndexOf("{");
+            if (li_pos_1 == -1)
+            {
+                return false;
+            }
+            int li_pos_2 = as_text.IndexOf("}");
+            if (li_pos_2 == -1)
+            {
+                return false;
+            }
+            return (1 + li_pos_1) < li_pos_2;
+        }
+
 
         public static void ExportSatelite(DxfEntityCollection a_dxfEntityCollection, Insert.Satelite a_sat, PCadDoc a_pCadDoc)
         {

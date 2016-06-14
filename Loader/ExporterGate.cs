@@ -25,7 +25,7 @@ namespace Loader
             m_gateName++;
             ExportContext.Current.BlockCollection.Add(l_block);
             ExportQGateInner(l_block.Entities, a_gate);
-            Exporter.ExportInsert(a_coll, a_gate, a_pCadDoc, l_block);
+            Exporter.ExportInsert(a_coll, a_gate, a_pCadDoc, l_block, null);
         }
 
 
