@@ -915,6 +915,10 @@ namespace Loader
                 //change the name and add it to the repo
                 string ls_appendix = GetNameAppendix(a_insert.m_parameters);
                 a_block.Name += ls_appendix;
+                if (a_dict[a_block.Name] != null)
+                {
+                    return;
+                }
                 a_dict[a_block.Name] = a_block;
                 ExportContext.Current.Model.Blocks.Add(a_block);
 
@@ -942,6 +946,47 @@ namespace Loader
         }
 
 
+        private static void Make_Flipped_Block(ref Insert a_insert, ref DxfBlock a_block, ref HybridDictionary a_dict)
+        {
+            if(a_insert.m_ver)
+            {
+                //make a copy
+                CloneContext cloneContext = new CloneContext(
+                    ExportContext.Current.Model,
+                    ExportContext.Current.Model,
+                    ReferenceResolutionType.CloneMissing);
+                DxfBlock l_new_block = (DxfBlock)a_block.Clone(cloneContext);
+                cloneContext.ResolveReferences();
+                a_block = l_new_block;
+
+                //change the name and add it to the repo
+                string ls_appendix = "_h";
+                a_block.Name += ls_appendix;
+                if (a_dict[a_block.Name] != null)
+                {
+                    return;
+                }
+
+                a_dict[a_block.Name] = a_block;
+                ExportContext.Current.Model.Blocks.Add(a_block);
+
+                foreach (DxfEntity l_entity in a_block.Entities)
+                {
+                    if (l_entity is DxfMText)
+                    {
+                        DxfMText l_text = l_entity as DxfMText;
+                        if (l_text != null)
+                        {
+                            l_text.XAxis = new Vector3D(-1, 0, 0);
+                            l_text.ZAxis = new Vector3D(0, 0, -1);
+                            l_text.AttachmentPoint = Helper.FlipAlignment(l_text.AttachmentPoint);
+
+                        }
+                    }//if DxfMText
+                }//foreach entity
+            }
+        }
+
         public static void ExportInsert(DxfEntityCollection a_dxfEntityCollection, Insert a_insert, PCadDoc a_pCadDoc, DxfBlock a_block, HybridDictionary a_dict)
         {
             Point3D l_centerPoint = GetRectCenterPoint(a_insert.m_position);
@@ -950,8 +995,8 @@ namespace Loader
 
             
             Make_Parametrized_Block(ref a_insert, ref a_block, ref a_dict);
+            Make_Flipped_Block(ref a_insert, ref a_block, ref a_dict);
 
-            
 
             DxfInsert l_insert = new DxfInsert(a_block, l_centerPoint);
             l_insert.ScaleFactor = new Vector3D(

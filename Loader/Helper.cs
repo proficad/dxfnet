@@ -321,6 +321,31 @@ namespace Loader
             return ls_result.Trim();
         }
 
+        internal static AttachmentPoint FlipAlignment(AttachmentPoint attachmentPoint)
+        {
+            switch(attachmentPoint)
+            {
+                case AttachmentPoint.TopLeft:
+                    return AttachmentPoint.TopRight;
+                case AttachmentPoint.TopRight:
+                    return AttachmentPoint.TopLeft;
+
+                case AttachmentPoint.MiddleLeft:
+                    return AttachmentPoint.MiddleRight;
+                case AttachmentPoint.MiddleRight:
+                    return AttachmentPoint.MiddleLeft;
+
+                case AttachmentPoint.BottomLeft:
+                    return AttachmentPoint.BottomRight;
+                case AttachmentPoint.BottomRight:
+                    return AttachmentPoint.BottomLeft;
+
+
+                default:
+                    return attachmentPoint;
+            }
+        }
+
         //--------------------------------
     }
 }
