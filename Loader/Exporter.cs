@@ -892,25 +892,27 @@ namespace Loader
             }
         }
 
-
-        public static void ExportInsert(DxfEntityCollection a_dxfEntityCollection, Insert a_insert, PCadDoc a_pCadDoc, DxfBlock a_block, HybridDictionary a_dict)
+        
+        /// <summary>
+        /// if the insert is parametrized, we need to make a copy of the block
+        /// </summary>
+        /// <param name="a_insert"></param>
+        /// <param name="a_block"></param>
+        /// <param name="a_dict"></param>
+        private static void Make_Parametrized_Block(ref Insert a_insert, ref DxfBlock a_block, ref HybridDictionary a_dict)
         {
-            Point3D l_centerPoint = GetRectCenterPoint(a_insert.m_position);
-            l_centerPoint.Y *= REVERSE_Y;
-
-
-            //if the insert is parametrized, we need to make a copy of the block
-            if(a_insert.m_parameters.Count > 0)
+            if (a_insert.m_parameters.Count > 0)
             {
+                //make a copy
                 CloneContext cloneContext = new CloneContext(
-                    ExportContext.Current.Model, 
-                    ExportContext.Current.Model, 
+                    ExportContext.Current.Model,
+                    ExportContext.Current.Model,
                     ReferenceResolutionType.CloneMissing);
                 DxfBlock l_new_block = (DxfBlock)a_block.Clone(cloneContext);
                 cloneContext.ResolveReferences();
                 a_block = l_new_block;
 
-
+                //change the name and add it to the repo
                 string ls_appendix = GetNameAppendix(a_insert.m_parameters);
                 a_block.Name += ls_appendix;
                 a_dict[a_block.Name] = a_block;
@@ -918,30 +920,38 @@ namespace Loader
 
                 foreach (DxfEntity l_entity in a_block.Entities)
                 {
-                    if(l_entity is DxfMText)
+                    if (l_entity is DxfMText)
                     {
                         DxfMText l_text = l_entity as DxfMText;
-                        if(l_text != null)
+                        if (l_text != null)
                         {
-                            if(IsTemplate(l_text.Text))
+                            if (IsTemplate(l_text.Text))
                             {
-                                foreach(var ls_key in a_insert.m_parameters.Keys)
+                                //resolve template
+                                foreach (var ls_key in a_insert.m_parameters.Keys)
                                 {
                                     string ls_keyWithBraces = string.Format("{0}", ls_key);
                                     string ls_new_string = a_insert.m_parameters[ls_key].ToString();
                                     l_text.Text = l_text.Text.Replace(ls_keyWithBraces, ls_new_string);
                                 }
-
-                                
                             }
                         }
-                    }
-                }
+                    }//if DxfMText
+                }//foreach entity
+            }// if has parameters
+        }
 
 
-            }
-            // end of parameters resolution
+        public static void ExportInsert(DxfEntityCollection a_dxfEntityCollection, Insert a_insert, PCadDoc a_pCadDoc, DxfBlock a_block, HybridDictionary a_dict)
+        {
+            Point3D l_centerPoint = GetRectCenterPoint(a_insert.m_position);
+            l_centerPoint.Y *= REVERSE_Y;
 
+
+            
+            Make_Parametrized_Block(ref a_insert, ref a_block, ref a_dict);
+
+            
 
             DxfInsert l_insert = new DxfInsert(a_block, l_centerPoint);
             l_insert.ScaleFactor = new Vector3D(
