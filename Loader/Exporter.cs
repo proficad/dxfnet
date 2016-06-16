@@ -904,13 +904,7 @@ namespace Loader
             if (a_insert.m_parameters.Count > 0)
             {
                 //make a copy
-                CloneContext cloneContext = new CloneContext(
-                    ExportContext.Current.Model,
-                    ExportContext.Current.Model,
-                    ReferenceResolutionType.CloneMissing);
-                DxfBlock l_new_block = (DxfBlock)a_block.Clone(cloneContext);
-                cloneContext.ResolveReferences();
-                a_block = l_new_block;
+                Clone_Block(ref a_block);
 
                 //change the name and add it to the repo
                 string ls_appendix = GetNameAppendix(a_insert.m_parameters);
@@ -920,6 +914,10 @@ namespace Loader
                     return;
                 }
                 a_dict[a_block.Name] = a_block;
+                if(ExportContext.Current.Model.Blocks.Contains(a_block.Name))
+                {
+                    return;
+                }
                 ExportContext.Current.Model.Blocks.Add(a_block);
 
                 foreach (DxfEntity l_entity in a_block.Entities)
@@ -946,18 +944,24 @@ namespace Loader
         }
 
 
+        private static void Clone_Block(ref DxfBlock a_block)
+        {
+            CloneContext cloneContext = new CloneContext(
+                ExportContext.Current.Model,
+                ExportContext.Current.Model,
+                ReferenceResolutionType.CloneMissing);
+            DxfBlock l_new_block = (DxfBlock)a_block.Clone(cloneContext);
+            cloneContext.ResolveReferences();
+            a_block = l_new_block;
+        }
+
         private static void Make_Flipped_Block(ref Insert a_insert, ref DxfBlock a_block, ref HybridDictionary a_dict)
         {
             if(a_insert.m_ver)
             {
                 //make a copy
-                CloneContext cloneContext = new CloneContext(
-                    ExportContext.Current.Model,
-                    ExportContext.Current.Model,
-                    ReferenceResolutionType.CloneMissing);
-                DxfBlock l_new_block = (DxfBlock)a_block.Clone(cloneContext);
-                cloneContext.ResolveReferences();
-                a_block = l_new_block;
+                Clone_Block(ref a_block);
+
 
                 //change the name and add it to the repo
                 string ls_appendix = "_h";
@@ -968,6 +972,11 @@ namespace Loader
                 }
 
                 a_dict[a_block.Name] = a_block;
+
+                if (ExportContext.Current.Model.Blocks.Contains(a_block.Name))
+                {
+                    return;
+                }
                 ExportContext.Current.Model.Blocks.Add(a_block);
 
                 foreach (DxfEntity l_entity in a_block.Entities)
