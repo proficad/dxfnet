@@ -17,6 +17,7 @@ using DxfNet;
 using System.Globalization;
 using System.IO;
 using System.Collections;
+using Microsoft.Win32;
 
 namespace Loader
 {
@@ -852,8 +853,37 @@ namespace Loader
 
             dxfText.Layer = ExportContext.Current.Layer;
             dxfText.Color = Helper.MakeEntityColorByBlock(freeText.m_efont.m_color, false);
+
+            //add style
+            string ls_font_name = freeText.m_efont.m_faceName;
+            if (freeText.m_efont.m_bold) ls_font_name += " Bold";
+            if (freeText.m_efont.m_ital) ls_font_name += " Italic";
+
+            string ls_font_file_name = EFont_To_Font_File_Name(ls_font_name);
+            DxfTextStyle textStyle = new DxfTextStyle(ls_font_name, ls_font_file_name);
+            ExportContext.Current.Model.TextStyles.Add(textStyle);
+            dxfText.Style = textStyle;
+
             a_coll.Add(dxfText);
         }
+
+
+        private static string EFont_To_Font_File_Name(string as_font_name)
+        {
+            RegistryKey fontKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion\\Fonts", false);
+            string[] names = fontKey.GetValueNames();
+            foreach(string ls_name in names)
+            {
+                if(ls_name.Contains(as_font_name))
+                {
+                    string ls_temp = fontKey.GetValue(ls_name).ToString();
+                    return ls_temp;
+                }
+            }
+
+            return "tahoma.ttf";
+        }
+
 
         private static AttachmentPoint GetAttachementPoint(QTextAlignment a_align)
         {

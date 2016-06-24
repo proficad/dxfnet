@@ -55,7 +55,9 @@ namespace Export2Dxf
             {
                 ls_log = args[2];
             }
-        
+
+            Console.WriteLine("Converting file");
+            Console.WriteLine(ls_in);
 
             StringCollection l_coll = new StringCollection();
             try
