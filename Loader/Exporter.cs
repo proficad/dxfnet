@@ -284,8 +284,12 @@ namespace Loader
             //calc center point of the TB
             PtbDoc l_ptb_doc = ExportContext.Current.PCadDocument.GetRepo().GetPtb(ls_name);
 
-            Rectangle l_rectUsed = l_ptb_doc.GetUsedRect();
+            if(l_ptb_doc == null)
+            {
+                return;
+            }
 
+            Rectangle l_rectUsed = l_ptb_doc.GetUsedRect();
 
 
             int li_tbBorderRight = l_rectUsed.Right;
