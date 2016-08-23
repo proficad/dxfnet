@@ -77,7 +77,13 @@ namespace Loader
                     }
                     else
                     {
-                        ExportTbInsert(model.Entities, ExportContext.Current.PCadDocument.Parent.m_ptbPosition, l_dictRepo);//global TB
+                        if(ExportContext.Current.PCadDocument.Parent.m_ptbPosition.m_useTb)
+                        {
+                            if(!string.IsNullOrWhiteSpace(ExportContext.Current.PCadDocument.Parent.m_ptbPosition.Path))
+                            {
+                                ExportTbInsert(model.Entities, ExportContext.Current.PCadDocument.Parent.m_ptbPosition, l_dictRepo);//global TB
+                            }
+                        }
                     }
                 }
             }
@@ -991,6 +997,11 @@ namespace Loader
 
         private static void Make_Flipped_Block(ref Insert a_insert, ref DxfBlock a_block, ref HybridDictionary a_dict)
         {
+            if(a_dict == null)
+            {
+                return;
+            }
+
             if(a_insert.m_ver)
             {
                 //make a copy
