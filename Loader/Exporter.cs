@@ -62,6 +62,7 @@ namespace Loader
             {
                 ExportTitleBlocks(model.Blocks, l_ptb, l_dictRepo);
             }
+
             ExportDrawDoc(model.Entities, a_doc, l_dictRepo, false);
 
 
@@ -129,7 +130,7 @@ namespace Loader
             }
         }
 
-        private static void ExportQImageDesc(DxfImageDefCollection a_coll, QImageDesc a_imgDesc, HybridDictionary a_dictRepo)
+        private static void ExportQImageDesc(DxfImageDefCollection a_coll, QImageDesc a_imgDesc, HybridDictionary a_dict)
         {
 
             if (string.IsNullOrEmpty(a_imgDesc.ImgEncoded))
@@ -174,7 +175,7 @@ namespace Loader
             //model.Images.Add(imageDef);
 
             a_coll.Add(l_imgDef);
-            a_dictRepo[a_imgDesc.LastGuid] = l_imgDef;
+            a_dict[a_imgDesc.LastGuid] = l_imgDef;
 
         }
 
@@ -334,7 +335,7 @@ namespace Loader
         
 
 
-        private static void ExportDrawDoc(DxfEntityCollection a_coll, DrawDoc a_doc, HybridDictionary a_dictRepo, bool ab_block)
+        private static void ExportDrawDoc(DxfEntityCollection a_coll, DrawDoc a_doc, HybridDictionary a_dict, bool ab_block)
         {
             foreach (DrawObj obj in a_doc.m_objects)
             {
@@ -345,10 +346,10 @@ namespace Loader
 
                 if (obj is QImage)
                 {
-                    if (a_dictRepo != null)
+                    if (a_dict != null)
                     {
                         QImage l_image = obj as QImage;
-                        DxfImageDef l_imgDesc = (DxfImageDef)a_dictRepo[l_image.LastGuid];
+                        DxfImageDef l_imgDesc = (DxfImageDef)a_dict[l_image.LastGuid];
                         if (l_imgDesc == null)
                         {
                             //throw new Exception("l_block is null");
@@ -365,12 +366,12 @@ namespace Loader
 
                 if (obj is Trafo)
                 {
-                    ExportTrafo(a_coll, obj as Trafo, a_doc as PCadDoc, a_dictRepo);
+                    ExportTrafo(a_coll, obj as Trafo, a_doc as PCadDoc, a_dict);
                     continue;
                 }
                 if (obj is QIC)
                 {
-                    ExporterQic.ExportQic(a_coll, obj as QIC, a_doc as PCadDoc, a_dictRepo);
+                    ExporterQic.ExportQic(a_coll, obj as QIC, a_doc as PCadDoc, a_dict);
                     continue;
                 }
                 if (obj is QGate)
@@ -381,12 +382,12 @@ namespace Loader
                 if (obj is Insert)
                 {
                     Insert l_insert = obj as Insert;
-                    DxfBlock l_block = (DxfBlock)a_dictRepo[l_insert.m_lG];
+                    DxfBlock l_block = (DxfBlock)a_dict[l_insert.m_lG];
                     if (l_block == null)
                     {
                         throw new Exception("l_block is null");
                     }
-                    ExportInsert(a_coll, obj as Insert, a_doc as PCadDoc, l_block, a_dictRepo);
+                    ExportInsert(a_coll, obj as Insert, a_doc as PCadDoc, l_block, a_dict);
                     continue;
                 }
 
@@ -403,7 +404,7 @@ namespace Loader
                     case Shape.rectangle:       ExportRect      (a_coll, obj as DrawRect, ab_block); break;
                     case Shape.roundRectangle:  ExportRoundRect (a_coll, obj as DrawRect, ab_block); break;
                     case Shape.text:            ExportFreeText(a_coll, obj as FreeText); break;
-                    case Shape.cable: ExportCable(a_coll, obj as CableSymbol, a_doc as PCadDoc); break;
+                    case Shape.cable:           ExportCable(a_coll, obj as CableSymbol, a_doc as PCadDoc); break;
                 }
             }
         }
@@ -505,7 +506,7 @@ namespace Loader
 
 
 
-        private static void ExportTrafo(DxfEntityCollection a_coll, Trafo a_trafo, PCadDoc a_pCadDoc, HybridDictionary a_dictRepo)
+        private static void ExportTrafo(DxfEntityCollection a_coll, Trafo a_trafo, PCadDoc a_pCadDoc, HybridDictionary a_dict)
         {
             DxfBlock l_block = new DxfBlock("trafo " + m_trafoName.ToString(System.Globalization.CultureInfo.InvariantCulture));
             m_trafoName++;
@@ -1060,7 +1061,7 @@ namespace Loader
 
             l_insert.Color = Helper.MakeEntityColorByBlock(a_insert.m_color_border, false);
 
-            l_insert.Rotation = (Math.PI * a_insert.m_turns) / 4;
+            l_insert.Rotation = Angle2Radians(a_insert.m_angle);
 
             l_insert.Layer = ExportContext.Current.Layer;
             a_dxfEntityCollection.Add(l_insert);
@@ -1164,44 +1165,34 @@ namespace Loader
         }
 
 
-        private static void ExportBlockPpd(WW.Cad.Model.Tables.DxfBlockCollection dxfBlockCollection, PpdDoc ppdDoc, HybridDictionary a_dict)
+        private static void ExportBlockPpd(DxfBlockCollection dxfBlockCollection, PpdDoc ppdDoc, HybridDictionary a_dict)
         {
-            string ls_name = ppdDoc.m_name;
-            ls_name = Sanitize(ls_name);
-
-            if (ls_name.Length == 0)
-            {
-                ls_name = ppdDoc.m_lG;
-            }
+            string ls_name = ppdDoc.m_lG;
             if (ls_name.Length == 0)
             {
                 throw new Exception("lG of l_block is empty");
             }
 
-            if (ppdDoc.m_lG.Length < 5)
-            {
-                return;
-            }
-
-
-            // 2011-08-10 changing name to lG because it must be unique
-            //DxfBlock l_block = new DxfBlock(ls_name);
-            DxfBlock l_block = new DxfBlock(ppdDoc.m_lG);
-
-
+            DxfBlock l_block = new DxfBlock(ls_name);
             if (l_block == null)
             {
                 throw new Exception("l_block is null");
             }
+
             if (!dxfBlockCollection.Contains(ls_name))
             {
                 //export images
-                //HybridDictionary l_dictRepo = new HybridDictionary();
                 foreach (QImageDesc l_imgDesc in ppdDoc.m_repo.m_listImgDesc)
                 {
                     ExportQImageDesc(ExportContext.Current.Model.Images, l_imgDesc, a_dict);
                 }
-           
+                //export ppds
+                
+                foreach (PpdDoc l_ppdDoc in ppdDoc.m_repo.m_listPpd)
+                {
+                    ExportBlockPpd(ExportContext.Current.Model.Blocks, l_ppdDoc, a_dict);
+                }
+                
 
                 dxfBlockCollection.Add(l_block);
                 ExportDrawDoc(l_block.Entities, ppdDoc, a_dict, true);
@@ -2325,6 +2316,11 @@ namespace Loader
             a_dict[ls_name] = l_block;
             
        
+        }
+
+        private static double Angle2Radians(int ai_angle_tenth_of_degree)
+        {
+            return (double)(Math.PI * ai_angle_tenth_of_degree / 1800);
         }
 
         //----------------------------------------

@@ -122,7 +122,7 @@ namespace Dxf2ProfiCAD
 
             float fl = (float)1.1; //pouze pro zkompilovani
             Insert l_insert = new Insert(Shape.soucastka, MyShiftScaleX(l_dxfInsert.InsertionPoint.X), MyShiftScaleY(l_dxfInsert.InsertionPoint.Y), fl, fl);//99
-            l_insert.m_turns = li_turns;
+            l_insert.m_angle = RadiansToAngle(l_dxfInsert.Rotation);
             l_insert.m_scaleX = (float)l_dxfInsert.ScaleFactor.X;
             l_insert.m_scaleY = (float)l_dxfInsert.ScaleFactor.Y;
 
@@ -437,6 +437,11 @@ namespace Dxf2ProfiCAD
             m_shift_x = ai_shift_x;
             m_shift_y = ai_shift_y;
             m_shift_target_y = ai_shift_target_y;
+        }
+
+        private static int RadiansToAngle(double ad_radians)
+        {
+            return (int)(-1800 * ad_radians / Math.PI);
         }
 
     }
