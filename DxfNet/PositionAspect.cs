@@ -9,7 +9,7 @@ namespace DxfNet
     public class PositionAspect
     {
         public Point m_pivot;
-        public int m_otacek;
+        public int m_angle;
         public bool m_horizontal;
         public bool m_vertical;
         public double ScaleX { get; set; }
@@ -18,16 +18,16 @@ namespace DxfNet
         public PositionAspect()
         {
             m_pivot = new Point(0,0);
-            m_otacek = 0;
+            m_angle = 0;
             m_horizontal = false;
             m_vertical = false;
         }
 
 
-        public PositionAspect(Point a_pivot, int a_otacek, bool a_horizontal, bool a_vertical)
+        public PositionAspect(Point a_pivot, int a_angle, bool a_horizontal, bool a_vertical)
         {
             m_pivot = a_pivot;
-            m_otacek = a_otacek;
+            m_angle = a_angle;
             m_horizontal = a_horizontal;
             m_vertical = a_vertical;
             ScaleX = 1;

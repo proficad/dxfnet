@@ -76,9 +76,9 @@ namespace Loader
 
   
 
-        public static void ExportQic(DxfEntityCollection a_coll, QIC a_ic, PCadDoc a_pCadDoc, HybridDictionary a_dictRepo)
+        public static void ExportQic(DxfEntityCollection a_coll, QIC a_ic, PCadDoc a_pCadDoc, HybridDictionary a_dict)
         {
-            DxfNet.PositionAspect l_posAspect = new PositionAspect(a_ic.m_position.Location, a_ic.m_turns, a_ic.m_hor, a_ic.m_ver);
+            DxfNet.PositionAspect l_posAspect = new PositionAspect(a_ic.m_position.Location, a_ic.m_angle, a_ic.m_hor, a_ic.m_ver);
 
             string ret;
             System.Drawing.Color l_textColor = System.Drawing.Color.Black;
@@ -338,7 +338,7 @@ namespace Loader
                     a_textAlignment = QTextAlignment.AL_LM;
             }
 
-            if ((a_aspect.m_otacek == 4) || (a_aspect.m_otacek == 6))
+            if ((a_aspect.m_angle == 900) || (a_aspect.m_angle == -900))
             {
                 if (a_textAlignment == QTextAlignment.AL_LM)
                     a_textAlignment = QTextAlignment.AL_RM;
@@ -352,11 +352,11 @@ namespace Loader
             bool lb_isNumeric = int.TryParse(as_ret, out li_out);
             bool lb_otacet = ((as_ret.Length > 2) || (!lb_isNumeric));//not a number or longer > 2
 
-            switch (a_aspect.m_otacek)
+            switch (a_aspect.m_angle)
             {
 
-                case 2: 	// 90 degrees left
-                case 6:		// 90 degrees right
+                case 900: 	// 90 degrees left
+                case -900:		// 90 degrees right
                     if (!ab_topOrBottomEdge)
                     {
                         if (lb_otacet)

@@ -9,17 +9,17 @@ namespace DxfNet
     public class QPivot
     {
         public Point m_pivot;//axis of the object
-        public int m_otacek;//step pi/4
+        public int m_angle;
         public bool m_horizontal;
         public bool m_vertical;
 
         public double ScaleX { get; set; }
         public double ScaleY { get; set; }
 
-        public QPivot(Point a_pivot, int a_otacek, bool ab_horizontal, bool ab_vertical)
+        public QPivot(Point a_pivot, int a_angle, bool ab_horizontal, bool ab_vertical)
         {
             m_pivot = a_pivot;
-            m_otacek = a_otacek;
+            m_angle = a_angle;
             m_horizontal = ab_horizontal;
             m_vertical = ab_vertical;
         }
@@ -27,7 +27,7 @@ namespace DxfNet
         public QPivot(PositionAspect a_aspect)
         {
             m_pivot = a_aspect.m_pivot;
-            m_otacek = a_aspect.m_otacek;
+            m_angle = a_aspect.m_angle;
             m_horizontal = a_aspect.m_horizontal;
             m_vertical = a_aspect.m_vertical;
             ScaleX = a_aspect.ScaleX;
@@ -44,15 +44,11 @@ namespace DxfNet
         {
 	        Point	vysledek = vstup;
 
-            if ((m_otacek == 0) && (m_vertical == false) && (m_horizontal == false))
+            if ((m_angle == 0) && (m_vertical == false) && (m_horizontal == false))
             {
 		        return vstup;
 	        }
 
-	        int	otacek = m_otacek;                    
-	        // dostat otáčky do intervalu <0;7>
-	        for(otacek = m_otacek;otacek<0;otacek += 8);
-	        for(;otacek>7;otacek -= 8);
 	        //zohlednit polohu bodu vůči středu součástky...
 	        int X = m_pivot.X; 
 	        int Y = m_pivot.Y; 
@@ -69,20 +65,21 @@ namespace DxfNet
 	        if (m_horizontal) y = -y;//máme MM_TEXT
 
 	        //////
-	        switch(otacek){
+	        switch(m_angle)
+            {
 	        case 0: 
 		        vysledek.X = X + x;
 		        vysledek.Y = Y + y;
 		        break;
-	        case 2: 
+	        case 900: 
 		        vysledek.X = X + y;
 		        vysledek.Y = Y - x;
 		        break;
-	        case 4: 
+	        case 1800: 
 		        vysledek.X = X - x;
 		        vysledek.Y = Y - y;
 		        break;
-	        case 6: 
+	        case -900: 
 		        vysledek.X = X - y;
 		        vysledek.Y = Y + x;
 		        break;
@@ -93,8 +90,8 @@ namespace DxfNet
 		        double fi = Math.Atan2((double)y, (double)x);
 		        double z = (double)((y*y)+(x*x)); z = Math.Sqrt(z);
 		        //
-		        x = (int)(z * Math.Cos(fi + (pi * 0.25 * m_otacek)));
-		        y = -(int)(z * Math.Sin(fi + (pi * 0.25 * m_otacek)));
+		        x = (int) (z * Math.Cos(fi + (pi * 0.25 * m_angle / 450)));
+		        y = -(int)(z * Math.Sin(fi + (pi * 0.25 * m_angle / 450)));
 		        // update the size
 		        //
 		        x += X; y += Y ;

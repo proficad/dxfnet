@@ -133,7 +133,7 @@ namespace Loader
             XmlNode nodeNumberingWireSettings = xmlDoc.SelectSingleNode("/document/NumberingWire");
             if(nodeNumberingWireSettings != null)
             {
-            LoadNumberingWireSettings(l_collPages.m_settingsNumberingWire, nodeNumberingWireSettings, l_collPages);
+                LoadNumberingWireSettings(l_collPages.m_settingsNumberingWire, nodeNumberingWireSettings, l_collPages);
             }
 
 
@@ -896,7 +896,19 @@ namespace Loader
         {
             a_insert.m_hor = XmlAttrToBool(a_node.Attributes["h"]);
             a_insert.m_ver = XmlAttrToBool(a_node.Attributes["v"]);
-            a_insert.m_turns = XmlAttrToInt(a_node.Attributes["t"]) % 8;
+
+
+            XmlAttribute l_attr_turns = a_node.Attributes["t"];
+            if(l_attr_turns != null)
+            {
+                int li_turns = XmlAttrToInt(a_node.Attributes["t"]) % 8;
+                a_insert.m_angle = TurnsToAngle(li_turns);
+            }
+            else
+            {
+                a_insert.m_angle = XmlAttrToInt(a_node.Attributes["a"]);
+            }
+
 
             string ls_linecolor = XmlAttrToString(a_node.Attributes["c"]);
             if (ls_linecolor.Length > 0)
@@ -967,7 +979,7 @@ namespace Loader
             {
                 return;
             }
-            //XmlNode l_nodeElements = a_node.SelectSingleNode("elements");
+
             foreach (XmlNode nodeRepoElement in a_node)
             {
                 if (nodeRepoElement.NodeType == XmlNodeType.Element)
@@ -1282,6 +1294,12 @@ namespace Loader
                 a_page.m_ptbPosition.m_useTb    = XmlAttrToBool  (l_node_tb.Attributes["use"]);
                 a_page.m_ptbPosition.m_turn     = XmlAttrToBool  (l_node_tb.Attributes["t"]);
             }
+        }
+
+        private static int TurnsToAngle(int ai_turns)
+        {
+            int li_result = 450 * ai_turns;
+            return li_result;
         }
 
 

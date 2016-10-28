@@ -46,7 +46,7 @@ namespace DxfNet
         public string m_lG;
         public bool m_hor;//horizontal
         public bool m_ver;//vertical
-        public int m_turns;
+        public int m_angle;
         public Color m_color_border;
         public Color m_color_fill;
         public float m_scaleX;
@@ -88,9 +88,9 @@ namespace DxfNet
             {
                 a_xmlWriter.WriteAttributeString("v", "1");
             }
-            if (m_turns != 0)
+            if (m_angle != 0)
             {
-                a_xmlWriter.WriteAttributeString("t", m_turns.ToString());
+                a_xmlWriter.WriteAttributeString("a", m_angle.ToString());
             }
             if (m_scaleX != 1f)
             {
@@ -163,7 +163,7 @@ namespace DxfNet
         {
             
             
-            if ((0 == m_turns)&&(false == m_ver)&&(false == m_hor)&&(m_scaleX==1)&&(m_scaleY==1))
+            if ((0 == m_angle)&&(false == m_ver)&&(false == m_hor)&&(m_scaleX==1)&&(m_scaleY==1))
 	        {
 		        return a_vyvod;
 	        }
@@ -171,7 +171,7 @@ namespace DxfNet
 
 	        PositionAspect l_positionAspect = new PositionAspect();
 	        l_positionAspect.m_pivot = Helper.GetRectCenterPoint(m_position);
-	        l_positionAspect.m_otacek = m_turns;
+	        l_positionAspect.m_angle = m_angle;
 	        l_positionAspect.m_horizontal = m_hor;
 	        l_positionAspect.m_vertical = m_ver;
 	        l_positionAspect.ScaleX = m_scaleX;
