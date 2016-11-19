@@ -83,6 +83,26 @@ namespace DxfNet
             return m_points[m_points.Count - 2];
         }
 
+        public bool IsWireShort(int ai_long_wire_len)
+        {
+            if (m_points.Count != 2) // > 2 means it is long, < 2 means it is not valid
+            {
+                return false;
+            }
+
+            int li_dist = Helper.EasyDistance2Points(m_points[0], m_points[1]);
+            return li_dist < (10 * ai_long_wire_len);
+        }
+
+        public Point GetLineCenterPoint()
+        {
+            Point l_center = new Point();
+            l_center.X = (m_points[0].X + m_points[1].X) / 2;
+            l_center.Y = (m_points[0].Y + m_points[1].Y) / 2;
+
+            return l_center;
+        }
+
         //-------------------------
 
     }

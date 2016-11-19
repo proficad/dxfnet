@@ -19,7 +19,7 @@ namespace DxfNet
         public const string Attr_WireLabelDist_b = "WireLabelDist_b";
         public const string Attr_WireLabelDist_c = "WireLabelDist_c";
         public const string Attr_Vertically = "Vertically";
-
+        public const string Attr_LongWireLength = "LongWireLength";
 
 
         public bool Enabled     { get; set; }
@@ -32,7 +32,7 @@ namespace DxfNet
         public int WireLabelDist_B { get; set; }
         public int WireLabelDist_C { get; set; }
 
-
+        public int Long_Wire_Len { get; set; }
 
 
     }

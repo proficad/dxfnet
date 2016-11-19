@@ -52,6 +52,10 @@ namespace DxfNet
             x = t;
         }
 
-
+        internal static int EasyDistance2Points(Point a_point1, Point a_point2)
+        {
+            return
+            Math.Abs(a_point1.X - a_point2.X) + Math.Abs(a_point1.Y - a_point2.Y);
+        }
     }
 }

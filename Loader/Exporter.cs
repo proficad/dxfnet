@@ -648,21 +648,28 @@ namespace Loader
                 return;
             }
 
-            
+           
 
             SettingsNumberingWire.EnumShowWireNumbers l_swn = pSettings.ShowWireNumbers;
 			if (l_swn != SettingsNumberingWire.EnumShowWireNumbers.swn_no)
 			{
-                if ((!a_wire.Is_connected_first) || l_swn == SettingsNumberingWire.EnumShowWireNumbers.swn_both)
-				{
-					ExportWireLabel(a_coll, a_wire, true, a_efont, 
-                        pSettings.WireLabelDist_A, pSettings.WireLabelDist_B, pSettings.Vertically);
-				}
-				if ((!a_wire.Is_connected_last) || l_swn == SettingsNumberingWire.EnumShowWireNumbers.swn_both)
-				{
-					ExportWireLabel(a_coll, a_wire, false, a_efont, 
-                        pSettings.WireLabelDist_A, pSettings.WireLabelDist_B, pSettings.Vertically);
-				}
+                if ((l_swn == SettingsNumberingWire.EnumShowWireNumbers.swn_both) && (a_wire.IsWireShort(pSettings.Long_Wire_Len)))
+                {
+                    Export_Straight_Wire_Label(a_coll, a_wire, a_efont, pSettings);
+                }
+                else
+                {
+                    if ((!a_wire.Is_connected_first) || l_swn == SettingsNumberingWire.EnumShowWireNumbers.swn_both)
+                    {
+                        ExportWireLabel(a_coll, a_wire, true, a_efont,
+                            pSettings.WireLabelDist_A, pSettings.WireLabelDist_B, pSettings.Vertically);
+                    }
+                    if ((!a_wire.Is_connected_last) || l_swn == SettingsNumberingWire.EnumShowWireNumbers.swn_both)
+                    {
+                        ExportWireLabel(a_coll, a_wire, false, a_efont,
+                            pSettings.WireLabelDist_A, pSettings.WireLabelDist_B, pSettings.Vertically);
+                    }
+                }
 			}
 	
         }
@@ -2321,6 +2328,52 @@ namespace Loader
         private static double Angle2Radians(int ai_angle_tenth_of_degree)
         {
             return (double)(Math.PI * ai_angle_tenth_of_degree / 1800);
+        }
+
+        private static void Export_Straight_Wire_Label(DxfEntityCollection a_coll, DxfNet.Wire a_wire, EFont a_efont, SettingsNumberingWire pSettings)
+        {
+            string ls_name = a_wire.GetName();
+            if(string.IsNullOrWhiteSpace(ls_name))
+            {
+                return;
+            }
+
+            AttachmentPoint l_attachment_point = AttachmentPoint.MiddleCenter;
+            Vector3D l_axis = TurnsToVector3D(0);
+
+
+            Point l_point_temp = a_wire.GetLineCenterPoint();
+            Point3D l_center_point = new Point3D(l_point_temp.X, l_point_temp.Y, 0);
+
+            //adjust the center point depending on the orientation of the wire
+            UtilsMath.cardinal_directions l_cd = UtilsMath.GetDirection(l_point_nearest, l_point_next);
+            if (l_cd == UtilsMath.cardinal_directions.cd_none)
+            {
+                return;
+            }
+
+            if ((l_cd == UtilsMath.cardinal_directions.cd_west) || (l_cd == UtilsMath.cardinal_directions.cd_east))
+            {
+
+            }
+            else if ((l_cd == UtilsMath.cardinal_directions.cd_north) || (l_cd == UtilsMath.cardinal_directions.cd_south))
+            {
+
+            }
+
+
+
+                Point3D l_anchor = new Point3D(a_point_nearest.X, a_point_nearest.Y, 0);
+            l_anchor.Y *= REVERSE_Y;
+            int li_height = GetFontAscentSize(a_efont);
+
+            DxfMText dxfText = new DxfMText(ls_name, l_anchor, li_height);
+            dxfText.Color = Helper.MakeEntityColorByBlock(a_efont.m_color, false);
+
+            dxfText.AttachmentPoint = l_attachment_point;
+            dxfText.XAxis = l_axis;
+
+            a_coll.Add(dxfText);
         }
 
         //----------------------------------------

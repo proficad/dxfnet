@@ -278,6 +278,7 @@ namespace Loader
             a_setting.WireLabelDist_B = XmlAttrToInt(a_node.Attributes[SettingsNumberingWire.Attr_WireLabelDist_b]);
             a_setting.WireLabelDist_C = XmlAttrToInt(a_node.Attributes[SettingsNumberingWire.Attr_WireLabelDist_c]);
 
+            a_setting.Long_Wire_Len = XmlAttrToInt(a_node.Attributes[SettingsNumberingWire.Attr_LongWireLength]);
         }
 
 
