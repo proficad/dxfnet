@@ -2346,7 +2346,7 @@ namespace Loader
             Point3D l_center_point = new Point3D(l_point_temp.X, l_point_temp.Y, 0);
 
             //adjust the center point depending on the orientation of the wire
-            UtilsMath.cardinal_directions l_cd = UtilsMath.GetDirection(l_point_nearest, l_point_next);
+            UtilsMath.cardinal_directions l_cd = UtilsMath.GetDirection(a_wire.m_points[0], a_wire.m_points[1]);
             if (l_cd == UtilsMath.cardinal_directions.cd_none)
             {
                 return;
@@ -2354,16 +2354,26 @@ namespace Loader
 
             if ((l_cd == UtilsMath.cardinal_directions.cd_west) || (l_cd == UtilsMath.cardinal_directions.cd_east))
             {
-
+                l_center_point.Y -= pSettings.WireLabelDist_A;
+                l_attachment_point = AttachmentPoint.BottomCenter;
             }
             else if ((l_cd == UtilsMath.cardinal_directions.cd_north) || (l_cd == UtilsMath.cardinal_directions.cd_south))
             {
+                l_center_point.X -= pSettings.WireLabelDist_A;
 
+                if (pSettings.Vertically)
+                {
+                    l_axis = TurnsToVector3D(2);
+                    l_attachment_point = AttachmentPoint.BottomCenter;
+                }
+                else
+                {
+                    l_attachment_point = AttachmentPoint.MiddleRight;
+                }
             }
 
 
-
-                Point3D l_anchor = new Point3D(a_point_nearest.X, a_point_nearest.Y, 0);
+            Point3D l_anchor = new Point3D(l_center_point.X, l_center_point.Y, 0);
             l_anchor.Y *= REVERSE_Y;
             int li_height = GetFontAscentSize(a_efont);
 

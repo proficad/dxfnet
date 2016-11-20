@@ -278,7 +278,7 @@ namespace Loader
             a_setting.WireLabelDist_B = XmlAttrToInt(a_node.Attributes[SettingsNumberingWire.Attr_WireLabelDist_b]);
             a_setting.WireLabelDist_C = XmlAttrToInt(a_node.Attributes[SettingsNumberingWire.Attr_WireLabelDist_c]);
 
-            a_setting.Long_Wire_Len = XmlAttrToInt(a_node.Attributes[SettingsNumberingWire.Attr_LongWireLength]);
+            a_setting.Long_Wire_Len = XmlAttrToIntWithDefault(a_node.Attributes[SettingsNumberingWire.Attr_LongWireLength], 50);
         }
 
 
@@ -730,6 +730,11 @@ namespace Loader
 
         public static int XmlAttrToInt(XmlAttribute a_attr)
         {
+            return XmlAttrToIntWithDefault(a_attr, 0);
+        }
+
+        public static int XmlAttrToIntWithDefault(XmlAttribute a_attr, int ai_default)
+        {
             string ls_result = string.Empty;
             if (a_attr != null)
             {
@@ -737,12 +742,10 @@ namespace Loader
             }
             if (ls_result.Length == 0)
             {
-                return 0;
+                return ai_default;
             }
             return int.Parse(ls_result);
         }
-
-
 
 
         public static void LoadDrawDoc(DrawDoc a_drawDoc, XmlNode a_node)
