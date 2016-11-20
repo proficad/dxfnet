@@ -360,10 +360,22 @@ namespace Loader
 
         private static void LoadSummary(Hashtable a_hashTable, XmlNode a_node)
         {
+            //old way
             foreach (XmlAttribute l_attr in a_node.Attributes)
             {
                 a_hashTable[l_attr.Name] = l_attr.Value;
             }
+
+            //new way
+            XmlNodeList fieldNodes = a_node.SelectNodes("field");
+            foreach(XmlNode l_node in fieldNodes)
+            {
+                string ls_name = XmlAttrToString(l_node.Attributes["name"]);
+                string ls_value = XmlAttrToString(l_node.Attributes["value"]);
+                a_hashTable[ls_name] = ls_value;
+            }
+
+
         }
 
         //for version < 8, position and TB was stored together
