@@ -76,6 +76,19 @@ namespace Loader
             XmlNodeList list = xmlDoc.GetElementsByTagName("document");
             XmlNode docNode = list[0];
 
+            XmlAttribute l_attrib_namespace = docNode.Attributes["xmlns"];
+            if(l_attrib_namespace != null)
+            {
+                docNode.Attributes.Remove(l_attrib_namespace);
+                xmlDoc.Save(as_path);
+                xmlDoc.Load(as_path);
+
+                list = xmlDoc.GetElementsByTagName("document");
+                docNode = list[0];
+
+            }
+            
+
             NumberFormatInfo formatInfo = CultureInfo.InvariantCulture.NumberFormat;
 
             string ls_type      = docNode.Attributes["type"].Value;
