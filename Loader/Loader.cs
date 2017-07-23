@@ -1206,7 +1206,10 @@ namespace Loader
                 string ls_value = l_node_param.Attributes["value"].Value;
                 if(!string.IsNullOrWhiteSpace(ls_key) && !string.IsNullOrWhiteSpace(ls_value))
                 {
-                    a_hashTable.Add(ls_key, ls_value);
+                    if(!a_hashTable.ContainsKey(ls_key))
+                    {
+                        a_hashTable.Add(ls_key, ls_value);
+                    }
                 }
             }
         }
