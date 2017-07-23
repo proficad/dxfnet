@@ -1099,6 +1099,8 @@ namespace Loader
             {
                 ls_result += ls_val + "-";
             }
+
+            ls_result = ls_result.Replace("/", "-");
             return ls_result;
         }
 
