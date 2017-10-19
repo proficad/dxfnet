@@ -66,7 +66,15 @@ namespace Loader
             catch(System.Xml.XmlException exc)
             {
                 string ls_what = exc.Message;
-                throw new VersionPre5();
+
+                string ls_first_line = "";
+                using (StreamReader sr = new StreamReader(as_path))
+                {
+                    ls_first_line = sr.ReadLine();
+                }
+
+                
+                throw new VersionPre5(ls_first_line);
             }
 
             CollPages l_collPages = new CollPages();
@@ -926,18 +934,7 @@ namespace Loader
             a_insert.m_hor = XmlAttrToBool(a_node.Attributes["h"]);
             a_insert.m_ver = XmlAttrToBool(a_node.Attributes["v"]);
 
-
-            XmlAttribute l_attr_turns = a_node.Attributes["t"];
-            if(l_attr_turns != null)
-            {
-                int li_turns = XmlAttrToInt(a_node.Attributes["t"]) % 8;
-                a_insert.m_angle = TurnsToAngle(li_turns);
-            }
-            else
-            {
-                a_insert.m_angle = XmlAttrToInt(a_node.Attributes["a"]);
-            }
-
+            a_insert.m_angle = LoadTurnsOrAngle(a_node);
 
             string ls_linecolor = XmlAttrToString(a_node.Attributes["c"]);
             if (ls_linecolor.Length > 0)
@@ -984,12 +981,15 @@ namespace Loader
             int li_x = int.Parse(a_node.Attributes["x"].Value);
             int li_y = int.Parse(a_node.Attributes["y"].Value);
             string ls_font = a_node.Attributes["f"].Value;
-            int li_turns = XmlAttrToInt(a_node.Attributes["t"]) % 8;
+
+            int li_angle = LoadTurnsOrAngle(a_node);
+
             Rectangle l_rect = new Rectangle(li_x, li_y, 0, 0);
 
             string ls_text = System.Web.HttpUtility.HtmlDecode(a_node.InnerText);//2009-2-7 znacka jistic >
             EFont l_efont = EFont.StringToEfont(ls_font);
-            FreeText l_text = new FreeText(ls_text, l_efont, l_rect, li_turns);
+            FreeText l_text = new FreeText(ls_text, l_efont, l_rect, 0);
+            l_text.m_angle = li_angle;
 
             l_text.m_alignment = (QTextAlignment) XmlAttrToInt(a_node.Attributes["al"]); //empty value gives 0, which is the default AL_MM
 
@@ -1332,6 +1332,20 @@ namespace Loader
         {
             int li_result = 450 * ai_turns;
             return li_result;
+        }
+
+        private static int LoadTurnsOrAngle(XmlNode a_node)
+        {
+            XmlAttribute l_attr_turns = a_node.Attributes["t"];
+            if (l_attr_turns != null)
+            {
+                int li_turns = XmlAttrToInt(a_node.Attributes["t"]) % 8;
+                return TurnsToAngle(li_turns);
+            }
+            else
+            {
+                return XmlAttrToInt(a_node.Attributes["a"]);
+            }
         }
 
 
