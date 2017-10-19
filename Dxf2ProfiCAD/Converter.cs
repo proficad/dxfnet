@@ -323,11 +323,10 @@ namespace Dxf2ProfiCAD
                 l_angle = Math.Atan2(l_axis_y, l_axis_x);
             }
 
-            double ld_turns = 4 * l_angle / Math.PI;
-            int li_turns = (int)Math.Round(ld_turns);
+            int li_angle = 10 * RadiansToAngle(l_angle);
 
-            FreeText l_text = new FreeText(ls_text, l_efont, l_rect, 0);
-            l_text.m_turns = li_turns;
+            FreeText l_text = new FreeText(ls_text, l_efont, l_rect, li_angle);
+            
 
             return l_text;
         }

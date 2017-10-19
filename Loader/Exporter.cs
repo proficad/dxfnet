@@ -867,7 +867,7 @@ namespace Loader
             DxfMText dxfText = new DxfMText(ls_text, l_leftTop, li_height);
            
             dxfText.AttachmentPoint = GetAttachementPoint(freeText.m_alignment);//2012-11-2
-            dxfText.XAxis = TurnsToVector3D(freeText.m_turns);
+            dxfText.XAxis = Vector3D.FromAngle(freeText.m_angle * WW.Math.Constants.DegreesToRadians / 10);
 
             dxfText.Layer = ExportContext.Current.Layer;
             dxfText.Color = Helper.MakeEntityColorByBlock(freeText.m_efont.m_color, false);
@@ -1951,10 +1951,9 @@ namespace Loader
                 ls_corrected = "-0" + as_what.Substring(1);
             }
 
-
-
             return Double.Parse(ls_corrected, System.Globalization.CultureInfo.InvariantCulture);
         }
+
 
         public static void ExportBezier(DxfEntityCollection a_coll, DrawPoly drawPoly, bool ab_block)
         {
