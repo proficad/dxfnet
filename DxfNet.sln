@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProfiCAD2Dxf", "Export2Dxf\ProfiCAD2Dxf.csproj", "{CADCC099-D6E1-4D90-86B8-85D7DB1EFE6D}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProfiCAD2Dxf", "Export2Dxf\
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Loader", "Loader\Loader.csproj", "{E4692CFB-F467-4F4B-A70E-A33C8E4A4948}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "DxfNet\Core.csproj", "{C2460D61-F733-48E4-A53A-6B875D647911}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dxf2ProfiCAD", "Dxf2ProfiCAD\Dxf2ProfiCAD.csproj", "{6E7E7363-AF2E-4BCE-855D-B5BB9FC643B2}"
 EndProject
@@ -27,6 +25,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tester", "Tester\Tester.csproj", "{EE4D9238-F1E5-4BE6-B83E-DFD28846EBF4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{C2460D61-F733-48E4-A53A-6B875D647911}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,10 +41,6 @@ Global
 		{E4692CFB-F467-4F4B-A70E-A33C8E4A4948}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4692CFB-F467-4F4B-A70E-A33C8E4A4948}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4692CFB-F467-4F4B-A70E-A33C8E4A4948}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C2460D61-F733-48E4-A53A-6B875D647911}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C2460D61-F733-48E4-A53A-6B875D647911}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C2460D61-F733-48E4-A53A-6B875D647911}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C2460D61-F733-48E4-A53A-6B875D647911}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6E7E7363-AF2E-4BCE-855D-B5BB9FC643B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6E7E7363-AF2E-4BCE-855D-B5BB9FC643B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E7E7363-AF2E-4BCE-855D-B5BB9FC643B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -62,6 +58,10 @@ Global
 		{EE4D9238-F1E5-4BE6-B83E-DFD28846EBF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE4D9238-F1E5-4BE6-B83E-DFD28846EBF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE4D9238-F1E5-4BE6-B83E-DFD28846EBF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2460D61-F733-48E4-A53A-6B875D647911}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2460D61-F733-48E4-A53A-6B875D647911}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2460D61-F733-48E4-A53A-6B875D647911}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2460D61-F733-48E4-A53A-6B875D647911}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

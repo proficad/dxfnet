@@ -84,16 +84,16 @@
     <Compile Include="VersionPre5.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DxfNet\Core.csproj">
-      <Project>{C2460D61-F733-48E4-A53A-6B875D647911}</Project>
-      <Name>Core</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Core.csproj">
+      <Project>{c2460d61-f733-48e4-a53a-6b875d647911}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

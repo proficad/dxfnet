@@ -10,16 +10,17 @@ namespace DxfNet
     {
 //        public string m_text;
         public EFont m_efont;
-        public int m_turns;
+        
         public bool m_isInTb;
         bool m_bTurnWithSymbol = false;
         public QTextAlignment m_alignment;
-        
-        public FreeText(string as_text, EFont a_efont, Rectangle a_rect, int ai_turns) : base(Shape.text, a_rect)
+        public int m_angle;
+
+        public FreeText(string as_text, EFont a_efont, Rectangle a_rect, int ai_angle) : base(Shape.text, a_rect)
         {
             m_text = as_text;
             m_efont = a_efont;
-            m_turns = ai_turns;
+            m_angle = ai_angle;
             m_isInTb = false;
             m_alignment = QTextAlignment.AL_MM;
         }
@@ -40,7 +41,7 @@ namespace DxfNet
             Point l_pivot2Save = GetPivotRotated();
 	        string ls_currentFont = m_efont.ToString();
 
-            SaveTextToXml(a_xmlWriter, li_druhpisma, m_text, l_pivot2Save, m_turns, ls_currentFont, m_bTurnWithSymbol);
+            SaveTextToXml(a_xmlWriter, li_druhpisma, m_text, l_pivot2Save, m_angle, ls_currentFont, m_bTurnWithSymbol);
 
         }
 
@@ -50,7 +51,7 @@ namespace DxfNet
             return GetCenterPoint();
         }
 
-        private void SaveTextToXml(System.Xml.XmlWriter a_xmlWriter, int li_druhpisma, string as_text, Point l_pivot2Save, int ai_turns, string as_currentFont, bool a_bTurnWithSymbol)
+        private void SaveTextToXml(System.Xml.XmlWriter a_xmlWriter, int li_druhpisma, string as_text, Point l_pivot2Save, int ai_angle, string as_currentFont, bool a_bTurnWithSymbol)
         {
  
 	        string ls_stringEncoded = Helper.EncodeHtml(as_text);
@@ -68,9 +69,9 @@ namespace DxfNet
             a_xmlWriter.WriteAttributeString("y", l_pivot2Save.Y.ToString());
 
 	
-	        if (ai_turns != 0)
+	        if (ai_angle != 0)
 	        {
-                a_xmlWriter.WriteAttributeString("t", ai_turns.ToString());
+                a_xmlWriter.WriteAttributeString("a", ai_angle.ToString());
 	        }
 
             a_xmlWriter.WriteAttributeString("f", as_currentFont);
