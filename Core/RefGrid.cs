@@ -7,6 +7,6 @@
         public bool Right { get; set; }
         public bool Bottom { get; set; }
         public int FieldSize { get; set; }
-
+        public int GRID_THICKNESS = 50;
     }
 }

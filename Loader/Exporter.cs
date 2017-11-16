@@ -74,7 +74,7 @@ namespace Loader
                 {
                     if(!string.IsNullOrWhiteSpace(ExportContext.Current.PCadDocument.m_ptbPosition.Path))//page level path
                     {
-                        ExportTbInsert(model.Entities, ExportContext.Current.PCadDocument.m_ptbPosition, l_dictRepo);//page TB
+                        ExportTbInsert(model.Entities, ExportContext.Current.PCadDocument.m_ptbPosition, a_doc.Parent.m_ref_grid, l_dictRepo);//page TB
                     }
                     else
                     {
@@ -82,7 +82,7 @@ namespace Loader
                         {
                             if(!string.IsNullOrWhiteSpace(ExportContext.Current.PCadDocument.Parent.m_ptbPosition.Path))
                             {
-                                ExportTbInsert(model.Entities, ExportContext.Current.PCadDocument.Parent.m_ptbPosition, l_dictRepo);//global TB
+                                ExportTbInsert(model.Entities, ExportContext.Current.PCadDocument.Parent.m_ptbPosition, a_doc.Parent.m_ref_grid, l_dictRepo);//global TB
                             }
                         }
                     }
@@ -268,7 +268,7 @@ namespace Loader
         }
 
         
-        private static void ExportTbInsert(DxfEntityCollection a_coll, PtbPosition a_ptb_pos, HybridDictionary a_dict)
+        private static void ExportTbInsert(DxfEntityCollection a_coll, PtbPosition a_ptb_pos, RefGridSettings a_ref_grid_settings, HybridDictionary a_dict)
         {
             string ls_name = a_ptb_pos.Path;
             if(string.IsNullOrWhiteSpace(ls_name))
@@ -321,6 +321,28 @@ namespace Loader
 
             l_centerPoint.X -= a_ptb_pos.m_horDist;
             l_centerPoint.Y -= a_ptb_pos.m_verDist;
+
+
+            // if ref grid, shift the TB
+            if (a_ref_grid_settings.Right)
+            {
+                l_centerPoint.X -= a_ref_grid_settings.GRID_THICKNESS;
+            }
+            if (li_turns == 2)
+            {
+                if (a_ref_grid_settings.Top)
+                {
+                    l_centerPoint.Y += a_ref_grid_settings.GRID_THICKNESS;
+                }
+            }
+            else
+            {
+                if(a_ref_grid_settings.Bottom)
+                {
+                    l_centerPoint.Y -= a_ref_grid_settings.GRID_THICKNESS;
+                }
+            }
+
 
 
             l_centerPoint.Y *= REVERSE_Y;
