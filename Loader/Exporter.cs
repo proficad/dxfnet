@@ -2341,6 +2341,11 @@ namespace Loader
             }
 
 
+            foreach (PpdDoc l_ppdDoc in a_ptb.m_repo.m_listPpd)
+            {
+                ExportBlockPpd(ExportContext.Current.Model.Blocks, l_ppdDoc, a_dict);
+            }
+
             dxfBlockCollection.Add(l_block);
             ExportDrawDoc(l_block.Entities, a_ptb, a_dict, true);
             a_dict[ls_name] = l_block;
