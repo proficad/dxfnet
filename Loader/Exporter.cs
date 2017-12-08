@@ -326,20 +326,20 @@ namespace Loader
             // if ref grid, shift the TB
             if (a_ref_grid_settings.Right)
             {
-                l_centerPoint.X -= a_ref_grid_settings.GRID_THICKNESS;
+                l_centerPoint.X -= RefGridSettings.GRID_THICKNESS;
             }
             if (li_turns == 2)
             {
                 if (a_ref_grid_settings.Top)
                 {
-                    l_centerPoint.Y += a_ref_grid_settings.GRID_THICKNESS;
+                    l_centerPoint.Y += RefGridSettings.GRID_THICKNESS;
                 }
             }
             else
             {
                 if(a_ref_grid_settings.Bottom)
                 {
-                    l_centerPoint.Y -= a_ref_grid_settings.GRID_THICKNESS;
+                    l_centerPoint.Y -= RefGridSettings.GRID_THICKNESS;
                 }
             }
 
@@ -2019,7 +2019,8 @@ namespace Loader
             at_sip4, 
             at_sip5,
             at_sip6,
-            at_sip7
+            at_sip7,
+            at_sip8
         }
 
 
@@ -2188,7 +2189,18 @@ namespace Loader
                 Helper.ExportPolylineAux(a_coll, l_poly5, ab_block);
                 return;
             }
-            
+            case ArrowType.at_sip8://    /------------------/ stavební
+            {
+                DrawPoly l_poly = new DrawPoly(Shape.polyline, ai_thickness, a_color);
+                l_poly.AddPoint(a_start);
+                l_poly.AddPoint(a_cil);
+
+                DrawPoly l_poly2 = new DrawPoly(Shape.polyline, ai_thickness, a_color);
+                l_poly2.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - (80 * li_coef), a_start.Y)));
+                l_poly2.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - (60 * li_coef), a_start.Y - 5 * li_coef)));
+
+                return;
+            }
 
 
             default:
@@ -2205,13 +2217,15 @@ namespace Loader
 		}	
     }
 
-        static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, Point a_start, Point a_cil, System.Drawing.Color a_color, bool ab_drawStem, bool ab_is_ending, double a_scaleX, double a_scaleY, int ai_thickness, bool ab_block)
+static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, Point a_start, Point a_cil, System.Drawing.Color a_color, bool ab_drawStem, bool ab_is_ending, double a_scaleX, double a_scaleY, int ai_thickness, bool ab_block)
 {
 	int li_coef_x_12 = (int) ((12.0 * a_scaleX) + 0.499);
 	int li_coef_x_24 = (int) ((24.0 * a_scaleX) + 0.499);
 	int li_coef_y_5  = (int) ((5.0 * a_scaleY) + 0.499);
+    int li_coef_x_7 = (int)((7.0 * a_scaleX) + 0.499);
+    int li_coef_y_7 = (int)((7.0 * a_scaleY) + 0.499);
 
-	int	li_coef = 2;
+    int	li_coef = 2;
 	int li_len = Helper.MyHypot(a_start.X - a_cil.X, a_start.Y - a_cil.Y);
 
 	switch(a_typ){
@@ -2291,6 +2305,12 @@ namespace Loader
         l_poly_sip5.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - li_coef_x_12 * li_coef, a_start.Y + li_coef_y_5 * li_coef)));
         Helper.ExportPolylineAux(a_coll, l_poly_sip5, ab_block);
 		break;
+    case ArrowType.at_sip8:
+        DrawPoly l_poly_sip8 = new DrawPoly(Shape.polyline, ai_thickness, a_color);
+        l_poly_sip8.AddPoint(Helper.PrevodBodu(a_cil, a_start, new Point(a_cil.X + li_coef_x_7 * li_coef, a_cil.Y - li_coef_y_7 * li_coef)));
+        l_poly_sip8.AddPoint(Helper.PrevodBodu(a_cil, a_start, new Point(a_cil.X - li_coef_x_7 * li_coef, a_cil.Y + li_coef_y_7 * li_coef)));
+        Helper.ExportPolylineAux(a_coll, l_poly_sip8, ab_block);
+        break;
 
 	}	
 }
