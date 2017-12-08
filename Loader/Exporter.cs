@@ -2225,6 +2225,9 @@ static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, 
     int li_coef_x_7 = (int)((7.0 * a_scaleX) + 0.499);
     int li_coef_y_7 = (int)((7.0 * a_scaleY) + 0.499);
 
+    int li_dist_80 = 80;
+    int li_dist_60 = 60;
+
     int	li_coef = 2;
 	int li_len = Helper.MyHypot(a_start.X - a_cil.X, a_start.Y - a_cil.Y);
 
@@ -2305,7 +2308,18 @@ static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, 
         l_poly_sip5.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - li_coef_x_12 * li_coef, a_start.Y + li_coef_y_5 * li_coef)));
         Helper.ExportPolylineAux(a_coll, l_poly_sip5, ab_block);
 		break;
-    case ArrowType.at_sip8:
+    case ArrowType.at_sip7://mala s sipkami dovnitr na kotovani der zvenku added version 4.1
+         DrawPoly l_poly_sip_7a = new DrawPoly(Shape.polyline, ai_thickness, a_color);
+        l_poly_sip_7a.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - (li_dist_80 * li_coef), a_start.Y)));
+        l_poly_sip_7a.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - (li_dist_60 * li_coef), a_start.Y - li_coef_y_5 * li_coef)));
+        Helper.ExportPolylineAux(a_coll, l_poly_sip_7a, ab_block);
+
+        DrawPoly l_poly_sip_7b = new DrawPoly(Shape.polyline, ai_thickness, a_color);
+        l_poly_sip_7b.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - (li_dist_80 * li_coef), a_start.Y)));
+        l_poly_sip_7b.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - (li_dist_60 * li_coef), a_start.Y + li_coef_y_5 * li_coef)));
+        Helper.ExportPolylineAux(a_coll, l_poly_sip_7b, ab_block);
+        break;
+    case ArrowType.at_sip8://    /------------------/ stavební
         DrawPoly l_poly_sip8 = new DrawPoly(Shape.polyline, ai_thickness, a_color);
         l_poly_sip8.AddPoint(Helper.PrevodBodu(a_cil, a_start, new Point(a_cil.X + li_coef_x_7 * li_coef, a_cil.Y - li_coef_y_7 * li_coef)));
         l_poly_sip8.AddPoint(Helper.PrevodBodu(a_cil, a_start, new Point(a_cil.X - li_coef_x_7 * li_coef, a_cil.Y + li_coef_y_7 * li_coef)));
