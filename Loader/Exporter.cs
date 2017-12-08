@@ -493,12 +493,11 @@ namespace Loader
             l_img.ImageDef = a_imgDef;
             l_img.InsertionPoint = l_inserionPoint;
 
-            l_img.ImageDisplayFlags = ImageDisplayFlags.ShowImage;
             l_img.SetDefaultBoundaryVertices();
-            l_img.Size = new Size2D(2, 2);//nedela to nic
 
             double li_coef_x = a_image.GetWidth() / a_imgDef.Size.X;
             double li_coef_y = a_image.GetHeight() / a_imgDef.Size.Y;
+        
 
             l_img.XAxis = new Vector3D(li_coef_x, 0D, 0D);
             l_img.YAxis = new Vector3D(0D, li_coef_y, 0D);
@@ -507,9 +506,14 @@ namespace Loader
 
             double ld_angle_rad = Angle2Radians((int)a_image.m_angle_tenths);
 
+            double ld_hor = a_image.m_hor ? -1 : 1;
+            double ld_ver = a_image.m_ver ? -1 : 1;
+
+
             Matrix4D transform =
                         Transformation4D.Translation((Vector3D)l_center_point_3D) *
                         Transformation4D.RotateZ(ld_angle_rad) *
+                        Transformation4D.Scaling(ld_ver, ld_hor, 1) *
                         Transformation4D.Translation(-(Vector3D)l_center_point_3D);
 
             l_img.ImageDisplayFlags = ImageDisplayFlags.ShowImage | ImageDisplayFlags.ShowUnalignedImage;
