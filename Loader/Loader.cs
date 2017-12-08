@@ -136,7 +136,7 @@ namespace Loader
 
 
             list = xmlDoc.GetElementsByTagName("summary");
-            XmlNode node = list[0];
+            
 
             XmlNode l_node_ref_grid = xmlDoc.SelectSingleNode("document/RefGridSettings");
             LoadRefGrid(l_collPages.m_ref_grid, l_node_ref_grid);
@@ -526,9 +526,11 @@ namespace Loader
             {
                 string ls_font = textNode.Attributes["font"].Value;
                 string ls_text = textNode.InnerText;
+                int li_angle = Loader.TurnsToAngle(XmlAttrToInt(textNode.Attributes["turns"]));
 
                 a_drawRect.m_text = ls_text;
                 a_drawRect.m_efont = EFont.StringToEfont(ls_font);
+                a_drawRect.m_text_angle = li_angle;
             }
         }
 

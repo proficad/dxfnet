@@ -19,7 +19,7 @@ namespace DxfNet
         public Size m_arcEnd;	// ending point of arc, pie and chord
 
         public bool m_arrow_flipped;
-
+        public int m_text_angle;
         internal override void Write2Xml(System.Xml.XmlWriter a_xmlWriter)
         {
 

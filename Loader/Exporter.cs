@@ -523,7 +523,7 @@ namespace Loader
 
             Point3D l_center = GetRectCenterPoint(a_drawRect.m_position);
             l_center.Y = -l_center.Y;
-            ExportTextInRect(a_coll, l_center, a_drawRect.m_text, a_drawRect.m_efont);
+            ExportTextInRect(a_coll, l_center, a_drawRect.m_text, a_drawRect.m_efont, a_drawRect.m_text_angle);
         }
 
 
@@ -1274,7 +1274,7 @@ namespace Loader
 
             Point3D l_center = GetRectCenterPoint(a_drawRect.m_position);
             l_center.Y = -l_center.Y;
-            ExportTextInRect(a_coll, l_center, a_drawRect.m_text, a_drawRect.m_efont);
+            ExportTextInRect(a_coll, l_center, a_drawRect.m_text, a_drawRect.m_efont, a_drawRect.m_text_angle);
 
             dxfPolyline.Layer = ExportContext.Current.Layer;
             a_coll.Add(dxfPolyline);
@@ -1360,7 +1360,7 @@ namespace Loader
             dxfEllipse.Layer = ExportContext.Current.Layer; 
             a_coll.Add(dxfEllipse);
 
-            ExportTextInRect(a_coll, l_center, a_drawRect.m_text, a_drawRect.m_efont);
+            ExportTextInRect(a_coll, l_center, a_drawRect.m_text, a_drawRect.m_efont, a_drawRect.m_text_angle);
         }
 
         public static int Calculate_Line_Thickness_Ellipse(int ai_width)
@@ -1403,7 +1403,8 @@ namespace Loader
             return ai_width;
         }
 
-        private static void ExportTextInRect(DxfEntityCollection a_coll, Point3D l_center, string as_text, EFont a_efont)
+
+        private static void ExportTextInRect(DxfEntityCollection a_coll, Point3D l_center, string as_text, EFont a_efont, int a_angle)
         {
             if (as_text == null)
             {
@@ -1415,10 +1416,12 @@ namespace Loader
             int li_height = GetFontAscentSize(a_efont);
             DxfMText dxfText = new DxfMText(ls_text, l_center, li_height);
             dxfText.AttachmentPoint = AttachmentPoint.MiddleCenter;
+            dxfText.XAxis = Vector3D.FromAngle(a_angle * WW.Math.Constants.DegreesToRadians / 10);
 
             dxfText.Layer = ExportContext.Current.Layer;            
             a_coll.Add(dxfText);
         }
+
 
         private static void ExportEllipseSolid(DxfEntityCollection a_dxfEntityCollection, Point3D l_center, Vector3D l_longAxis, double ld_ratio, ObjProps a_objProps, bool ab_hatch, bool ab_block)
         {
