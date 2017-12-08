@@ -61,7 +61,7 @@ namespace DxfNet
 
         internal abstract void Write2Xml(System.Xml.XmlWriter a_xmlWriter);
 
-        internal Point GetCenterPoint()
+        public Point GetCenterPoint()
         {
             Point l_result = new Point();
             l_result.X = (m_position.Left + m_position.Right) / 2;

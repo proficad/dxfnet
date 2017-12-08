@@ -867,7 +867,10 @@ namespace Loader
         {
             Rectangle l_rect = RectFromXml(a_node);
             string ls_lastGuid = a_node.Attributes["lastGuid"].Value;
-            QImage l_image = new QImage(Shape.shapeNone, l_rect, ls_lastGuid);
+            int li_angle = XmlAttrToInt(a_node.Attributes["a"]);
+            bool lb_hor = XmlAttrToBool(a_node.Attributes["h"]);
+            bool lb_ver = XmlAttrToBool(a_node.Attributes["v"]);
+            QImage l_image = new QImage(Shape.shapeNone, l_rect, ls_lastGuid, li_angle, lb_hor, lb_ver);
             a_drawDoc.Add(l_image, ContextP2A.Current.CurrentLayer);
         }
 

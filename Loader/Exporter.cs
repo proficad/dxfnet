@@ -18,6 +18,7 @@ using System.Globalization;
 using System.IO;
 using System.Collections;
 using Microsoft.Win32;
+using WW.Cad.Drawing;
 
 namespace Loader
 {
@@ -482,7 +483,12 @@ namespace Loader
             Point3D l_inserionPoint = new Point3D(a_image.m_position.Left, a_image.m_position.Top, 0);
             l_inserionPoint.Y += a_image.GetHeight();
         
-            l_inserionPoint.Y *= REVERSE_Y;         
+            l_inserionPoint.Y *= REVERSE_Y;
+
+            Point l_center_point_2D = a_image.GetCenterPoint();
+            l_center_point_2D.Y *= REVERSE_Y;
+            Point3D l_center_point_3D = new Point3D(l_center_point_2D.X, l_center_point_2D.Y, 0);
+
             DxfImage l_img = new DxfImage();
             l_img.ImageDef = a_imgDef;
             l_img.InsertionPoint = l_inserionPoint;
@@ -496,10 +502,20 @@ namespace Loader
 
             l_img.XAxis = new Vector3D(li_coef_x, 0D, 0D);
             l_img.YAxis = new Vector3D(0D, li_coef_y, 0D);
-            
+
+            TransformConfig tc = new TransformConfig();
+
+            double ld_angle_rad = Angle2Radians((int)a_image.m_angle_tenths);
+
+            Matrix4D transform =
+                        Transformation4D.Translation((Vector3D)l_center_point_3D) *
+                        Transformation4D.RotateZ(ld_angle_rad) *
+                        Transformation4D.Translation(-(Vector3D)l_center_point_3D);
+
+            l_img.ImageDisplayFlags = ImageDisplayFlags.ShowImage | ImageDisplayFlags.ShowUnalignedImage;
+            l_img.TransformMe(tc, transform);
 
             a_coll.Add(l_img);
-            
         }
 
 
@@ -2023,199 +2039,6 @@ namespace Loader
             at_sip8
         }
 
-
-        private static void ExportSipka(DxfEntityCollection a_coll, ArrowType a_typ, Point a_start, Point a_cil, int ai_thickness, System.Drawing.Color a_color, bool ab_block)
-        {
-            int li_coef = 2;//shown in drawing
-            int li_len = Helper.MyHypot(a_start.X - a_cil.X, a_start.Y - a_cil.Y);
-
-		switch(a_typ){
-            case ArrowType.at_sip1://velká
-                {
-                    DrawPoly l_poly = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-                    l_poly.AddPoint(a_start);
-                    l_poly.AddPoint(a_cil);
-
-                    DrawPoly l_poly2 = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-                    Point l_point1 = Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - 12 * li_coef, a_start.Y - 5 * li_coef));
-                    l_poly2.AddPoint(l_point1);
-                    l_poly2.AddPoint(a_cil);
-                    Point l_point2 = Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - 12 * li_coef, a_start.Y + 5 * li_coef));
-                    l_poly2.AddPoint(l_point2);
-
-                    Helper.ExportPolylineAux(a_coll, l_poly, ab_block);
-                    Helper.ExportPolylineAux(a_coll, l_poly2, ab_block);
-                    return;
-                }
-
-            case ArrowType.at_sip6://velka duta uzavrena (proudy), added to version 3.0 on 9-MAR-2004
-			    {
-                    Point pointMitte = Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - 13 * li_coef, a_start.Y - 0 * li_coef));
-                    Point pointA = Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - 12 * li_coef, a_start.Y - 5 * li_coef));
-                    Point pointB = Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - 12 * li_coef, a_start.Y + 5 * li_coef));
-                    DrawPoly l_poly = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-                    l_poly.AddPoint(a_start);
-                    l_poly.AddPoint(pointMitte);
-
-                    DrawPoly l_poly2 = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-                    l_poly2.AddPoint(a_cil);
-                    l_poly2.AddPoint(pointA);
-                    l_poly2.AddPoint(pointB);
-                    l_poly2.AddPoint(a_cil);
-                    Helper.ExportPolylineAux(a_coll, l_poly, ab_block);
-                    Helper.ExportPolylineAux(a_coll, l_poly2, ab_block);
-                    return;
-			    }
-		
-            case ArrowType.at_sip2://malá
-            {
-                DrawPoly l_poly = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-                l_poly.AddPoint(a_start);
-                l_poly.AddPoint(a_cil);
-
-                l_poly.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - 12 * li_coef, a_start.Y - 3 * li_coef)));
-                l_poly.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - 12 * li_coef, a_start.Y + 3 * li_coef)));
-                l_poly.AddPoint(a_cil);
-                Helper.ExportPolylineAux(a_coll, l_poly, ab_block);
-             
-                return;
-            
-            }
-         
-            case ArrowType.at_sip3://malá s ocasem
-            {
-                DrawPoly l_poly = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-                l_poly.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + 12 * li_coef, a_start.Y)));
-                l_poly.AddPoint(a_cil);
-                l_poly.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - 12 * li_coef, a_start.Y - 3 * li_coef)));
-
-                DrawPoly l_poly2 = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-                l_poly2.AddPoint(a_cil);
-                l_poly2.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - 12 * li_coef, a_start.Y + 3 * li_coef)));
-
-                DrawPoly l_poly3 = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-                l_poly3.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + 12 * li_coef, a_start.Y)));
-                l_poly3.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X, a_start.Y - 3 * li_coef)));
-
-                DrawPoly l_poly4 = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-                l_poly4.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + 12 * li_coef, a_start.Y)));
-                l_poly4.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X, a_start.Y + 3 * li_coef)));
-
-                Helper.ExportPolylineAux(a_coll, l_poly, ab_block);
-                Helper.ExportPolylineAux(a_coll, l_poly2, ab_block);
-                Helper.ExportPolylineAux(a_coll, l_poly3, ab_block);
-                Helper.ExportPolylineAux(a_coll, l_poly4, ab_block);
-                return;
-            }
-           
-            case ArrowType.at_sip4://velká oboustranná
-            {
-                DrawPoly l_poly = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-                l_poly.AddPoint(a_start);
-                l_poly.AddPoint(a_cil);
-                l_poly.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - 20 * li_coef, a_start.Y - 5 * li_coef)));
-
-                DrawPoly l_poly2 = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-                l_poly2.AddPoint(a_cil);
-                l_poly2.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - 20 * li_coef, a_start.Y + 5 * li_coef)));
-                
-                DrawPoly l_poly3 = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-                l_poly3.AddPoint(a_start);
-                l_poly3.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + 20 * li_coef, a_start.Y - 5 * li_coef)));
-                
-                DrawPoly l_poly4 = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-                l_poly4.AddPoint(a_start);
-                l_poly4.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + 20 * li_coef, a_start.Y + 5 * li_coef)));
-
-                Helper.ExportPolylineAux(a_coll, l_poly, ab_block);
-                Helper.ExportPolylineAux(a_coll, l_poly2, ab_block);
-                Helper.ExportPolylineAux(a_coll, l_poly3, ab_block);
-                Helper.ExportPolylineAux(a_coll, l_poly4, ab_block);
-                return;
-            }
-         
-            case ArrowType.at_sip5://malá oboustranná
-            {
-                DrawPoly l_poly = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-                l_poly.AddPoint(a_start);
-                l_poly.AddPoint(a_cil);
-                l_poly.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - 12 * li_coef, a_start.Y - 5 * li_coef)));
-
-                DrawPoly l_poly2 = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-                l_poly2.AddPoint(a_cil);
-                l_poly2.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - 12 * li_coef, a_start.Y + 5 * li_coef)));
-
-                DrawPoly l_poly3 = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-                l_poly3.AddPoint(a_start);
-                l_poly3.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + 12 * li_coef, a_start.Y - 5 * li_coef)));
-
-                DrawPoly l_poly4 = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-                l_poly4.AddPoint(a_start);
-                l_poly4.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + 12 * li_coef, a_start.Y + 5 * li_coef)));
-
-                Helper.ExportPolylineAux(a_coll, l_poly, ab_block);
-                Helper.ExportPolylineAux(a_coll, l_poly2, ab_block);
-                Helper.ExportPolylineAux(a_coll, l_poly3, ab_block);
-                Helper.ExportPolylineAux(a_coll, l_poly4, ab_block);
-                return;
-            }
-     
-            case ArrowType.at_sip7://mala s sipkami dovnitr na kotovani der zvenku added version 4.1
-            {
-                DrawPoly l_poly = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-                l_poly.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X, a_start.Y)));
-                l_poly.AddPoint(a_cil);
-
-                DrawPoly l_poly2 = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-                l_poly2.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - (80 * li_coef), a_start.Y)));
-                l_poly2.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - (60 * li_coef), a_start.Y - 5 * li_coef)));
-
-                DrawPoly l_poly3 = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-                l_poly2.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - (80 * li_coef), a_start.Y)));
-                l_poly2.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - (60 * li_coef), a_start.Y + 5 * li_coef)));
-
-                DrawPoly l_poly4 = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-                l_poly4.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + (80 * li_coef), a_start.Y)));
-                l_poly4.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + (60 * li_coef), a_start.Y - 5 * li_coef)));
-
-                DrawPoly l_poly5 = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-                l_poly5.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + (80 * li_coef), a_start.Y)));
-                l_poly5.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + (60 * li_coef), a_start.Y + 5 * li_coef)));
-
-                Helper.ExportPolylineAux(a_coll, l_poly, ab_block);
-                Helper.ExportPolylineAux(a_coll, l_poly2, ab_block);
-                Helper.ExportPolylineAux(a_coll, l_poly3, ab_block);
-                Helper.ExportPolylineAux(a_coll, l_poly4, ab_block);
-                Helper.ExportPolylineAux(a_coll, l_poly5, ab_block);
-                return;
-            }
-            case ArrowType.at_sip8://    /------------------/ stavební
-            {
-                DrawPoly l_poly = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-                l_poly.AddPoint(a_start);
-                l_poly.AddPoint(a_cil);
-
-                DrawPoly l_poly2 = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-                l_poly2.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - (80 * li_coef), a_start.Y)));
-                l_poly2.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - (60 * li_coef), a_start.Y - 5 * li_coef)));
-
-                return;
-            }
-
-
-            default:
-            {
-                //not an arrow, let QLin do its work
-                DrawPoly l_poly = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-                l_poly.AddPoint(a_start);
-                l_poly.AddPoint(a_cil);
-                Helper.ExportPolylineAux(a_coll, l_poly, ab_block);
-
-            }
-            break;
-
-		}	
-    }
 
 static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, Point a_start, Point a_cil, System.Drawing.Color a_color, bool ab_drawStem, bool ab_is_ending, double a_scaleX, double a_scaleY, int ai_thickness, bool ab_block)
 {

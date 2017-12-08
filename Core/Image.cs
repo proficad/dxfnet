@@ -8,9 +8,14 @@ namespace DxfNet
 {
     public class QImage : DrawObj
     {
-        public QImage(Shape a_shape, Rectangle a_rect, string as_lastGuid) : base(a_shape, a_rect)
+        public QImage(Shape a_shape, Rectangle a_rect, string as_lastGuid, 
+            int a_angle_tenths, bool ab_hor, bool ab_ver) 
+            : base(a_shape, a_rect)
         {
             LastGuid = as_lastGuid;
+            m_angle_tenths = a_angle_tenths;
+            m_hor = ab_hor;
+            m_ver = ab_ver;
         }
 
         internal override void Write2Xml(System.Xml.XmlWriter a_xmlWriter)
@@ -37,6 +42,11 @@ namespace DxfNet
         public QImageDesc ImgDesc { get; set; }
         public string LastGuid;
 
+        public float Angle { get; private set; }
+
+        public bool m_hor;
+        public bool m_ver;
+        public int m_angle_tenths;
 
         public double GetWidth()
         {
