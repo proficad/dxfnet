@@ -1677,9 +1677,15 @@ namespace Loader
 
             ArrowType l_arrowType = (ArrowType)a_drawRect.m_objProps.m_logpen.m_style;
         
-            Point l_point_ending = Helper.RotatePoint(a_arcEnd, 90 - li_coef_angle, l_stred_kruhu);
-            Point l_point_begin = Helper.RotatePoint(a_arcBegin, -90 + li_coef_angle, l_stred_kruhu);
+            Point l_point_ending = Helper.RotatePoint(a_arcEnd, -90 + li_coef_angle, l_stred_kruhu);
+            Point l_point_begin = Helper.RotatePoint(a_arcBegin, 90 - li_coef_angle, l_stred_kruhu);
             int li_thinckness = 1;
+
+            Flip_Point_Y(ref l_point_ending, l_stred_kruhu.Y);
+            Flip_Point_Y(ref a_arcEnd, l_stred_kruhu.Y);
+            Flip_Point_Y(ref l_point_begin, l_stred_kruhu.Y);
+            Flip_Point_Y(ref a_arcBegin, l_stred_kruhu.Y);
+
 
             ExportSipkaWithoutStem(a_coll, l_arrowType, l_point_ending, a_arcEnd, a_color, false, !a_drawRect.m_arrow_flipped, a_scaleX, a_scaleY, li_thinckness, ab_block);
             ExportSipkaWithoutStem(a_coll, l_arrowType, l_point_begin, a_arcBegin, a_color, false, a_drawRect.m_arrow_flipped, a_scaleX, a_scaleY, li_thinckness, ab_block);
@@ -2276,6 +2282,12 @@ static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, 
             dxfText.XAxis = l_axis;
 
             a_coll.Add(dxfText);
+        }
+
+        private static void Flip_Point_Y(ref Point a_point, int ai_ref)
+        {
+            int li_dif = a_point.Y - ai_ref;
+            a_point.Y = ai_ref - li_dif;
         }
 
         //----------------------------------------
