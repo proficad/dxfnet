@@ -1834,16 +1834,7 @@ namespace Loader
                 ExportPolylineArrowWithoutStem(a_coll, drawPoly, l_arrowType, drawPoly.m_objProps.m_logpen.m_color, 1, 1, drawPoly.m_objProps.m_logpen.m_width, ab_block, drawPoly.Scale_arrow_x, drawPoly.Scale_arrow_y);
 
             }
-            /*
-            if (lb_isArrow)
-            {
-                Point l_pointFrom = drawPoly.m_points[li_arrSize - 1];
-                Point l_pointTo = drawPoly.m_points[li_arrSize];
-                int l_thickness = drawPoly.m_objProps.m_logpen.m_width;
-                Color l_color = drawPoly.m_objProps.m_logpen.m_color;
-                ExportSipka(a_coll, l_arrowType, l_pointFrom, l_pointTo, l_thickness, l_color);
-            }
-            */
+       
         }
 
         private static void ExportPolylineArrowWithoutStem(DxfEntityCollection a_coll, DrawPoly a_drawPoly, ArrowType a_typ, System.Drawing.Color a_color, double a_scaleX, double a_scaleY, int ai_thickness, bool ab_block, double a_scale_arrow_x, double a_scale_arrow_y)
