@@ -36,7 +36,7 @@ namespace Example
                 new Point3D(pageWidth - 2d * margin, margin, 0d),
                 new Point3D(pageWidth / 2d, margin, 0d)
             );
-            using (Stream stream = File.Create("h:\\test.svg"))
+            using (Stream stream = File.Create(@"h:\f3\test.svg"))
             {
                 SvgExporter exporter = new SvgExporter(stream, paperSize);
                 exporter.Draw(model, GraphicsConfig.WhiteBackgroundCorrectForBackColor, to2DTransform);
