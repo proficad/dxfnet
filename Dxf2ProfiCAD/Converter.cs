@@ -82,6 +82,10 @@ namespace Dxf2ProfiCAD
             {
                 return ConvertDxfPolyline2D(a_entity);
             }
+            if (a_entity is DxfDimension.Aligned)
+            {
+                return ConvertDxfDimension_Aligned(a_entity);
+            }
 
             System.Console.WriteLine("did not convert type {0}", a_entity.ToString());
             return null;
@@ -234,6 +238,20 @@ namespace Dxf2ProfiCAD
             l_drawPoly.AddPoint(MyShiftScaleX(l_line.End.X), MyShiftScaleY(l_line.End.Y));
             l_drawPoly.RecalcPosition();
             return l_drawPoly;
+        }
+
+        private static DrawObj ConvertDxfDimension_Aligned(DxfEntity a_entity)
+        {
+            DxfDimension.Aligned l_dim = a_entity as DxfDimension.Aligned;
+            if(l_dim != null)
+            {
+                DrawPoly l_drawPoly = new DrawPoly(Shape.polyline);
+                l_drawPoly.AddPoint(MyShiftScaleX(l_dim.ExtensionLine1StartPoint.X), MyShiftScaleY(l_dim.ExtensionLine1StartPoint.Y));
+                l_drawPoly.AddPoint(MyShiftScaleX(l_dim.ExtensionLine2StartPoint.X), MyShiftScaleY(l_dim.ExtensionLine2StartPoint.Y));
+                l_drawPoly.RecalcPosition();
+                return l_drawPoly;
+            }
+            return null;
         }
 
         private static DrawObj ConvertCircle(DxfEntity a_entity)
@@ -442,6 +460,8 @@ namespace Dxf2ProfiCAD
         {
             return (int)(-1800 * ad_radians / Math.PI);
         }
+
+
 
     }
 }

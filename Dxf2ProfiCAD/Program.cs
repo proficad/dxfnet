@@ -25,7 +25,7 @@ namespace Dxf2ProfiCAD
             
 //            string ls_path = @"C:\down\ProfiCAD1.dxf";
 //            const string ls_path = @"H:\f\dxf\Grundriss.dwg";
-            const string ls_path = @"H:\f3\aku.dxf";
+            const string ls_path = @"H:\f3\4VT_PD-QK-xxLB08.dxf";
 
             if (!System.IO.File.Exists(ls_path))
             {
