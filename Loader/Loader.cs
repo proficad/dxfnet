@@ -563,6 +563,8 @@ namespace Loader
 
         }
 
+
+
         private static void AddPolyLine(DrawDoc doc, XmlNode a_node)
         {
             string ls_points = a_node.Attributes["pts"].Value;
@@ -587,6 +589,8 @@ namespace Loader
             if (a_node.Name.Equals("polyline"))
             {
                 poly = new DrawPoly(Shape.polyline);
+                poly.Scale_arrow_x = XmlAttrToFloat(a_node.Attributes["arrow_scale_x"]);
+                poly.Scale_arrow_y = XmlAttrToFloat(a_node.Attributes["arrow_scale_y"]);
             }
             if (a_node.Name.Equals("polybezier"))
             {
@@ -622,8 +626,9 @@ namespace Loader
 
 
             doc.Add(poly, ContextP2A.Current.CurrentLayer);
-
         }
+
+
 
         private static ObjProps ObjPropsFromXml(XmlNode node)
         {

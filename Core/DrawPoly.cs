@@ -10,12 +10,17 @@ namespace DxfNet
     {
         public DrawPoly(Shape a_shape) : base(a_shape)
         {
+            Scale_arrow_x = 1;
+            Scale_arrow_y = 1;
         }
 
         public DrawPoly(Shape a_shape, int ai_thickness, Color a_colorBorder) : base(a_shape)
         {
             m_objProps.m_logpen.m_width = ai_thickness;
             m_objProps.m_logpen.m_color = a_colorBorder;
+
+            Scale_arrow_x = 1;
+            Scale_arrow_y = 1;
         }
 
         public DrawPoly(Shape a_shape, int ai_thickness, Color a_colorBorder, Point a_from, Point a_to) : base(a_shape)
@@ -24,6 +29,9 @@ namespace DxfNet
             m_objProps.m_logpen.m_color = a_colorBorder;
             AddPoint(a_from);
             AddPoint(a_to);
+
+            Scale_arrow_x = 1;
+            Scale_arrow_y = 1;
         }
 
         public DrawPoly(Shape a_shape, int ai_thickness, Color a_colorBorder, Point [] a_points) : base(a_shape)
@@ -34,9 +42,25 @@ namespace DxfNet
             {
                 AddPoint(l_point);
             }
+
+            Scale_arrow_x = 1;
+            Scale_arrow_y = 1;
         }
 
         public List<Point> m_points = new List<Point>();
+
+        double m_scale_arrow_x;
+        public double Scale_arrow_x
+        {
+            get { return m_scale_arrow_x; }
+            set { m_scale_arrow_x = value; }
+        }
+        double m_scale_arrow_y;
+        public double Scale_arrow_y
+        {
+            get { return m_scale_arrow_y; }
+            set { m_scale_arrow_y = value; }
+        }
 
         public void AddPoint(int ai_x, int ai_y)
         {

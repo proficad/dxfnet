@@ -1687,8 +1687,8 @@ namespace Loader
             Flip_Point_Y(ref a_arcBegin, l_stred_kruhu.Y);
 
 
-            ExportSipkaWithoutStem(a_coll, l_arrowType, l_point_ending, a_arcEnd, a_color, false, !a_drawRect.m_arrow_flipped, a_scaleX, a_scaleY, li_thinckness, ab_block);
-            ExportSipkaWithoutStem(a_coll, l_arrowType, l_point_begin, a_arcBegin, a_color, false, a_drawRect.m_arrow_flipped, a_scaleX, a_scaleY, li_thinckness, ab_block);
+            ExportSipkaWithoutStem(a_coll, l_arrowType, l_point_ending, a_arcEnd, a_color, false, !a_drawRect.m_arrow_flipped, a_scaleX, a_scaleY, li_thinckness, ab_block, 1, 1);
+            ExportSipkaWithoutStem(a_coll, l_arrowType, l_point_begin, a_arcBegin, a_color, false, a_drawRect.m_arrow_flipped, a_scaleX, a_scaleY, li_thinckness, ab_block, 1, 1);
 
         }
 
@@ -1831,7 +1831,7 @@ namespace Loader
                 dxfPolyline.Layer = ExportContext.Current.Layer;
                 a_coll.Add(dxfPolyline);
 
-                ExportPolylineArrowWithoutStem(a_coll, drawPoly, l_arrowType, drawPoly.m_objProps.m_logpen.m_color, 1, 1, 1, ab_block);
+                ExportPolylineArrowWithoutStem(a_coll, drawPoly, l_arrowType, drawPoly.m_objProps.m_logpen.m_color, 1, 1, 1, ab_block, drawPoly.Scale_arrow_x, drawPoly.Scale_arrow_y);
 
             }
             /*
@@ -1846,7 +1846,7 @@ namespace Loader
             */
         }
 
-        private static void ExportPolylineArrowWithoutStem(DxfEntityCollection a_coll, DrawPoly a_drawPoly, ArrowType a_typ, System.Drawing.Color a_color, double a_scaleX, double a_scaleY, int ai_thickness, bool ab_block)
+        private static void ExportPolylineArrowWithoutStem(DxfEntityCollection a_coll, DrawPoly a_drawPoly, ArrowType a_typ, System.Drawing.Color a_color, double a_scaleX, double a_scaleY, int ai_thickness, bool ab_block, double a_scale_arrow_x, double a_scale_arrow_y)
         {
             int li_points_count = a_drawPoly.m_points.Count;
             if (li_points_count < 2)
@@ -1854,8 +1854,8 @@ namespace Loader
                 return;
             }
 
-            ExportSipkaWithoutStem(a_coll, a_typ, a_drawPoly.m_points[li_points_count - 2], a_drawPoly.m_points[li_points_count - 1], a_color, false, true, a_scaleX, a_scaleY, ai_thickness, ab_block);
-            ExportSipkaWithoutStem(a_coll, a_typ, a_drawPoly.m_points[1], a_drawPoly.m_points[0], a_color, false, false, a_scaleX, a_scaleY, ai_thickness, ab_block);
+            ExportSipkaWithoutStem(a_coll, a_typ, a_drawPoly.m_points[li_points_count - 2], a_drawPoly.m_points[li_points_count - 1], a_color, false, true, a_scaleX, a_scaleY, ai_thickness, ab_block, a_scale_arrow_x, a_scale_arrow_y);
+            ExportSipkaWithoutStem(a_coll, a_typ, a_drawPoly.m_points[1], a_drawPoly.m_points[0], a_color, false, false, a_scaleX, a_scaleY, ai_thickness, ab_block, a_scale_arrow_x, a_scale_arrow_y);
         }
 
         private static void ExportPolygon(DxfEntityCollection a_coll, DrawPoly a_drawPoly, bool ab_block)
@@ -2050,7 +2050,7 @@ namespace Loader
         }
 
 
-static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, Point a_start, Point a_cil, System.Drawing.Color a_color, bool ab_drawStem, bool ab_is_ending, double a_scaleX, double a_scaleY, int ai_thickness, bool ab_block)
+static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, Point a_start, Point a_cil, System.Drawing.Color a_color, bool ab_drawStem, bool ab_is_ending, double a_scaleX, double a_scaleY, int ai_thickness, bool ab_block, double a_scale_arrow_x, double a_scale_arrow_y)
 {
 	int li_coef_x_12 = (int) ((12.0 * a_scaleX) + 0.499);
 	int li_coef_x_24 = (int) ((24.0 * a_scaleX) + 0.499);
