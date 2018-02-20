@@ -1831,7 +1831,7 @@ namespace Loader
                 dxfPolyline.Layer = ExportContext.Current.Layer;
                 a_coll.Add(dxfPolyline);
 
-                ExportPolylineArrowWithoutStem(a_coll, drawPoly, l_arrowType, drawPoly.m_objProps.m_logpen.m_color, 1, 1, 1, ab_block, drawPoly.Scale_arrow_x, drawPoly.Scale_arrow_y);
+                ExportPolylineArrowWithoutStem(a_coll, drawPoly, l_arrowType, drawPoly.m_objProps.m_logpen.m_color, 1, 1, drawPoly.m_objProps.m_logpen.m_width, ab_block, drawPoly.Scale_arrow_x, drawPoly.Scale_arrow_y);
 
             }
             /*
@@ -2050,13 +2050,16 @@ namespace Loader
         }
 
 
-static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, Point a_start, Point a_cil, System.Drawing.Color a_color, bool ab_drawStem, bool ab_is_ending, double a_scaleX, double a_scaleY, int ai_thickness, bool ab_block, double a_scale_arrow_x, double a_scale_arrow_y)
+static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, Point a_start, Point a_cil, System.Drawing.Color a_color, bool ab_drawStem, bool ab_is_ending, 
+    double a_scaleX, double a_scaleY, int ai_thickness, bool ab_block, 
+    double a_scale_arrow_x, double a_scale_arrow_y)
 {
-	int li_coef_x_12 = (int) ((12.0 * a_scaleX) + 0.499);
-	int li_coef_x_24 = (int) ((24.0 * a_scaleX) + 0.499);
-	int li_coef_y_5  = (int) ((5.0 * a_scaleY) + 0.499);
-    int li_coef_x_7 = (int)((7.0 * a_scaleX) + 0.499);
-    int li_coef_y_7 = (int)((7.0 * a_scaleY) + 0.499);
+	int li_coef_x_12 = (int) ((12.0 * a_scaleX * a_scale_arrow_x) + 0.499);
+	int li_coef_x_24 = (int) ((24.0 * a_scaleX * a_scale_arrow_x) + 0.499);
+    int li_coef_x_7  = (int) (( 7.0 * a_scaleX * a_scale_arrow_x) + 0.499);
+
+	int li_coef_y_5  = (int) ((5.0 * a_scaleY * a_scale_arrow_y) + 0.499);
+    int li_coef_y_7  = (int) ((7.0 * a_scaleY * a_scale_arrow_y) + 0.499);
 
     int li_dist_80 = 80;
     int li_dist_60 = 60;
