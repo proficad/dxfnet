@@ -109,7 +109,7 @@ namespace Loader
             vport.Height = 3000;
             model.VPorts.Add(vport);
 
-            AdjustScale(a_doc, model);
+            // AdjustScale(a_doc, model); blbost asi
 
             // obsolete 2010-05-11            DxfWriter.WriteDxf(as_pathDxf, model, false);
             DxfWriter.Write(as_pathDxf, model, false);
@@ -1915,6 +1915,7 @@ namespace Loader
                         l_hatch.Pattern = pattern;
                     }
                 }
+                l_hatch.Color = EntityColor.CreateFrom((WW.Drawing.ArgbColor)a_objProps.m_logpen.m_color);
             }
             else
             {
