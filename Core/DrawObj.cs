@@ -32,7 +32,8 @@ namespace DxfNet
         poly, 
         polyline, 
         bezier, 
-        chord, pie, arc, spoj, text, soucastka, outlet, cable };
+        chord, pie, arc, spoj, text, soucastka, outlet, cable,
+        dim_line, dim_circle };
 
     public abstract class DrawObj
     {

@@ -428,6 +428,7 @@ namespace Loader
                     case Shape.roundRectangle:  ExportRoundRect (a_coll, obj as DrawRect, ab_block); break;
                     case Shape.text:            ExportFreeText(a_coll, obj as FreeText); break;
                     case Shape.cable:           ExportCable(a_coll, obj as CableSymbol, a_doc as PCadDoc); break;
+                    case Shape.dim_line:        ExportDimLine(a_coll, obj as QDimLine, ab_block); break;
                 }
             }
         }
@@ -2283,6 +2284,36 @@ static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, 
         {
             int li_dif = a_point.Y - ai_ref;
             a_point.Y = ai_ref - li_dif;
+        }
+
+        private static void ExportDimLine(DxfEntityCollection a_coll, QDimLine a_dim, bool ab_block)
+        {
+            Point3D A_3D = new Point3D(a_dim.A.X, a_dim.A.Y * REVERSE_Y, 0);
+            Point3D B_3D = new Point3D(a_dim.B.X, a_dim.B.Y * REVERSE_Y, 0);
+            Point3D C_3D = new Point3D(a_dim.C.X, a_dim.C.Y * REVERSE_Y, 0);
+
+
+
+
+
+            if(a_dim.m_dir == QDimLine.DimDirection.dimdir_aligned)
+            {
+                DxfDimension.Aligned dxfDimAl = new DxfDimension.Aligned(ExportContext.Current.Model.CurrentDimensionStyle);
+                dxfDimAl.ExtensionLine1StartPoint = A_3D;
+                dxfDimAl.ExtensionLine2StartPoint = B_3D;
+                dxfDimAl.DimensionLineLocation = C_3D;
+                a_coll.Add(dxfDimAl);
+            }
+            else
+            {
+                DxfDimension.Linear dxfDimLin = new DxfDimension.Linear(ExportContext.Current.Model.CurrentDimensionStyle);
+                dxfDimLin.ExtensionLine1StartPoint = A_3D;
+                dxfDimLin.ExtensionLine2StartPoint = B_3D;
+                dxfDimLin.DimensionLineLocation = C_3D;
+                a_coll.Add(dxfDimLin);
+            }
+
+            
         }
 
         //----------------------------------------

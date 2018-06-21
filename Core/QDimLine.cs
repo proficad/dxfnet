@@ -1,0 +1,48 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Xml;
+
+namespace DxfNet
+{
+    public class QDimLine : DrawObj
+    {
+        public Point A, B, C;
+
+        public enum DimDirection { dimdir_none, dimdir_hor, dimdir_ver, dimdir_aligned };
+        public DimDirection m_dir;
+
+        public QDimLine(Point a_a, Point a_b, Point a_c, DimDirection a_dir) : base(Shape.dim_line, new Rectangle(a_a.X, a_a.Y, 1, 1))
+        {
+            A = a_a;
+            B = a_b;
+            C = a_c;
+            m_dir = a_dir;
+        }
+
+        internal override void Write2Xml(System.Xml.XmlWriter a_xmlWriter)
+        {
+            
+        }
+
+        internal override void RecalcBounds(ref MyRect l_bounds)
+        {
+            
+        }
+
+        internal override void MoveBy(Size a_offset)
+        {
+            A.Offset(a_offset.Width, a_offset.Height);
+            B.Offset(a_offset.Width, a_offset.Height);
+            C.Offset(a_offset.Width, a_offset.Height);
+
+        }
+
+        public override void RecalcPosition()
+        {
+         
+        }
+    }
+}

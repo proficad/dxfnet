@@ -773,6 +773,17 @@ namespace Loader
             return XmlAttrToIntWithDefault(a_attr, 0);
         }
 
+
+        public static Point XmlAttrToPoint(XmlNode a_node, string as_attr_prefix)
+        {
+            Point l_point = new Point();
+            l_point.X = XmlAttrToInt(a_node.Attributes[as_attr_prefix + "x"]);
+            l_point.Y = XmlAttrToInt(a_node.Attributes[as_attr_prefix + "y"]);
+
+            return l_point;
+        }
+
+
         public static int XmlAttrToIntWithDefault(XmlAttribute a_attr, int ai_default)
         {
             string ls_result = string.Empty;
@@ -815,10 +826,27 @@ namespace Loader
                         case "img":         AddImage        (a_drawDoc, nodeElement); break;
                         case "CableSymbol": AddCableSymbol  (a_drawDoc, nodeElement); break;
                         case "outlet":      AddOutlet       (a_drawDoc, nodeElement); break;
+                        case "dim_line":    AddDimLine      (a_drawDoc, nodeElement); break;
 
                     }
                 }
             }
+        }
+
+
+        private static void AddDimLine(DrawDoc a_drawDoc, XmlNode a_node)
+        {
+            Point l_a = XmlAttrToPoint(a_node, "a");
+            Point l_b = XmlAttrToPoint(a_node, "b");
+            Point l_c = XmlAttrToPoint(a_node, "c");
+
+            QDimLine.DimDirection l_dir = (QDimLine.DimDirection) XmlAttrToInt(a_node.Attributes["dir"]);
+
+
+
+            QDimLine l_dim = new QDimLine(l_a, l_b, l_c, l_dir);
+            a_drawDoc.Add(l_dim, ContextP2A.Current.CurrentLayer);
+
         }
 
         private static void AddOutlet(DrawDoc a_drawDoc, XmlNode a_node)
