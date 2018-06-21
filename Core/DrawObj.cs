@@ -54,9 +54,9 @@ namespace DxfNet
 
         public Rectangle m_position;
         public string m_text;
-        bool m_bTurnWithSymbol;
+        //bool m_bTurnWithSymbol;
         public ObjProps m_objProps;
-        ObjType m_ObjType;
+        //ObjType m_ObjType;
         public Shape m_nShape;
         public Layer m_layer;
 

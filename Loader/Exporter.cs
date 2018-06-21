@@ -430,6 +430,7 @@ namespace Loader
                     case Shape.text:            ExportFreeText(a_coll, obj as FreeText); break;
                     case Shape.cable:           ExportCable(a_coll, obj as CableSymbol, a_doc as PCadDoc); break;
                     case Shape.dim_line:        ExportDimLine(a_coll, obj as QDimLine, ab_block); break;
+                    case Shape.dim_circle:      ExportDimCircle(a_coll, obj as QDimCircle, ab_block); break;
                 }
             }
         }
@@ -2315,11 +2316,32 @@ static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, 
             
         }
 
+
+        private static void ExportDimCircle(DxfEntityCollection a_coll, QDimCircle a_dim, bool ab_block)
+        {
+            Point3D A_3D = new Point3D(a_dim.A.X, a_dim.A.Y * REVERSE_Y, 0);
+            Point3D B_3D = new Point3D(a_dim.B.X, a_dim.B.Y * REVERSE_Y, 0);
+
+            DxfDimension.Diametric dxfDim = new DxfDimension.Diametric(ExportContext.Current.Model.CurrentDimensionStyle);
+            dxfDim.ArcLineIntersectionPoint1 = A_3D;
+//            dxfDim.ArcLineIntersectionPoint2 = B_3D;
+            dxfDim.AttachmentPoint = B_3D;
+
+
+            a_coll.Add(dxfDim);
+
+        }
+
+
         private static void Setup_DimStyle(DxfModel model)
         {
             DxfDimensionStyle l_style = model.CurrentDimensionStyle;
             l_style.ArrowSize = 20;
             l_style.TextHeight = 20;
+
+            //make text of aligned dims aligned
+            l_style.TextInsideHorizontal = false;
+            l_style.TextOutsideHorizontal = false;
         }
 
         //----------------------------------------

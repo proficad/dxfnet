@@ -827,12 +827,26 @@ namespace Loader
                         case "CableSymbol": AddCableSymbol  (a_drawDoc, nodeElement); break;
                         case "outlet":      AddOutlet       (a_drawDoc, nodeElement); break;
                         case "dim_line":    AddDimLine      (a_drawDoc, nodeElement); break;
+                        case "dim_circle":  AddDimCircle    (a_drawDoc, nodeElement); break;
 
                     }
                 }
             }
         }
 
+
+        private static void AddDimCircle(DrawDoc a_drawDoc, XmlNode a_node)
+        {
+            Point l_a = XmlAttrToPoint(a_node, "a");
+            Point l_b = XmlAttrToPoint(a_node, "b");
+
+            bool lb_has_2_arrows = XmlAttrToBool(a_node.Attributes["arr2"]);
+
+            Point l_label_pos = XmlAttrToPoint(a_node, "lp");
+
+            QDimCircle l_dim = new QDimCircle(l_a, l_b, lb_has_2_arrows, l_label_pos);
+            a_drawDoc.Add(l_dim, ContextP2A.Current.CurrentLayer);
+        }
 
         private static void AddDimLine(DrawDoc a_drawDoc, XmlNode a_node)
         {
