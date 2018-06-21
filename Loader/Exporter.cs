@@ -34,7 +34,8 @@ namespace Loader
         internal static void Export(PCadDoc a_doc, string as_pathDxf)
         {
             DxfModel model = new DxfModel(DxfVersion.Dxf21);//2012-12-02 vracime se k dxf21
-            
+
+            Setup_DimStyle(model);
 
             //add layers
             foreach (Layer l_layer in a_doc.m_layers)
@@ -2292,11 +2293,9 @@ static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, 
             Point3D B_3D = new Point3D(a_dim.B.X, a_dim.B.Y * REVERSE_Y, 0);
             Point3D C_3D = new Point3D(a_dim.C.X, a_dim.C.Y * REVERSE_Y, 0);
 
+            
 
-
-
-
-            if(a_dim.m_dir == QDimLine.DimDirection.dimdir_aligned)
+            if (a_dim.m_dir == QDimLine.DimDirection.dimdir_aligned)
             {
                 DxfDimension.Aligned dxfDimAl = new DxfDimension.Aligned(ExportContext.Current.Model.CurrentDimensionStyle);
                 dxfDimAl.ExtensionLine1StartPoint = A_3D;
@@ -2314,6 +2313,13 @@ static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, 
             }
 
             
+        }
+
+        private static void Setup_DimStyle(DxfModel model)
+        {
+            DxfDimensionStyle l_style = model.CurrentDimensionStyle;
+            l_style.ArrowSize = 20;
+            l_style.TextHeight = 20;
         }
 
         //----------------------------------------
