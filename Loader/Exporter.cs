@@ -1328,11 +1328,11 @@ namespace Loader
             l_center.Y *= REVERSE_Y;
             
             Vector3D l_longAxis = new Vector3D();
-            int li_otherDimensionHalf;
+            double li_otherDimensionHalf;
             double ld_ratio;
             //which axis is longer?
-            int li_width = Math.Abs(a_drawRect.m_position.Width);
-            int li_height = Math.Abs(a_drawRect.m_position.Height);
+            double li_width = Math.Abs(a_drawRect.m_position.Width);
+            double li_height = Math.Abs(a_drawRect.m_position.Height);
 
             if (li_width > li_height)
             {
@@ -2302,6 +2302,7 @@ static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, 
                 dxfDimAl.ExtensionLine1StartPoint = A_3D;
                 dxfDimAl.ExtensionLine2StartPoint = B_3D;
                 dxfDimAl.DimensionLineLocation = C_3D;
+                
                 a_coll.Add(dxfDimAl);
             }
             else
@@ -2321,11 +2322,16 @@ static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, 
         {
             Point3D A_3D = new Point3D(a_dim.A.X, a_dim.A.Y * REVERSE_Y, 0);
             Point3D B_3D = new Point3D(a_dim.B.X, a_dim.B.Y * REVERSE_Y, 0);
+            Point3D l_pos_label = new Point3D(a_dim.m_pos_label.X, a_dim.m_pos_label.Y, 0);
 
-            DxfDimension.Diametric dxfDim = new DxfDimension.Diametric(ExportContext.Current.Model.CurrentDimensionStyle);
-            dxfDim.ArcLineIntersectionPoint1 = A_3D;
-//            dxfDim.ArcLineIntersectionPoint2 = B_3D;
-            dxfDim.AttachmentPoint = B_3D;
+            DxfDimension.Diametric dxfDim = new DxfDimension.Diametric(ExportContext.Current.Model.CurrentDimensionStyle)
+            {
+                ArcLineIntersectionPoint1 = A_3D,
+                ArcLineIntersectionPoint2 = B_3D,
+
+                TextMiddlePoint = l_pos_label,
+                UseTextMiddlePoint = true
+            };
 
 
             a_coll.Add(dxfDim);
