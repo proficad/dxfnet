@@ -2311,6 +2311,12 @@ static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, 
                 dxfDimLin.ExtensionLine1StartPoint = A_3D;
                 dxfDimLin.ExtensionLine2StartPoint = B_3D;
                 dxfDimLin.DimensionLineLocation = C_3D;
+
+                if (A_3D.X == B_3D.X)
+                {
+                    dxfDimLin.Rotation = Math.PI / 2d;
+                }
+
                 a_coll.Add(dxfDimLin);
             }
 
