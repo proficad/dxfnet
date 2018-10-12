@@ -11,6 +11,7 @@ using System.Collections.Specialized;
 
 
 using DxfNet;
+using Core;
 
 namespace Loader
 {
@@ -234,6 +235,11 @@ namespace Loader
                     {
                         LoadTb(l_page.m_ptbPosition, l_node_page_ptb);
                     }
+
+                    string ls_dim_style_name = XmlAttrToString(l_node.Attributes["dim_style_name"]);
+
+                    l_page.m_dim_style = l_collPages.m_repo.GetDimStyle(ls_dim_style_name);
+
                 }
             }
 
@@ -310,8 +316,10 @@ namespace Loader
                 return;
             }
 
-            settingsPage.PagesHor = int.Parse(nodePageSettings.Attributes["pgsHor"].Value);
-            settingsPage.PagesVer = int.Parse(nodePageSettings.Attributes["pgsVer"].Value);
+
+            settingsPage.PagesHor = XmlAttrToIntWithDefault(nodePageSettings.Attributes["pgsHor"], 1);
+            settingsPage.PagesVer = XmlAttrToIntWithDefault(nodePageSettings.Attributes["pgsVer"], 1);
+
 
             string ls_showT     = nodePageSettings.Attributes["showT"].Value;
             string ls_showV     = nodePageSettings.Attributes["showV"].Value;
@@ -1067,14 +1075,25 @@ namespace Loader
                 {
                     switch (nodeRepoElement.Name)
                     {
-                        case "ppd":     AddPpd      (a_repo, nodeRepoElement); break;
-                        case "imgDesc": AddImageDesc(a_repo, nodeRepoElement); break;
-                        case "tb":      AddTb       (a_repo, nodeRepoElement); break;
+                        case "ppd":      AddPpd      (a_repo, nodeRepoElement); break;
+                        case "imgDesc":  AddImageDesc(a_repo, nodeRepoElement); break;
+                        case "tb":       AddTb       (a_repo, nodeRepoElement); break;
+                        case "DimStyle": AddDimStyle (a_repo, nodeRepoElement); break;
             
                     }
                 }
             }
         }
+
+        private static void AddDimStyle(Repo a_repo, XmlNode a_node)
+        {
+            Core.QDimStyle l_style = new QDimStyle();
+            l_style.m_name = a_node.Attributes["name"].Value;
+            l_style.m_align_text_with_dim_line = XmlAttrToBool(a_node.Attributes["align_text"]);
+
+            a_repo.AddDimStyle(l_style);
+        }
+
 
         private static void AddImageDesc(Repo a_repo, XmlNode a_node)
         {
@@ -1399,6 +1418,7 @@ namespace Loader
                 return XmlAttrToInt(a_node.Attributes["a"]);
             }
         }
+
 
 
 

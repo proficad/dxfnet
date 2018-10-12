@@ -35,7 +35,7 @@ namespace Loader
         {
             DxfModel model = new DxfModel(DxfVersion.Dxf21);//2012-12-02 vracime se k dxf21
 
-            Setup_DimStyle(model);
+            Setup_DimStyle(model, a_doc.m_dim_style);
 
             //add layers
             foreach (Layer l_layer in a_doc.m_layers)
@@ -110,7 +110,7 @@ namespace Loader
             vport.Height = 3000;
             model.VPorts.Add(vport);
 
-            // AdjustScale(a_doc, model); blbost asi
+            AdjustScale(a_doc, model);
 
             // obsolete 2010-05-11            DxfWriter.WriteDxf(as_pathDxf, model, false);
             DxfWriter.Write(as_pathDxf, model, false);
@@ -128,6 +128,16 @@ namespace Loader
                 foreach (DxfEntity l_entity in model.Entities)
                 {
                     l_entity.TransformMe(l_config, l_tr);
+                }
+
+
+                foreach(DxfLineType l_line_type in ExportContext.Current.Model.LineTypes)
+                {
+                    foreach(var l_elem in l_line_type.Elements)
+                    {
+                        l_elem.Length *= li_scale_factor;
+                    }
+                    
                 }
             }
         }
@@ -2312,7 +2322,7 @@ static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, 
                 dxfDimLin.ExtensionLine2StartPoint = B_3D;
                 dxfDimLin.DimensionLineLocation = C_3D;
 
-                if (A_3D.X == B_3D.X)
+                if (a_dim.m_dir == QDimLine.DimDirection.dimdir_ver)
                 {
                     dxfDimLin.Rotation = Math.PI / 2d;
                 }
@@ -2345,15 +2355,29 @@ static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, 
         }
 
 
-        private static void Setup_DimStyle(DxfModel model)
+        private static void Setup_DimStyle(DxfModel model, Core.QDimStyle a_dim_style)
         {
+            if(a_dim_style == null)
+            {
+                return;
+            }
+
             DxfDimensionStyle l_style = model.CurrentDimensionStyle;
             l_style.ArrowSize = 20;
             l_style.TextHeight = 20;
 
             //make text of aligned dims aligned
-            l_style.TextInsideHorizontal = false;
-            l_style.TextOutsideHorizontal = false;
+            l_style.TextInsideHorizontal  = !a_dim_style.m_align_text_with_dim_line;
+            l_style.TextOutsideHorizontal = !a_dim_style.m_align_text_with_dim_line;
+
+            //DxfDimensionStyle.TextVerticalAlignment ll;
+
+            //l_style.TextVerticalAlignment = DimensionTextVerticalAlignment.Below;
+
+            //model.CurrentDimensionStyle.TextVerticalAlignment = DimensionTextVerticalAlignment.Below;
+
+
+
         }
 
         //----------------------------------------

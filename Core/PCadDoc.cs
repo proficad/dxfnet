@@ -8,6 +8,8 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Xml;
 
+using Core;
+
 namespace DxfNet
 {
     public class PCadDoc : DrawDoc
@@ -23,9 +25,10 @@ namespace DxfNet
         public PtbPosition m_ptbPosition = new PtbPosition();//version 8, each page may have its own TB
 
         public Hashtable m_summInfo = new Hashtable();//2012-11-02
- 
 
- 
+        public QDimStyle m_dim_style;
+
+
         public List<Layer> m_layers;
 
         public PCadDoc(CollPages a_parent)

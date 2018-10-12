@@ -85,6 +85,7 @@
     <Compile Include="PtbPosition.cs" />
     <Compile Include="QDimCircle.cs" />
     <Compile Include="QDimLine.cs" />
+    <Compile Include="QDimStyle.cs" />
     <Compile Include="QFontsCollection.cs" />
     <Compile Include="QGate.cs" />
     <Compile Include="QIC.cs" />

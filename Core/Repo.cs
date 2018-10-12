@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using Core;
+
 namespace DxfNet
 {
     public class Repo
@@ -10,9 +12,13 @@ namespace DxfNet
         public List<PpdDoc>     m_listPpd       = new List<PpdDoc>();
         public List<QImageDesc> m_listImgDesc   = new List<QImageDesc>();
         public List<PtbDoc>     m_listPtb       = new List<PtbDoc>();
+        public List<QDimStyle>  m_listDimStyles = new List<QDimStyle>();
 
 
-
+        public QDimStyle GetDimStyle(string as_name)
+        {
+            return m_listDimStyles.Where(x => x.m_name == as_name).FirstOrDefault();
+        }
 
         public PpdDoc FindPpdDocInRepo(string ls_lastGuid)
         {
@@ -54,6 +60,11 @@ namespace DxfNet
         public void AddTb(PtbDoc a_ptbDoc)
         {
             m_listPtb.Add(a_ptbDoc);
+        }
+
+        public void AddDimStyle(Core.QDimStyle a_style)
+        {
+            m_listDimStyles.Add(a_style);
         }
 
 
