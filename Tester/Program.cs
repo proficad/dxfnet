@@ -23,26 +23,16 @@ namespace Tester
 {
     class Program
     {
-         
 
         static void Main(string[] args)
         {
 
             //Calculate_Line_Thickness();
-            TestDims();
+            TestDim();
             //TestImageTransform();
 
         }
 
-        /*
-        private static void Calculate_Line_Thickness()
-        {
-            for (int li_i = 0; li_i < 50; ++li_i)
-            {
-                Console.WriteLine("{0} -> {1}", li_i, Exporter.Calculate_Line_Thickness_Ellipse(li_i));
-            }
-        }
-        */
 
 
         private static void TestImageTransform()
@@ -79,6 +69,9 @@ namespace Tester
         {
             DxfModel model = new DxfModel(DxfVersion.Dxf14);
 
+
+            var ll = model.Header.InsUnits;
+
             DxfLayer layer = new DxfLayer("DIMENSIONS");
             model.Layers.Add(layer);
 
@@ -89,13 +82,14 @@ namespace Tester
             insert.Layer = layer;
             model.Entities.Add(insert);
 
+            
             // Horizontal.
             DxfDimension.Linear linearDimension1 = new DxfDimension.Linear(model.DefaultDimensionStyle);
             linearDimension1.ExtensionLine1StartPoint = new Point3D(0, 0, 0);
             linearDimension1.ExtensionLine2StartPoint = new Point3D(200, 0, 0);
             linearDimension1.DimensionLineLocation = new Point3D(200, 100, 0);
             block.Entities.Add(linearDimension1);
-            /*
+            
             // Rotated and usage of "<>" text.
             DxfDimension.Linear linearDimension2 = new DxfDimension.Linear(model.DefaultDimensionStyle);
             linearDimension2.Rotation = Math.PI / 6d;
@@ -125,17 +119,18 @@ namespace Tester
             linearDimension4.ExtensionLine2StartPoint = new Point3D(0, 6, 0);
             linearDimension4.DimensionLineLocation = new Point3D(2, 8, 0);
             block.Entities.Add(linearDimension4);
-
+            
             // Vertical.
-            DxfDimension.Linear linearDimension5 = new DxfDimension.Linear(model.DefaultDimensionStyle);
+            DxfDimension.Linear linearDimension5 = new DxfDimension.Linear(model.CurrentDimensionStyle);
             linearDimension5.TextRotation = Math.PI / 8d;
+            linearDimension5.Text = "jde to";
             linearDimension5.Rotation = Math.PI / 2d;
             linearDimension5.DimensionStyleOverrides.TextInsideHorizontal = false;
             linearDimension5.ExtensionLine1StartPoint = new Point3D(0, 10, 0);
             linearDimension5.ExtensionLine2StartPoint = new Point3D(0, 8, 0);
             linearDimension5.DimensionLineLocation = new Point3D(2, 8, 0);
             block.Entities.Add(linearDimension5);
-
+            
             // Vertical.
             DxfDimension.Linear linearDimension6 = new DxfDimension.Linear(model.DefaultDimensionStyle);
             linearDimension6.Rotation = Math.PI / 2d;
@@ -144,7 +139,7 @@ namespace Tester
             linearDimension6.ExtensionLine2StartPoint = new Point3D(0, 10, 0);
             linearDimension6.DimensionLineLocation = new Point3D(2, 10, 0);
             block.Entities.Add(linearDimension6);
-            */
+            
             DxfWriter.Write(@"H:\f3\TestDim.dxf", model, false);
         }
 
@@ -154,6 +149,7 @@ namespace Tester
 
             model.Entities.Add(CreateAlignedDim(model, new Point3D(2, 1, 0), new Point3D(4, 2, 0), 1));
             model.Entities.Add(CreateLinearDim(model, new Point3D(2, 3, 0), new Point3D(2.1, 4, 0), new Point3D(4, 5, 0)));
+            model.Entities.Add(CreateLinearDim(model, new Point3D(2, 3, 0), new Point3D(2, 4, 0), new Point3D(4, 3.5, 0)));
 
             DwgWriter.Write(@"H:\f3\dim.dwg", model);
         }
@@ -182,6 +178,13 @@ namespace Tester
             dim.ExtensionLine1StartPoint = a;
             dim.ExtensionLine2StartPoint = b;
             dim.DimensionLineLocation = dimensionLineLocation;
+
+            if(a.X == b.X)
+            {
+                dim.Rotation = Math.PI / 2d;
+            }
+
+
             return dim;
         }
 
