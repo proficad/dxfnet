@@ -12,6 +12,7 @@ namespace DxfNet
         public bool WantsCustom { get; set; }
         public int CustomSizeX { get; set; }
         public int CustomSizeY { get; set; }
+        public short PaperSizeEnum { get; set; }
 
 
         public bool IsLandscape()

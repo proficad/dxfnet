@@ -237,8 +237,26 @@ namespace Loader
                     }
 
                     string ls_dim_style_name = XmlAttrToString(l_node.Attributes["dim_style_name"]);
-
                     l_page.m_dim_style = l_collPages.m_repo.GetDimStyle(ls_dim_style_name);
+
+                    XmlNode l_node_page_size_settings = l_node.SelectSingleNode("PageSizeSettings");
+                    if(null != l_node_page_size_settings)
+                    {
+                        LoadPageSizeSettings (l_page, l_node_page_size_settings);
+
+                        XmlNode l_node_page_print_settings = l_node.SelectSingleNode("PagePrintSettings");
+                        LoadPagePrintSettings(l_page, l_node_page_print_settings);
+                    }
+                    else
+                    {
+                        //version pre 10
+                        SettingsPage l_settings_page = l_collPages.m_settingsPage;
+                        PrintSettings l_settings_print = l_collPages.m_printSettings;
+                        SettingsPrinter l_settings_printer = l_collPages.m_settingsPrinter;
+                        l_page.m_page_size_settings. Init_From_Old_Page_Settings(l_settings_page, l_settings_print, l_settings_printer);
+                        l_page.m_page_print_settings.Init_From_Old_Page_Settings(l_settings_page, l_settings_print, l_settings_printer);
+                    }
+
 
                 }
             }
@@ -331,7 +349,7 @@ namespace Loader
             settingsPage.DrawFrame = (ls_drawFrame == "YES");
 
             string ls_pageMargins = nodePageSettings.Attributes["pageMargins"].Value;
-//            string[] ls_margins = ls_pageMargins.Split(', ');
+
             string[] ls_margins = System.Text.RegularExpressions.Regex.Split(ls_pageMargins, ", ");
             if (ls_margins.Length == 4)
             {
@@ -383,7 +401,7 @@ namespace Loader
             printSettings.CustomSizeX = int.Parse(a_nodePrintSettings.Attributes["CustomSizeX"].Value);
             printSettings.CustomSizeY = int.Parse(a_nodePrintSettings.Attributes["CustomSizeY"].Value);
 
-
+            printSettings.PaperSizeEnum = short.Parse(a_nodePrintSettings.Attributes["PaperSize"].Value);
         }
 
 
@@ -766,6 +784,7 @@ namespace Loader
             return lf_result;
         }
 
+
         public static bool XmlAttrToBool(XmlAttribute a_attr)
         {
             string ls_result = string.Empty;
@@ -775,6 +794,47 @@ namespace Loader
             }
             return (ls_result == "1");
         }
+
+
+        private static MyRect XmlAttrib2Rect(XmlNode a_node, string as_attrib, int ai_def)
+        {
+
+            XmlAttribute l_attrib = a_node.Attributes[as_attrib];
+            if(l_attrib == null)
+            {
+                return new MyRect { Left = ai_def, Top = ai_def, Right = ai_def, Bottom = ai_def };
+            }
+
+            string ls_rect = l_attrib.Value;
+
+            string[] ls_margins = System.Text.RegularExpressions.Regex.Split(ls_rect, ", ");
+            if (ls_margins.Length == 4)
+            {
+                int li_left, li_top, li_right, li_bottom;
+
+                int.TryParse(ls_margins[0], out li_left);
+                int.TryParse(ls_margins[1], out li_top);
+                int.TryParse(ls_margins[2], out li_right);
+                int.TryParse(ls_margins[3], out li_bottom);
+
+                return new MyRect { Left = li_left, Top = li_top, Right = li_right, Bottom = li_bottom };
+                
+            }
+
+            return new MyRect();
+        }
+
+
+        public static Size XmlAttrToSize(XmlNode a_node, string as_attrib, int ai_def)
+        {
+            Size ls_size = new Size(
+                XmlAttrToIntWithDefault(a_node.Attributes[as_attrib + ("x")], ai_def),
+                XmlAttrToIntWithDefault(a_node.Attributes[as_attrib + ("y")], ai_def)
+	        );
+
+            return ls_size;
+        }
+
 
         public static int XmlAttrToInt(XmlAttribute a_attr)
         {
@@ -1417,6 +1477,28 @@ namespace Loader
             {
                 return XmlAttrToInt(a_node.Attributes["a"]);
             }
+        }
+
+        private static void LoadPageSizeSettings(PCadDoc a_page, XmlNode a_node)
+        {
+            a_page.m_page_size_settings.PaperSizeEnum = XmlAttrToInt(a_node.Attributes["paper_size_enum"]);
+            a_page.m_page_size_settings.sheet_size = XmlAttrToSize(a_node, "sheet_size_", 0);
+
+            Size l_size = XmlAttrToSize(a_node, "sheet_count_", 1);
+            a_page.m_page_size_settings.SheetsCount = l_size;
+
+            a_page.m_page_size_settings.m_source = (PageSizeSettings.EnumPaperSizeSource)XmlAttrToInt(a_node.Attributes["source"]);
+
+            a_page.m_page_size_settings.PageMargins = XmlAttrib2Rect(a_node, "margins", 10);
+        }
+
+
+
+        private static void LoadPagePrintSettings(PCadDoc a_page, XmlNode a_node)
+        {
+            a_page.m_page_print_settings.PaperSizeEnum = XmlAttrToInt(a_node.Attributes["paper_size_enum"]);
+            a_page.m_page_print_settings.sheet_size = XmlAttrToSize(a_node, "sheet_size_", 0);
+
         }
 
 

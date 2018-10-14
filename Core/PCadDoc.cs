@@ -28,6 +28,8 @@ namespace DxfNet
 
         public QDimStyle m_dim_style;
 
+        public PageSizeSettings m_page_size_settings = new PageSizeSettings();
+        public PagePrintSettings m_page_print_settings = new PagePrintSettings();
 
         public List<Layer> m_layers;
 
@@ -275,8 +277,35 @@ namespace DxfNet
         {
             Size l_size = Parent.GetSize();
 
+            if (m_page_size_settings.m_source == PageSizeSettings.EnumPaperSizeSource.PSS_Custom)
+            {
+                l_size = m_page_size_settings.sheet_size;
+                SubtractPaperMargins(ref l_size);
+                l_size.Width  *= 10;
+                l_size.Height *= 10;
+
+            }
+            else
+            {
+                if (m_page_size_settings.m_source == PageSizeSettings.EnumPaperSizeSource.PSS_Predefined)
+                {
+                    l_size = m_page_size_settings.sheet_size;
+                }
+                else if (m_page_size_settings.m_source == PageSizeSettings.EnumPaperSizeSource.PSS_Print)
+                {
+                    l_size = m_page_print_settings.sheet_size;
+                }
+
+                SubtractPaperMargins(ref l_size);
+                l_size.Width  *= 10;
+                l_size.Height *= 10;
 
 
+                l_size.Width  *= m_page_size_settings.SheetsCount.Width;
+                l_size.Height *= m_page_size_settings.SheetsCount.Height;
+            }
+
+            /*
             if (OriByPage)
             {
                 bool lb_global_landscape = l_size.Width > l_size.Height;
@@ -289,9 +318,20 @@ namespace DxfNet
                     l_size.Height = li_temp;
                 }
             }
-
+            */
             return l_size;
         }
+
+
+        private void SubtractPaperMargins(ref Size a_size)
+        {
+            a_size.Width = a_size.Width - m_page_size_settings.PageMargins.Left;
+            a_size.Width -= m_page_size_settings.PageMargins.Right;
+
+            a_size.Height -= m_page_size_settings.PageMargins.Top;
+            a_size.Height -= m_page_size_settings.PageMargins.Bottom;
+        }
+
 
         internal void SetupWireStatusConnected()
         {

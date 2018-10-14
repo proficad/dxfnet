@@ -75,6 +75,8 @@
     <Compile Include="ObjColors.cs" />
     <Compile Include="ObjProps.cs" />
     <Compile Include="Outlet.cs" />
+    <Compile Include="PagePrintSettings.cs" />
+    <Compile Include="PageSizeSettings.cs" />
     <Compile Include="PCadDoc.cs" />
     <Compile Include="PositionAspect.cs" />
     <Compile Include="PpdDoc.cs" />
