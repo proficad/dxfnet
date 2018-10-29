@@ -33,5 +33,17 @@ namespace DxfNet
             ScaleX = 1;
             ScaleY = 1;
         }
+
+        public PositionAspect(Point a_pivot, int a_angle, bool a_horizontal, bool a_vertical, double ad_scale_x, double ad_scale_y)
+        {
+            m_pivot = a_pivot;
+            m_angle = a_angle;
+            m_horizontal = a_horizontal;
+            m_vertical = a_vertical;
+            ScaleX = ad_scale_x;
+            ScaleY = ad_scale_y;
+        }
+
+
     }
 }

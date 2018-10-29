@@ -28,7 +28,9 @@ namespace Tester
         {
 
             //Calculate_Line_Thickness();
-            TestDim();
+            //TestDim();
+            Test_Diametric();
+            //Read_Dxf();
             //TestImageTransform();
 
         }
@@ -187,6 +189,48 @@ namespace Tester
 
             return dim;
         }
+
+
+        private static void Test_Diametric()
+        {
+            DxfModel model = new DxfModel();
+
+            DxfLayer layer = new DxfLayer("DIMENSIONS");
+            model.Layers.Add(layer);
+
+            DxfCircle circle = new DxfCircle(new Point3D(0d, 0d, 0d), 100d);
+            circle.Color = EntityColors.Green;
+            model.Entities.Add(circle);
+
+
+            DxfBlock block = new DxfBlock("DIAMETRIC_DIMENSIONS");
+            model.Blocks.Add(block);
+
+            DxfInsert insert = new DxfInsert(block, new Point3D(10, -15, 0));
+            insert.Layer = layer;
+            model.Entities.Add(insert);
+
+            DxfDimension.Diametric diametricDimension1 = new DxfDimension.Diametric(model.CurrentDimensionStyle);
+            diametricDimension1.ArcLineIntersectionPoint1 = new Point3D(-70d, 70d, 0);
+            diametricDimension1.ArcLineIntersectionPoint2 = new Point3D(70d, -70d, 0);
+            model.Entities.Add(diametricDimension1);
+
+            DxfWriter.Write(@"H:\Test_Diametric.dxf", model, false);
+        }
+
+
+        private static void Read_Dxf()
+        {
+            DxfModel model = new DxfModel();
+            DxfReader.Read(@"H:\acircle2.dwg");
+
+            foreach(DxfEntity l_e in model.Entities)
+            {
+                DxfColor l_color = l_e.DxfColor;
+            }
+            
+        }
+
 
         //-------------------
     }

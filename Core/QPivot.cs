@@ -44,7 +44,7 @@ namespace DxfNet
         {
 	        Point	vysledek = vstup;
 
-            if ((m_angle == 0) && (m_vertical == false) && (m_horizontal == false))
+            if ((m_angle == 0) && (m_vertical == false) && (m_horizontal == false) && (ScaleX == 1) && (ScaleY == 1))
             {
 		        return vstup;
 	        }

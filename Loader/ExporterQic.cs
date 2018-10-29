@@ -78,7 +78,7 @@ namespace Loader
 
         public static void ExportQic(DxfEntityCollection a_coll, QIC a_ic, PCadDoc a_pCadDoc, HybridDictionary a_dict)
         {
-            DxfNet.PositionAspect l_posAspect = new PositionAspect(a_ic.m_position.Location, a_ic.m_angle, a_ic.m_hor, a_ic.m_ver);
+            DxfNet.PositionAspect l_posAspect = new PositionAspect(a_ic.m_position.Location, a_ic.m_angle, a_ic.m_hor, a_ic.m_ver, a_ic.m_scaleX, a_ic.m_scaleY);
 
             string ret;
             System.Drawing.Color l_textColor = System.Drawing.Color.Black;
@@ -341,7 +341,7 @@ namespace Loader
                     a_textAlignment = QTextAlignment.AL_LM;
             }
 
-            if ((a_aspect.m_angle == 900) || (a_aspect.m_angle == -900))
+            if ((a_aspect.m_angle == -900) || (a_aspect.m_angle == 1800) || (a_aspect.m_angle == -1800))
             {
                 if (a_textAlignment == QTextAlignment.AL_LM)
                     a_textAlignment = QTextAlignment.AL_RM;

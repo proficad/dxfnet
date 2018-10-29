@@ -51,7 +51,11 @@ namespace Loader
 
         public static Point PrevodBodu(Point a_vstup, PositionAspect a_aspect)
         {
-            if ((a_aspect.m_angle == 0) && (a_aspect.m_vertical == false) && (a_aspect.m_horizontal == false))
+            if (
+                (a_aspect.m_angle == 0) 
+                && (a_aspect.m_vertical == false) && (a_aspect.m_horizontal == false) 
+                && (a_aspect.ScaleX == 1) && (a_aspect.ScaleY == 1)
+                )
             {
                 return a_vstup;
             }
