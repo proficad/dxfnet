@@ -2312,7 +2312,8 @@ static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, 
                 dxfDimAl.ExtensionLine1StartPoint = A_3D;
                 dxfDimAl.ExtensionLine2StartPoint = B_3D;
                 dxfDimAl.DimensionLineLocation = C_3D;
-                
+
+                dxfDimAl.Layer = ExportContext.Current.Layer;
                 a_coll.Add(dxfDimAl);
             }
             else
@@ -2327,6 +2328,7 @@ static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, 
                     dxfDimLin.Rotation = Math.PI / 2d;
                 }
 
+                dxfDimLin.Layer = ExportContext.Current.Layer;
                 a_coll.Add(dxfDimLin);
             }
 
@@ -2349,9 +2351,8 @@ static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, 
                 UseTextMiddlePoint = true
             };
 
-
+            dxfDim.Layer = ExportContext.Current.Layer;
             a_coll.Add(dxfDim);
-
         }
 
 
@@ -2370,13 +2371,23 @@ static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, 
             l_style.TextInsideHorizontal  = !a_dim_style.m_align_text_with_dim_line;
             l_style.TextOutsideHorizontal = !a_dim_style.m_align_text_with_dim_line;
 
-            //DxfDimensionStyle.TextVerticalAlignment ll;
 
-            //l_style.TextVerticalAlignment = DimensionTextVerticalAlignment.Below;
-
-            //model.CurrentDimensionStyle.TextVerticalAlignment = DimensionTextVerticalAlignment.Below;
+            l_style.DimensionLineColor = a_dim_style.m_line_dim.m_color;
+            l_style.ExtensionLineColor = a_dim_style.m_line_ext.m_color;
 
 
+            switch(a_dim_style.m_text_position)
+            {
+                case Core.QDimStyle.Text_Position.text_position_above:
+                    l_style.TextVerticalAlignment = DimensionTextVerticalAlignment.Above;
+                    break;
+
+                case Core.QDimStyle.Text_Position.text_position_below:
+                    l_style.TextVerticalAlignment = DimensionTextVerticalAlignment.Below;
+                    break;
+            }
+
+            l_style.Name = a_dim_style.m_name;
 
         }
 
