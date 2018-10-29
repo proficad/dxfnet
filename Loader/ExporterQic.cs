@@ -185,27 +185,30 @@ namespace Loader
                 {
                     continue;
                 }
-                int li_cislo = int.Parse(ls_item);
 
-                //udělej kroužek
-                if ((li_cislo > 0) && (li_cislo <= a_ic.m_numberOfOutletsVer))
+                int li_cislo;
+                if (int.TryParse(ls_item, out li_cislo))
                 {
-                    My_Kruh(a_coll, l_posAspect, new Point(li_left - 5, li_top + ((li_cislo + 1) * QIC.INT_VYV)), new Size(5, 5));
-                }
-                if ((li_cislo > a_ic.m_numberOfOutletsVer) && (li_cislo <= (a_ic.m_numberOfOutletsVer + a_ic.m_numberOfOutletsHor)))
-                {
-                    li_cislo -= a_ic.m_numberOfOutletsVer;
-                    My_Kruh(a_coll, l_posAspect, new Point(li_left + ((li_cislo) * QIC.INT_VYV), li_bottom + 5), new Size(5, 5));
-                }
-                if ((li_cislo > a_ic.m_numberOfOutletsVer + a_ic.m_numberOfOutletsHor) && (li_cislo <= (a_ic.m_numberOfOutletsVer + a_ic.m_numberOfOutletsHor + a_ic.m_numberOfOutletsVer)))
-                {
-                    li_cislo -= (a_ic.m_numberOfOutletsVer + a_ic.m_numberOfOutletsHor);
-                    My_Kruh(a_coll, l_posAspect, new Point(li_right + 5, li_bottom - ((li_cislo + 1) * QIC.INT_VYV)), new Size(5, 5));
-                }
-                if ((li_cislo > a_ic.m_numberOfOutletsVer + a_ic.m_numberOfOutletsHor + a_ic.m_numberOfOutletsVer) && (li_cislo <= (a_ic.m_numberOfOutletsVer + a_ic.m_numberOfOutletsHor + a_ic.m_numberOfOutletsVer + a_ic.m_numberOfOutletsHor)))
-                {
-                    li_cislo -= (a_ic.m_numberOfOutletsVer + a_ic.m_numberOfOutletsHor + a_ic.m_numberOfOutletsVer);
-                    My_Kruh(a_coll, l_posAspect, new Point(li_left + (QIC.INT_VYV * (a_ic.m_numberOfOutletsHor - li_cislo + 1)), li_top - 5), new Size(5, 5));
+                    //udělej kroužek
+                    if ((li_cislo > 0) && (li_cislo <= a_ic.m_numberOfOutletsVer))
+                    {
+                        My_Kruh(a_coll, l_posAspect, new Point(li_left - 5, li_top + ((li_cislo + 1) * QIC.INT_VYV)), new Size(5, 5));
+                    }
+                    if ((li_cislo > a_ic.m_numberOfOutletsVer) && (li_cislo <= (a_ic.m_numberOfOutletsVer + a_ic.m_numberOfOutletsHor)))
+                    {
+                        li_cislo -= a_ic.m_numberOfOutletsVer;
+                        My_Kruh(a_coll, l_posAspect, new Point(li_left + ((li_cislo) * QIC.INT_VYV), li_bottom + 5), new Size(5, 5));
+                    }
+                    if ((li_cislo > a_ic.m_numberOfOutletsVer + a_ic.m_numberOfOutletsHor) && (li_cislo <= (a_ic.m_numberOfOutletsVer + a_ic.m_numberOfOutletsHor + a_ic.m_numberOfOutletsVer)))
+                    {
+                        li_cislo -= (a_ic.m_numberOfOutletsVer + a_ic.m_numberOfOutletsHor);
+                        My_Kruh(a_coll, l_posAspect, new Point(li_right + 5, li_bottom - ((li_cislo + 1) * QIC.INT_VYV)), new Size(5, 5));
+                    }
+                    if ((li_cislo > a_ic.m_numberOfOutletsVer + a_ic.m_numberOfOutletsHor + a_ic.m_numberOfOutletsVer) && (li_cislo <= (a_ic.m_numberOfOutletsVer + a_ic.m_numberOfOutletsHor + a_ic.m_numberOfOutletsVer + a_ic.m_numberOfOutletsHor)))
+                    {
+                        li_cislo -= (a_ic.m_numberOfOutletsVer + a_ic.m_numberOfOutletsHor + a_ic.m_numberOfOutletsVer);
+                        My_Kruh(a_coll, l_posAspect, new Point(li_left + (QIC.INT_VYV * (a_ic.m_numberOfOutletsHor - li_cislo + 1)), li_top - 5), new Size(5, 5));
+                    }
                 }
             }
 
