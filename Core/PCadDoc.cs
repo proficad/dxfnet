@@ -305,20 +305,7 @@ namespace DxfNet
                 l_size.Height *= m_page_size_settings.SheetsCount.Height;
             }
 
-            /*
-            if (OriByPage)
-            {
-                bool lb_global_landscape = l_size.Width > l_size.Height;
-                bool lb_this_page_landscape = (Orientation == 1);
-
-                if (lb_global_landscape != lb_this_page_landscape)
-                {
-                    int li_temp = l_size.Width;
-                    l_size.Width = l_size.Height;
-                    l_size.Height = li_temp;
-                }
-            }
-            */
+      
             return l_size;
         }
 

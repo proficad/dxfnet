@@ -1150,6 +1150,14 @@ namespace Loader
             Core.QDimStyle l_style = new QDimStyle();
             l_style.m_name = a_node.Attributes["name"].Value;
             l_style.m_align_text_with_dim_line = XmlAttrToBool(a_node.Attributes["align_text"]);
+            l_style.m_text_position = (Core.QDimStyle.Text_Position) XmlAttrToInt(a_node.Attributes["lbl_pos"]);
+
+            const string TAG_DIM_LINE = "DimLine";
+            const string TAG_EXT_LINE = "ExtLine";
+
+            Load_Dim_Line(a_node, TAG_DIM_LINE, ref l_style.m_line_dim);
+            Load_Dim_Line(a_node, TAG_EXT_LINE, ref l_style.m_line_ext);
+            
 
             a_repo.AddDimStyle(l_style);
         }
@@ -1498,6 +1506,21 @@ namespace Loader
         {
             a_page.m_page_print_settings.PaperSizeEnum = XmlAttrToInt(a_node.Attributes["paper_size_enum"]);
             a_page.m_page_print_settings.sheet_size = XmlAttrToSize(a_node, "sheet_size_", 0);
+
+        }
+
+        private static void Load_Dim_Line(XmlNode a_node, string as_tag_name, ref QDimStyle.ColorThickness a_line_dim)
+        {
+            XmlNode l_node_line = a_node.SelectSingleNode(as_tag_name);
+            if(null != l_node_line)
+            {
+                string ls_color = XmlAttrToString(l_node_line.Attributes["op-lc"]);
+                int li_color = int.Parse(ls_color);
+
+                a_line_dim.m_color = System.Drawing.ColorTranslator.FromWin32(li_color);
+
+                a_line_dim.m_thickness = XmlAttrToInt(l_node_line.Attributes["op-lw"]);
+            }
 
         }
 
