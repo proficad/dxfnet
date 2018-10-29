@@ -88,10 +88,10 @@ namespace A2IDLL
                 model = DxfReader.Read(as_fileIn);
             }
 
-            
+            /*
             Example.ExportToSvgExample l_sample = new Example.ExportToSvgExample();
             l_sample.ExportToSvg(model);
-            
+            */
             
             if (as_format == "svg")
             {
