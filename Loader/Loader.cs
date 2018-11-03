@@ -348,7 +348,7 @@ namespace Loader
             string ls_drawFrame = nodePageSettings.Attributes["frame"].Value;
             settingsPage.DrawFrame = (ls_drawFrame == "YES");
 
-            string ls_pageMargins = nodePageSettings.Attributes["pageMargins"].Value;
+            string ls_pageMargins = XmlAttrToString(nodePageSettings.Attributes["pageMargins"]);
 
             string[] ls_margins = System.Text.RegularExpressions.Regex.Split(ls_pageMargins, ", ");
             if (ls_margins.Length == 4)
