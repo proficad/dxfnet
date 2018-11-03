@@ -77,7 +77,7 @@ namespace DxfNet
 
 
             a_xmlWriter.WriteStartElement("elem");
-            a_xmlWriter.WriteAttributeString("lGuid", m_lG);
+            a_xmlWriter.WriteAttributeString("lG", m_lG);
             a_xmlWriter.WriteAttributeString("x", Helper.GetRectCenterPoint(m_position).X.ToString());
             a_xmlWriter.WriteAttributeString("y", Helper.GetRectCenterPoint(m_position).Y.ToString());
             if (m_hor)

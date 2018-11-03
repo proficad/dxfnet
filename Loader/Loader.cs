@@ -981,7 +981,13 @@ namespace Loader
         private static void AddImage(DrawDoc a_drawDoc, XmlNode a_node)
         {
             Rectangle l_rect = RectFromXml(a_node);
-            string ls_lastGuid = a_node.Attributes["lastGuid"].Value;
+
+            string ls_lastGuid = a_node.Attributes["lG"].Value;
+            if(string.IsNullOrEmpty(ls_lastGuid))
+            {
+                ls_lastGuid = a_node.Attributes["lastGuid"].Value;
+            }
+
             int li_angle = XmlAttrToInt(a_node.Attributes["a"]);
             bool lb_hor = XmlAttrToBool(a_node.Attributes["h"]);
             bool lb_ver = XmlAttrToBool(a_node.Attributes["v"]);
@@ -1165,7 +1171,12 @@ namespace Loader
 
         private static void AddImageDesc(Repo a_repo, XmlNode a_node)
         {
-            string ls_lastGuid = a_node.Attributes["lastGuid"].Value;
+            string ls_lastGuid = a_node.Attributes["lG"].Value;
+            if (string.IsNullOrEmpty(ls_lastGuid))
+            {
+                ls_lastGuid = a_node.Attributes["lastGuid"].Value;
+            }
+
             int li_imgType = int.Parse(a_node.Attributes["imgType"].Value);
 
             if (li_imgType == 10)  // do not support WMF
@@ -1256,7 +1267,6 @@ namespace Loader
             
             QIC l_ic = new QIC(li_x, li_y, lf_scaleX, lf_scaleY);
 
-//            l_insert.m_lG = XmlAttrToString(a_node.Attributes["lGuid"]);
 
             SetupInsertCommon(doc, a_node, l_ic);
             XmlNode picdNode = a_node.SelectSingleNode("descendant::picd");
@@ -1319,7 +1329,12 @@ namespace Loader
             float lf_scaleY = Helper.ParseScale(a_node.Attributes["sY"]);
 
             Insert l_insert   = new Insert(Shape.soucastka, li_x, li_y, lf_scaleX, lf_scaleY);
-            l_insert.m_lG     = XmlAttrToString(a_node.Attributes["lGuid"]);
+
+            l_insert.m_lG     = XmlAttrToString(a_node.Attributes["lG"]);
+            if(string.IsNullOrEmpty(l_insert.m_lG))
+            {
+                l_insert.m_lG     = XmlAttrToString(a_node.Attributes["lGuid"]);
+            }
 
             XmlNode parametersNode = a_node.SelectSingleNode("parameters");
             LoadParameters(l_insert.m_parameters, parametersNode);
