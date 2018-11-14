@@ -73,7 +73,7 @@ namespace A2IDLL
                 li_size = li_maxSize;
             }
 
-            GraphicsConfig l_graphicsConfig = ab_convert ? GraphicsConfig.WhiteBackgroundCorrectForBackColor : GraphicsConfig.BlackBackground;
+            GraphicsConfig l_graphicsConfig = ab_convert ? GraphicsConfig.WhiteBackgroundCorrectForBackColor : GraphicsConfig.BlackBackgroundCorrectForBackColor;
             
 
             DxfModel model = null;

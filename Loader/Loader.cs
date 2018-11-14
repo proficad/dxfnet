@@ -175,7 +175,7 @@ namespace Loader
 
             XmlNode summaryNode = xmlDoc.SelectSingleNode("/document/summary");
             LoadSummary(l_collPages.m_summInfo, summaryNode);
-            
+
 
             //setup layers
             if (ld_version < 7)
@@ -240,9 +240,9 @@ namespace Loader
                     l_page.m_dim_style = l_collPages.m_repo.GetDimStyle(ls_dim_style_name);
 
                     XmlNode l_node_page_size_settings = l_node.SelectSingleNode("PageSizeSettings");
-                    if(null != l_node_page_size_settings)
+                    if (null != l_node_page_size_settings)
                     {
-                        LoadPageSizeSettings (l_page, l_node_page_size_settings);
+                        LoadPageSizeSettings(l_page, l_node_page_size_settings);
 
                         XmlNode l_node_page_print_settings = l_node.SelectSingleNode("PagePrintSettings");
                         LoadPagePrintSettings(l_page, l_node_page_print_settings);
@@ -250,12 +250,11 @@ namespace Loader
                     else
                     {
                         //version pre 10
-                        SettingsPage l_settings_page = l_collPages.m_settingsPage;
-                        PrintSettings l_settings_print = l_collPages.m_printSettings;
-                        SettingsPrinter l_settings_printer = l_collPages.m_settingsPrinter;
-                        l_page.m_page_size_settings. Init_From_Old_Page_Settings(l_settings_page, l_settings_print, l_settings_printer);
-                        l_page.m_page_print_settings.Init_From_Old_Page_Settings(l_settings_page, l_settings_print, l_settings_printer);
+   
+                        l_page.m_page_size_settings.Init_From_Old_Page_Settings (l_collPages.m_settingsPage, l_collPages.m_printSettings, l_collPages.m_settingsPrinter);
+                        l_page.m_page_print_settings.Init_From_Old_Page_Settings(l_collPages.m_settingsPage, l_collPages.m_printSettings, l_collPages.m_settingsPrinter);
                     }
+
 
 
                 }
@@ -315,6 +314,7 @@ namespace Loader
         {
             a_setting.Enabled       = XmlAttrToBool(a_node.Attributes[SettingsNumberingWire.Attr_Enabled]);
             a_setting.Vertically    = XmlAttrToBool(a_node.Attributes[SettingsNumberingWire.Attr_Vertically]);
+            a_setting.Over          = XmlAttrToBool(a_node.Attributes[SettingsNumberingWire.Attr_Over]);
 
             int li_show_wire_numbers = XmlAttrToInt(a_node.Attributes[SettingsNumberingWire.Attr_ShowWireName]);
             a_setting.ShowWireNumbers = (SettingsNumberingWire.EnumShowWireNumbers)li_show_wire_numbers;
@@ -334,10 +334,8 @@ namespace Loader
                 return;
             }
 
-
             settingsPage.PagesHor = XmlAttrToIntWithDefault(nodePageSettings.Attributes["pgsHor"], 1);
             settingsPage.PagesVer = XmlAttrToIntWithDefault(nodePageSettings.Attributes["pgsVer"], 1);
-
 
             string ls_showT     = nodePageSettings.Attributes["showT"].Value;
             string ls_showV     = nodePageSettings.Attributes["showV"].Value;
@@ -393,6 +391,9 @@ namespace Loader
                 return;
             }
 
+            printSettings.PaperSizeEnum = (short) XmlAttrToInt(a_nodePrintSettings, "PaperSize");
+            printSettings.FormName = XmlAttrToString(a_nodePrintSettings, "FormName");
+
             printSettings.SheetSizeX = int.Parse(a_nodePrintSettings.Attributes["SheetSizeX"].Value);
             printSettings.SheetSizeY = int.Parse(a_nodePrintSettings.Attributes["SheetSizeY"].Value);
 
@@ -401,7 +402,7 @@ namespace Loader
             printSettings.CustomSizeX = int.Parse(a_nodePrintSettings.Attributes["CustomSizeX"].Value);
             printSettings.CustomSizeY = int.Parse(a_nodePrintSettings.Attributes["CustomSizeY"].Value);
 
-            printSettings.PaperSizeEnum = short.Parse(a_nodePrintSettings.Attributes["PaperSize"].Value);
+
         }
 
 
@@ -761,7 +762,19 @@ namespace Loader
             }
             return string.Empty;
         }
-  
+
+        public static string XmlAttrToString(XmlNode a_node, string as_name)
+        {
+            XmlAttribute l_attr = a_node.Attributes[as_name];
+            if(null != l_attr)
+            {
+                return l_attr.Value;
+            }
+            else
+            {
+                return null;
+            }
+        }
 
         public static string XmlAttrToString(XmlAttribute a_attr)
         {
@@ -835,6 +848,11 @@ namespace Loader
             return ls_size;
         }
 
+        public static int XmlAttrToInt(XmlNode a_node, string as_name)
+        {
+            XmlAttribute l_attr = a_node.Attributes[as_name];
+            return XmlAttrToIntWithDefault(l_attr, 0);
+        }
 
         public static int XmlAttrToInt(XmlAttribute a_attr)
         {
@@ -914,6 +932,9 @@ namespace Loader
 
             QDimCircle l_dim = new QDimCircle(l_a, l_b, lb_has_2_arrows, l_label_pos);
             a_drawDoc.Add(l_dim, ContextP2A.Current.CurrentLayer);
+
+            XmlNode l_node_label = a_node.SelectSingleNode("label");
+            l_dim.Label = LoadQLabel(l_node_label);
         }
 
         private static void AddDimLine(DrawDoc a_drawDoc, XmlNode a_node)
@@ -922,14 +943,27 @@ namespace Loader
             Point l_b = XmlAttrToPoint(a_node, "b");
             Point l_c = XmlAttrToPoint(a_node, "c");
 
-            QDimLine.DimDirection l_dir = (QDimLine.DimDirection) XmlAttrToInt(a_node.Attributes["dir"]);
-
+            QDimLine.DimDirection l_dir = (QDimLine.DimDirection)XmlAttrToInt(a_node.Attributes["dir"]);
 
 
             QDimLine l_dim = new QDimLine(l_a, l_b, l_c, l_dir);
             a_drawDoc.Add(l_dim, ContextP2A.Current.CurrentLayer);
 
         }
+        private static QLabel LoadQLabel(XmlNode a_node)
+        {
+            if(null != a_node)
+            {
+                Point l_center_point = XmlAttrToPoint(a_node, "pos_");
+                string ls_text = XmlAttrToString(a_node, "text");
+                int li_angle = XmlAttrToInt(a_node, "angle");
+                QLabel l_label = new QLabel { Center = l_center_point, Text = ls_text, AngleTenths = li_angle };
+                return l_label;
+            }
+
+            return null;
+        }
+
 
         private static void AddOutlet(DrawDoc a_drawDoc, XmlNode a_node)
         {
@@ -982,8 +1016,8 @@ namespace Loader
         {
             Rectangle l_rect = RectFromXml(a_node);
 
-            string ls_lastGuid = a_node.Attributes["lG"].Value;
-            if(string.IsNullOrEmpty(ls_lastGuid))
+            string ls_lastGuid = XmlAttrToString(a_node, "lG");
+            if (string.IsNullOrEmpty(ls_lastGuid))
             {
                 ls_lastGuid = a_node.Attributes["lastGuid"].Value;
             }
@@ -1141,11 +1175,10 @@ namespace Loader
                 {
                     switch (nodeRepoElement.Name)
                     {
-                        case "ppd":      AddPpd      (a_repo, nodeRepoElement); break;
-                        case "imgDesc":  AddImageDesc(a_repo, nodeRepoElement); break;
-                        case "tb":       AddTb       (a_repo, nodeRepoElement); break;
-                        case "DimStyle": AddDimStyle (a_repo, nodeRepoElement); break;
-            
+                        case "ppd":     AddPpd      (a_repo, nodeRepoElement); break;
+                        case "imgDesc": AddImageDesc(a_repo, nodeRepoElement); break;
+                        case "tb":      AddTb       (a_repo, nodeRepoElement); break;
+                        case "DimStyle": AddDimStyle(a_repo, nodeRepoElement); break;
                     }
                 }
             }
@@ -1163,7 +1196,9 @@ namespace Loader
 
             Load_Dim_Line(a_node, TAG_DIM_LINE, ref l_style.m_line_dim);
             Load_Dim_Line(a_node, TAG_EXT_LINE, ref l_style.m_line_ext);
-            
+
+            l_style.m_arrow_index = XmlAttrToInt(a_node, "arrow");
+            l_style.m_label_font = EFont.StringToEfont(XmlAttrToString(a_node.Attributes["f"]));
 
             a_repo.AddDimStyle(l_style);
         }
@@ -1171,7 +1206,7 @@ namespace Loader
 
         private static void AddImageDesc(Repo a_repo, XmlNode a_node)
         {
-            string ls_lastGuid = a_node.Attributes["lG"].Value;
+            string ls_lastGuid = XmlAttrToString(a_node, "lG");
             if (string.IsNullOrEmpty(ls_lastGuid))
             {
                 ls_lastGuid = a_node.Attributes["lastGuid"].Value;
@@ -1268,6 +1303,7 @@ namespace Loader
             QIC l_ic = new QIC(li_x, li_y, lf_scaleX, lf_scaleY);
 
 
+
             SetupInsertCommon(doc, a_node, l_ic);
             XmlNode picdNode = a_node.SelectSingleNode("descendant::picd");
             
@@ -1330,10 +1366,10 @@ namespace Loader
 
             Insert l_insert   = new Insert(Shape.soucastka, li_x, li_y, lf_scaleX, lf_scaleY);
 
-            l_insert.m_lG     = XmlAttrToString(a_node.Attributes["lG"]);
-            if(string.IsNullOrEmpty(l_insert.m_lG))
+            l_insert.m_lG = XmlAttrToString(a_node, "lG");
+            if (string.IsNullOrEmpty(l_insert.m_lG))
             {
-                l_insert.m_lG     = XmlAttrToString(a_node.Attributes["lGuid"]);
+                l_insert.m_lG = XmlAttrToString(a_node.Attributes["lGuid"]);
             }
 
             XmlNode parametersNode = a_node.SelectSingleNode("parameters");

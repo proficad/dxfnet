@@ -12,6 +12,5 @@ namespace DxfNet
         public Size PaperSize { get; set; }
         public Point PhysicalOffsetTenthsMm { get; set; }
 
-
     }
 }

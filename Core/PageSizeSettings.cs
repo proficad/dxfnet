@@ -45,14 +45,17 @@ namespace Core
                 //const int li_margin_hor = 
                 int li_size_diff_x = sheet_size.Width - a_print.SheetSizeX;
                 int li_size_diff_y = sheet_size.Height - a_print.SheetSizeY;
-          
 
-                PageMargins.Left    = li_size_diff_x / 2;
-                PageMargins.Top     = li_size_diff_y / 2;
-                PageMargins.Right   = li_size_diff_x - PageMargins.Left;
-                PageMargins.Bottom  = li_size_diff_y - PageMargins.Top;
-                
+                if((li_size_diff_x > 0) && (li_size_diff_y > 0))
+                {
+                    PageMargins.Left = li_size_diff_x / 2;
+                    PageMargins.Top = li_size_diff_y / 2;
+                    PageMargins.Right = li_size_diff_x - PageMargins.Left;
+                    PageMargins.Bottom = li_size_diff_y - PageMargins.Top;
+                }
+
             }
         }
+
     }
 }

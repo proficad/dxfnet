@@ -31,6 +31,7 @@ namespace DxfNet
             a_xmlWriter.WriteEndElement();
         }
 
+
         public void RecalcToBeInCenterPoint(Point a_basePoint)
         {
 
@@ -85,9 +86,9 @@ namespace DxfNet
 
         }
 
+
         public Rectangle GetPosition()
         {
-
 
             if (m_objects.Count == 0)
             {

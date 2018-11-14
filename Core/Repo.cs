@@ -20,11 +20,11 @@ namespace DxfNet
             return m_listDimStyles.Where(x => x.m_name == as_name).FirstOrDefault();
         }
 
-        public PpdDoc FindPpdDocInRepo(string ls_lastGuid)
+        public PpdDoc FindPpdDocInRepo(string as_lastGuid)
         {
             foreach(PpdDoc l_doc in m_listPpd)
             {
-                if(l_doc.m_lG == ls_lastGuid)
+                if(l_doc.m_lG == as_lastGuid)
                 {
                     return l_doc;
                 }

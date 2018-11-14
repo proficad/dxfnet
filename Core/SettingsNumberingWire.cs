@@ -12,6 +12,7 @@ namespace DxfNet
         const string ElementName = "NumberingWire";
         public const string Attr_Enabled = "Enabled";
         public const string Attr_Prefill = "Prefill";
+        public const string Attr_Over = "Over";
         public const string Attr_Digits = "Digits";
         public const string Attr_TypeRenumbering = "TypeRenumbering";
         public const string Attr_ShowWireName = "ShowWireName";
@@ -24,6 +25,8 @@ namespace DxfNet
 
         public bool Enabled     { get; set; }
         public bool Vertically  { get; set; }
+        public bool Over { get; set; }
+
 
         public enum EnumShowWireNumbers { swn_no, swn_just_free, swn_both };
         public EnumShowWireNumbers ShowWireNumbers { get; set; }

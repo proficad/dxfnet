@@ -91,7 +91,9 @@
     <Compile Include="QFontsCollection.cs" />
     <Compile Include="QGate.cs" />
     <Compile Include="QIC.cs" />
+    <Compile Include="QLabel.cs" />
     <Compile Include="QLin.cs" />
+    <Compile Include="QPaperSize.cs" />
     <Compile Include="QPivot.cs" />
     <Compile Include="QSummInfo.cs" />
     <Compile Include="RefGrid.cs" />

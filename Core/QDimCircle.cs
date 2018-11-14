@@ -12,6 +12,9 @@ namespace DxfNet
         public bool m_has_2_arrows;
         public Point m_pos_label;
 
+        public QLabel Label;
+
+
         public QDimCircle(Point a_a, Point a_b, bool ab_has_2_arr, Point a_pos_label) : base(Shape.dim_circle, new Rectangle(a_a.X, a_a.Y, 1, 1))
         {
             A = a_a;

@@ -3,11 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using Core;
 
 namespace DxfNet
 {
     public static class Helper
     {
+        public enum EnumPageOri { OriPortrait, OriLandscape };
+
+
+        private const short _PROFICAD_DMPAPER_A0 = -10;
+        private const short _PROFICAD_DMPAPER_A1 = -11;
+        private const short DMPAPER_A2 = 66;
+        private const short DMPAPER_A3 = 8;
+        private const short DMPAPER_A4 = 9;
+        private const short DMPAPER_LETTER = 1;
+        private const short DMPAPER_LEGAL = 5;
+        private const short DMPAPER_LEDGER = 4;
         internal static string EncodeHtml(string as_input)
         {
             as_input = as_input.Replace("&", "&amp;");
@@ -89,5 +101,50 @@ namespace DxfNet
             return li_div;
         }
 
+        public static Size Sniff_Page_Size(int ai_paper_size_enum, string as_form_name)
+        {
+            List<QPaperSize> l_list = Get_List_Paper_Sizes();
+
+            Size l_size = l_list.Where(x => x.PaperSizeEnum == ai_paper_size_enum).Select(q => q.SheetSize).SingleOrDefault();
+          
+            if(l_size.IsEmpty)
+            {
+                l_size = l_list.Where(x => Form_Name_Match(x.FormName, as_form_name)).Select(q => q.SheetSize).SingleOrDefault();
+            }
+            
+            return l_size;
+        }
+
+
+        private static bool Form_Name_Match(string as_name_1, string as_name_2)
+        {
+            string ls_name_1 = Get_First_Part(as_name_1);
+            string ls_name_2 = Get_First_Part(as_name_2);
+
+            return (ls_name_1 == ls_name_2);
+        }
+
+        private static string Get_First_Part(string as_input)
+        {
+            return as_input.Split(' ')[0];
+        }
+
+        private static List<QPaperSize> Get_List_Paper_Sizes()
+        {
+            List<QPaperSize> l_list = new List<QPaperSize>();
+
+            l_list.Add(new QPaperSize(_PROFICAD_DMPAPER_A0, "A0 (1189 x 841 mm)",   new Size(841, 1189)));
+            l_list.Add(new QPaperSize(_PROFICAD_DMPAPER_A1, "A1 (841 x 594 mm)",    new Size(594, 841)));
+            l_list.Add(new QPaperSize(DMPAPER_A2,           "A2 (594 x 420 mm)",    new Size(420, 594)));
+            l_list.Add(new QPaperSize(DMPAPER_A3,           "A3 (420 x 297 mm)",    new Size(297, 420)));
+            l_list.Add(new QPaperSize(DMPAPER_A4,           "A4 (297 x 210 mm)",    new Size(210, 297)));
+            l_list.Add(new QPaperSize(DMPAPER_LETTER,       "letter (11 x 8.5\")",  new Size(216, 279)));
+            l_list.Add(new QPaperSize(DMPAPER_LEGAL,        "legal (14 x 8.5\")",   new Size(216, 356)));
+            l_list.Add(new QPaperSize(DMPAPER_LEDGER,       "ledger (17 x 11\")",   new Size(432, 279)));
+
+
+            return l_list;
+        }
+     //------------------------------------  
     }
 }

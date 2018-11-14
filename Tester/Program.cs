@@ -29,12 +29,36 @@ namespace Tester
 
             //Calculate_Line_Thickness();
             //TestDim();
-            Test_Diametric();
+            //Test_Diametric();
             //Read_Dxf();
             //TestImageTransform();
-
+            ExportAll();
         }
 
+
+        //export all SXE to DXF
+        private static void ExportAll()
+        {
+            string ls_path_in = @"H:\S\";
+            System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(ls_path_in);
+            IEnumerable<System.IO.FileInfo> fileList = dir.GetFiles("*.sxe", System.IO.SearchOption.AllDirectories);
+
+            foreach(FileInfo l_file in fileList)
+            {
+                ExportSxe(l_file);
+            }
+        }
+
+
+        private static void ExportSxe(FileInfo a_file)
+        {
+            string ls_in = a_file.FullName;
+            string ls_out = a_file.FullName.Replace(".sxe", ".dxf");
+
+            System.Collections.Specialized.StringCollection l_coll = new System.Collections.Specialized.StringCollection();
+            Loader.Loader.Sxe2Dxf(ls_in, ls_out, l_coll);
+
+        }
 
 
         private static void TestImageTransform()
@@ -86,14 +110,14 @@ namespace Tester
 
             
             // Horizontal.
-            DxfDimension.Linear linearDimension1 = new DxfDimension.Linear(model.DefaultDimensionStyle);
+            DxfDimension.Linear linearDimension1 = new DxfDimension.Linear(model.CurrentDimensionStyle);
             linearDimension1.ExtensionLine1StartPoint = new Point3D(0, 0, 0);
             linearDimension1.ExtensionLine2StartPoint = new Point3D(200, 0, 0);
             linearDimension1.DimensionLineLocation = new Point3D(200, 100, 0);
             block.Entities.Add(linearDimension1);
             
             // Rotated and usage of "<>" text.
-            DxfDimension.Linear linearDimension2 = new DxfDimension.Linear(model.DefaultDimensionStyle);
+            DxfDimension.Linear linearDimension2 = new DxfDimension.Linear(model.CurrentDimensionStyle);
             linearDimension2.Rotation = Math.PI / 6d;
             linearDimension2.Text = "<> cm"; // <> is replaced by measurement.
             linearDimension2.ExtensionLine1StartPoint = new Point3D(0, 2, 0);
@@ -102,7 +126,7 @@ namespace Tester
             block.Entities.Add(linearDimension2);
 
             // Rotated to the other side with rounded measurement and aligned text.
-            DxfDimension.Linear linearDimension3 = new DxfDimension.Linear(model.DefaultDimensionStyle);
+            DxfDimension.Linear linearDimension3 = new DxfDimension.Linear(model.CurrentDimensionStyle);
             linearDimension3.DimensionStyleOverrides.TextInsideHorizontal = false;
             linearDimension3.DimensionStyleOverrides.Rounding = 0.25;
             linearDimension3.DimensionStyleOverrides.DimensionLineColor = Colors.Red;
@@ -114,7 +138,7 @@ namespace Tester
             block.Entities.Add(linearDimension3);
 
             // Rotated.
-            DxfDimension.Linear linearDimension4 = new DxfDimension.Linear(model.DefaultDimensionStyle);
+            DxfDimension.Linear linearDimension4 = new DxfDimension.Linear(model.CurrentDimensionStyle);
             linearDimension4.TextRotation = 0;
             linearDimension4.Rotation = Math.PI / 6d;
             linearDimension4.ExtensionLine1StartPoint = new Point3D(2, 6, 0);
@@ -134,7 +158,7 @@ namespace Tester
             block.Entities.Add(linearDimension5);
             
             // Vertical.
-            DxfDimension.Linear linearDimension6 = new DxfDimension.Linear(model.DefaultDimensionStyle);
+            DxfDimension.Linear linearDimension6 = new DxfDimension.Linear(model.CurrentDimensionStyle);
             linearDimension6.Rotation = Math.PI / 2d;
             linearDimension6.DimensionStyleOverrides.TextInsideHorizontal = false;
             linearDimension6.ExtensionLine1StartPoint = new Point3D(0, 12, 0);
@@ -213,6 +237,10 @@ namespace Tester
             DxfDimension.Diametric diametricDimension1 = new DxfDimension.Diametric(model.CurrentDimensionStyle);
             diametricDimension1.ArcLineIntersectionPoint1 = new Point3D(-70d, 70d, 0);
             diametricDimension1.ArcLineIntersectionPoint2 = new Point3D(70d, -70d, 0);
+            diametricDimension1.DimensionStyleOverrides.TextInsideHorizontal = true;
+            diametricDimension1.DimensionStyleOverrides.TextInsideExtensions = true;
+            // Need this, otherwise for ArrowsTextFitType.MoveBestFit text and arrows are moved outside the extension lines.
+            diametricDimension1.DimensionStyleOverrides.ArrowsTextFit = ArrowsTextFitType.MoveBoth;
             model.Entities.Add(diametricDimension1);
 
             DxfWriter.Write(@"H:\Test_Diametric.dxf", model, false);

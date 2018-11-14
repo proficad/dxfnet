@@ -2342,6 +2342,14 @@ static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, 
             Point3D B_3D = new Point3D(a_dim.B.X, a_dim.B.Y * REVERSE_Y, 0);
             Point3D l_pos_label = new Point3D(a_dim.m_pos_label.X, a_dim.m_pos_label.Y, 0);
 
+
+            if((l_pos_label.X == 0) && (l_pos_label.Y == 0))
+            {
+                l_pos_label.X = (A_3D.X + B_3D.X) / 2;
+                l_pos_label.Y = (A_3D.Y + B_3D.Y) / 2;
+            }
+
+
             DxfDimension.Diametric dxfDim = new DxfDimension.Diametric(ExportContext.Current.Model.CurrentDimensionStyle)
             {
                 ArcLineIntersectionPoint1 = A_3D,

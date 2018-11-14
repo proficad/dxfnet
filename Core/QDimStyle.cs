@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using DxfNet;
 
 namespace Core
 {
@@ -12,7 +13,8 @@ namespace Core
         const string ATTR_LINE_THICK = "op-lw";
         const string ATTR_LINE_COLOR = "op-lc";
 
-
+        public int m_arrow_index; //0..normal, 1..floor plan
+        public EFont m_label_font;
 
         public bool m_align_text_with_dim_line;
         public string m_name;

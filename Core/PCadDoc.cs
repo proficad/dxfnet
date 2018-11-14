@@ -275,7 +275,14 @@ namespace DxfNet
 
         public Size GetSize()
         {
-            Size l_size = Parent.GetSize();
+            if (m_page_print_settings.sheet_size.IsEmpty)
+            {
+                return m_parent.GetSize();
+            }
+
+
+            Size l_size = new Size(0,0);
+
 
             if (m_page_size_settings.m_source == PageSizeSettings.EnumPaperSizeSource.PSS_Custom)
             {
@@ -305,7 +312,12 @@ namespace DxfNet
                 l_size.Height *= m_page_size_settings.SheetsCount.Height;
             }
 
-      
+            if((l_size.Width < 1) && (l_size.Height < 1))
+            {
+                l_size = new Size(2770, 1900);//A4 without margins
+            }
+
+
             return l_size;
         }
 
@@ -334,7 +346,6 @@ namespace DxfNet
                 SetupWireStatusConnected(l_wire, l_vyvody);
                 l_wire.SetupWireStatusConnectedKapky();
             }
-
 
         }
 
