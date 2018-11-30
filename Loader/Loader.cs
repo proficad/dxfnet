@@ -854,6 +854,13 @@ namespace Loader
             return XmlAttrToIntWithDefault(l_attr, 0);
         }
 
+        public static int XmlAttrToIntWithDefault(XmlNode a_node, string as_name, int ai_def)
+        {
+            XmlAttribute l_attr = a_node.Attributes[as_name];
+            return XmlAttrToIntWithDefault(l_attr, ai_def);
+        }
+
+
         public static int XmlAttrToInt(XmlAttribute a_attr)
         {
             return XmlAttrToIntWithDefault(a_attr, 0);
@@ -1199,6 +1206,8 @@ namespace Loader
 
             l_style.m_arrow_index = XmlAttrToInt(a_node, "arrow");
             l_style.m_label_font = EFont.StringToEfont(XmlAttrToString(a_node.Attributes["f"]));
+
+            l_style.m_unit = (QDimStyle.Unit) XmlAttrToIntWithDefault(a_node, "unit", -1);
 
             a_repo.AddDimStyle(l_style);
         }

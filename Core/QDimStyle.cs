@@ -25,7 +25,8 @@ namespace Core
         public struct ColorThickness { public Color m_color; public int m_thickness; }
         public ColorThickness m_line_ext, m_line_dim;
 
-
+        public enum Unit { unit_none = -1, unit_mm, unit_cm, unit_m, unit_km };
+        public Unit m_unit;
 
     }
 }

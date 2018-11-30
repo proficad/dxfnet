@@ -119,10 +119,12 @@ namespace Loader
 
         private static void AdjustScale(PCadDoc a_doc, DxfModel model)
         {
+            double li_scale_factor = 1;
+
             //SCALE to adjust the coordinates to the scale (Lehmann)
             if (a_doc.Scale != 0)
             {
-                double li_scale_factor = a_doc.Scale / 10d;
+                li_scale_factor = a_doc.Scale / 10d;
                 Matrix4D l_tr = Transformation4D.Scaling(li_scale_factor);
                 WW.Cad.Drawing.TransformConfig l_config = new WW.Cad.Drawing.TransformConfig();
                 foreach (DxfEntity l_entity in model.Entities)
@@ -131,14 +133,35 @@ namespace Loader
                 }
 
 
-                foreach(DxfLineType l_line_type in ExportContext.Current.Model.LineTypes)
+                foreach (DxfLineType l_line_type in ExportContext.Current.Model.LineTypes)
                 {
-                    foreach(var l_elem in l_line_type.Elements)
+                    foreach (var l_elem in l_line_type.Elements)
                     {
                         l_elem.Length *= li_scale_factor;
                     }
-                    
                 }
+
+
+                model.CurrentDimensionStyle.ScaleFactor = li_scale_factor;
+
+                double ld_linear_scale = 10d;//no scale
+                switch (a_doc.m_dim_style.m_unit)
+                {
+                    case Core.QDimStyle.Unit.unit_mm:
+                        ld_linear_scale = 1d;
+                        break;
+                    case Core.QDimStyle.Unit.unit_cm:
+                        ld_linear_scale = 0.1d;
+                        break;
+                    case Core.QDimStyle.Unit.unit_m:
+                        ld_linear_scale = 0.001d;
+                        break;
+                    case Core.QDimStyle.Unit.unit_km:
+                        ld_linear_scale = 0.000001d;
+                        break;
+                }
+
+                model.CurrentDimensionStyle.LinearScaleFactor = ld_linear_scale;
             }
         }
 
