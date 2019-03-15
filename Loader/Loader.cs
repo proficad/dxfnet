@@ -1248,6 +1248,12 @@ namespace Loader
             doc.m_fG        = XmlAttrToString(nodeElement.Attributes["fG"]);
             doc.m_lG        = XmlAttrToString(nodeElement.Attributes["lG"]);
 
+            if (doc.m_lG.Length != 36)
+            {
+                //something wrong with the insert, do not add it
+                return;
+            }
+
             //repo in repo
             XmlNode nodeRepo = nodeElement.SelectSingleNode("repo");
             if (nodeRepo != null)
@@ -1379,6 +1385,12 @@ namespace Loader
             if (string.IsNullOrEmpty(l_insert.m_lG))
             {
                 l_insert.m_lG = XmlAttrToString(a_node.Attributes["lGuid"]);
+            }
+
+            if(l_insert.m_lG.Length != 36)
+            {
+                //something wrong with the insert, do not add it
+                return;
             }
 
             XmlNode parametersNode = a_node.SelectSingleNode("parameters");
