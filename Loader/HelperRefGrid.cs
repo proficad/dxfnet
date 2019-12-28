@@ -29,29 +29,6 @@ namespace Loader
                 li_fieldSize_tenth_mm = FIELD_SIZE_DEFAULT;
             }
 
-            /*
-            CPen penFrame; penFrame.CreatePen(PS_SOLID, 3, RGB(0, 0, 0));
-            CPen penThick; penThick.CreatePen(PS_SOLID, 7, RGB(0, 0, 0));
-
-            
-            
-            CPen * const pOldPen = pDC->SelectObject(&penFrame);
-            CGdiObject * const pOldBrush = pDC->SelectStockObject(NULL_BRUSH);
-
-            
-            //prepare font
-            LOGFONT lf;
-            memset(&lf, 0, sizeof(LOGFONT));
-            lf.lfHeight = -35;
-            lf.lfWeight = 300;
-            CString ls_fontName("Arial");
-            _tcscpy_s(lf.lfFaceName, LF_FACESIZE, ls_fontName);
-            CFont l_font;
-            l_font.CreateFontIndirect(&lf);
-            CFont* pOldFont = pDC->SelectObject(&l_font);
-
-            int oldmode = pDC->SetBkMode(TRANSPARENT);
-            */
 
             if (a_settings.Left)
             {
@@ -160,7 +137,7 @@ namespace Loader
             LetterInRefGrid(a_coll, lb_turn, li_posTextX, li_lastLetter, ls_letter);
 
         }
-
+         
         private static int GetNumberOfFieldsHalved(int ai_center, int ai_fieldSize)
         {
             int li_min_field_size = ai_fieldSize / 2;
