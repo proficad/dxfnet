@@ -10,6 +10,8 @@ namespace Core
     public class QDimStyle
     {
      
+        public QDimStyle(string as_name) { m_name = as_name; }//should be nonnullable string
+
         const string ATTR_LINE_THICK = "op-lw";
         const string ATTR_LINE_COLOR = "op-lc";
 

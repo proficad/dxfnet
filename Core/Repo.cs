@@ -17,7 +17,13 @@ namespace DxfNet
 
         public QDimStyle GetDimStyle(string as_name)
         {
-            return m_listDimStyles.Where(x => x.m_name == as_name).FirstOrDefault();
+            QDimStyle l_dimstyle = m_listDimStyles.Where(x => x.m_name == as_name).FirstOrDefault();
+
+            if(l_dimstyle == null)
+            {
+                l_dimstyle = new QDimStyle(as_name);
+            }
+            return l_dimstyle;
         }
 
         public PpdDoc FindPpdDocInRepo(string as_lastGuid)
