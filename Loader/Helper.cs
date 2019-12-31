@@ -350,6 +350,11 @@ namespace Loader
             }
         }
 
+        internal static Point3D Point_To_Point3D(Point a_point)
+        {
+            return new Point3D(a_point.X, a_point.Y, 0);
+        }
+
         //--------------------------------
     }
 }

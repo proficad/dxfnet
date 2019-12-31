@@ -38,6 +38,7 @@ namespace DxfNet
             set { m_is_connected_last = value; }
         }
 
+       public DxfNet.WireLabelPos m_label_beg = null, m_label_mid = null, m_label_end = null;
 
 
         public Wire()
@@ -103,6 +104,17 @@ namespace DxfNet
             return l_center;
         }
 
+        public WireLabelPos GetEndingLabelVis(bool ab_first)
+        {
+            if (ab_first)
+            {
+                return m_label_beg;
+            }
+            else
+            {
+                return m_label_end;
+            }
+        }
         //-------------------------
 
     }

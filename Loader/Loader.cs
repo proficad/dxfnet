@@ -649,6 +649,7 @@ namespace Loader
                 l_wire.SetDrop1(XmlAttrToBool(a_node.Attributes["drop1"]));
                 l_wire.SetDrop2(XmlAttrToBool(a_node.Attributes["drop2"]));
                 l_wire.SetName(XmlAttrToString(a_node.Attributes["name"]));
+				FromXmlPositionsOfLabels(l_wire, a_node);
             }
 
 
@@ -1193,8 +1194,7 @@ namespace Loader
 
         private static void AddDimStyle(Repo a_repo, XmlNode a_node)
         {
-            Core.QDimStyle l_style = new QDimStyle();
-            l_style.m_name = a_node.Attributes["name"].Value;
+            Core.QDimStyle l_style = new QDimStyle(a_node.Attributes["name"].Value);
             l_style.m_align_text_with_dim_line = XmlAttrToBool(a_node.Attributes["align_text"]);
             l_style.m_text_position = (Core.QDimStyle.Text_Position) XmlAttrToInt(a_node.Attributes["lbl_pos"]);
 
@@ -1545,6 +1545,27 @@ namespace Loader
             return li_result;
         }
 
+        private static void FromXmlPositionsOfLabels(Wire a_wire, XmlNode a_node)
+        {
+            XmlNode l_node = a_node.SelectSingleNode("fixed_labels");
+            if(null != l_node)
+            {
+                Load_Wire_Label(l_node, "beg", ref a_wire.m_label_beg);
+                Load_Wire_Label(l_node, "mid", ref a_wire.m_label_mid);
+                Load_Wire_Label(l_node, "end", ref a_wire.m_label_end);
+            }
+        }
+
+        private static void Load_Wire_Label(XmlNode a_node, String as_name, ref DxfNet.WireLabelPos a_label)
+        {
+            XmlNode l_node = a_node.SelectSingleNode(as_name);
+            if (null != l_node)
+            {
+                Point l_point = XmlAttrToPoint(l_node, "");
+                a_label = new DxfNet.WireLabelPos(l_point);
+            }
+        }
+		
         private static int LoadTurnsOrAngle(XmlNode a_node)
         {
             XmlAttribute l_attr_turns = a_node.Attributes["t"];

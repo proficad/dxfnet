@@ -2281,6 +2281,8 @@ static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, 
                 return;
             }
 
+
+
             if ((l_cd == UtilsMath.cardinal_directions.cd_west) || (l_cd == UtilsMath.cardinal_directions.cd_east))
             {
                 l_center_point.Y -= pSettings.WireLabelDist_A;
@@ -2301,6 +2303,11 @@ static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, 
                 }
             }
 
+            if(a_wire.m_label_mid != null)
+            {
+                l_center_point = Helper.Point_To_Point3D(a_wire.m_label_mid.m_point);
+                l_attachment_point = AttachmentPoint.MiddleCenter;
+            }
 
             Point3D l_anchor = new Point3D(l_center_point.X, l_center_point.Y, 0);
             l_anchor.Y *= REVERSE_Y;

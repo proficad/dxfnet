@@ -12,7 +12,7 @@ namespace DxfNet
         {
             m_arrow_flipped = false;
         }
-        //public int m_turns;
+        
         public EFont m_efont;
         public int m_rX, m_rY;
         public Size m_arcBegin;	// starting point of arc, pie and chord

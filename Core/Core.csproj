@@ -105,6 +105,7 @@
     <Compile Include="TrafoWinding.cs" />
     <Compile Include="UtilsMath.cs" />
     <Compile Include="Wire.cs" />
+    <Compile Include="WireLabelPos.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />

@@ -8,7 +8,7 @@ namespace DxfNet
 {
     public class FreeText : DrawObj
     {
-//        public string m_text;
+
         public EFont m_efont;
         
         public bool m_isInTb;
