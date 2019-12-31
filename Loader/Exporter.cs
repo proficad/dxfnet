@@ -774,13 +774,13 @@ namespace Loader
                 return;
             }
 
-            DrawWireLabelInternal(a_coll, a_wire.GetName(), a_efont, l_cd, l_point_nearest, ai_a, ai_b, ab_vertically);
+            DrawWireLabelInternal(a_coll, a_wire, ab_first, a_efont, l_cd, l_point_nearest, ai_a, ai_b, ab_vertically);
         }
 
 
         // a = distance from wire
         // b = distance from end of wire
-        private static void DrawWireLabelInternal(DxfEntityCollection a_coll, string as_name, EFont a_efont, UtilsMath.cardinal_directions a_cd, Point a_point_nearest, int ai_a, int ai_b, bool ab_vertically)
+        private static void DrawWireLabelInternal(DxfEntityCollection a_coll, DxfNet.Wire a_wire, bool ab_first, EFont a_efont, UtilsMath.cardinal_directions a_cd, Point a_point_nearest, int ai_a, int ai_b, bool ab_vertically)
         {
 
             AttachmentPoint l_attachment_point = AttachmentPoint.MiddleCenter;
@@ -839,10 +839,19 @@ namespace Loader
 
 
             Point3D l_anchor = new Point3D(a_point_nearest.X, a_point_nearest.Y, 0);
+
+
+            WireLabelPos l_label = a_wire.GetEndingLabelVis(ab_first);
+            if(l_label != null)
+            {
+                l_anchor = Helper.Point_To_Point3D(l_label.m_point);
+                l_attachment_point = AttachmentPoint.MiddleCenter;
+            }
+
             l_anchor.Y *= REVERSE_Y;
             int li_height = GetFontAscentSize(a_efont);
 
-            DxfMText dxfText = new DxfMText(as_name, l_anchor, li_height);
+            DxfMText dxfText = new DxfMText(a_wire.GetName(), l_anchor, li_height);
             dxfText.Color = Helper.MakeEntityColorByBlock(a_efont.m_color, false);
 
             dxfText.AttachmentPoint = l_attachment_point;
