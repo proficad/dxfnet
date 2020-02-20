@@ -1547,7 +1547,7 @@ namespace Loader
 
         private static void FromXmlPositionsOfLabels(Wire a_wire, XmlNode a_node)
         {
-            XmlNode l_node = a_node.SelectSingleNode("fixed_labels");
+            XmlNode l_node = a_node.SelectSingleNode("fixed-labels");
             if(null != l_node)
             {
                 Load_Wire_Label(l_node, "beg", ref a_wire.m_label_beg);

@@ -2436,6 +2436,10 @@ static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, 
 
             l_style.Name = a_dim_style.m_name;
 
+            if(string.IsNullOrEmpty(l_style.Name))
+            {
+                l_style.Name = "noname";
+            }
         }
 
         //----------------------------------------
