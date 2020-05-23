@@ -80,6 +80,14 @@ namespace DxfNet
             x = t;
         }
 
+        public static int Distance2Points(Point a_point1, Point a_point2)
+        {
+            int li_diff_x = a_point1.X - a_point2.X;
+            int li_diff_y = a_point1.Y - a_point2.Y;
+            return (int)Math.Sqrt(
+                (li_diff_x * li_diff_x) + (li_diff_y * li_diff_y)
+            );
+        }
 
         internal static int EasyDistance2Points(Point a_point1, Point a_point2)
         {

@@ -455,7 +455,7 @@ namespace Loader
                     case Shape.spoj:            ExportWire      (a_coll, obj as DxfNet.Wire, a_doc as PCadDoc); break;
                     case Shape.bezier:          ExportBezier    (a_coll, obj as DrawPoly, ab_block); break;
                     case Shape.ellipse:         ExportEllipse   (a_coll, obj as DrawRect, ab_block); break;
-                    case Shape.circle:          ExportCircle    (a_coll, obj as DrawRect, ab_block); break;
+                    case Shape.circle:          ExportCircle    (a_coll, obj as QCircle, ab_block); break;
                     case Shape.pie:
                     case Shape.chord:           ExportPieChord  (a_coll, obj as DrawRect, ab_block); break;
                     case Shape.arc:             ExportArc       (a_coll, obj as DrawRect, ab_block); break;
@@ -1429,57 +1429,15 @@ namespace Loader
             ExportTextInRect(a_coll, l_center, a_drawRect.m_text, a_drawRect.m_efont, a_drawRect.m_text_angle);
         }
 
-        private static void ExportCircle(DxfEntityCollection a_coll, DrawRect a_drawRect, bool ab_block)
+        private static void ExportCircle(DxfEntityCollection a_coll, QCircle a_circle, bool ab_block)
         {
-            //need center, long axis and min/maj ratio
-            Point3D l_center = GetRectCenterPoint(a_drawRect.m_position);
-            l_center.Y *= REVERSE_Y;
+            int li_radius = DxfNet.Helper.Distance2Points(a_circle.m_center, a_circle.m_tangent);
+            Point3D l_center = new Point3D(a_circle.m_center.X, a_circle.m_center.Y * REVERSE_Y, 0);
 
-            Vector3D l_longAxis = new Vector3D();
-            double li_otherDimensionHalf;
-            double ld_ratio;
-            //which axis is longer?
-            double li_width = Math.Abs(a_drawRect.m_position.Width);
-            double li_height = Math.Abs(a_drawRect.m_position.Height);
+            DxfCircle dxfCircle = new DxfCircle(l_center, li_radius);
 
-            if (li_width > li_height)
-            {
-                l_longAxis.X = li_width / 2;
-                l_longAxis.Y = l_longAxis.Z = 0;
-                li_otherDimensionHalf = li_height / 2;
-                if (li_otherDimensionHalf == 0)
-                {
-                    return;
-                }
-                ld_ratio = li_otherDimensionHalf / l_longAxis.X;
-            }
-            else
-            {
-                l_longAxis.Y = li_height / 2;
-                l_longAxis.X = l_longAxis.Z = 0;
-                li_otherDimensionHalf = li_width / 2;
-                if (li_otherDimensionHalf == 0)
-                {
-                    return;
-                }
-                ld_ratio = li_otherDimensionHalf / l_longAxis.Y;
-            }
-
-            if (a_drawRect.m_objProps.m_bBrush)
-            {
-                ExportEllipseSolid(a_coll, l_center, l_longAxis, ld_ratio, a_drawRect.m_objProps, false, ab_block);
-            }
-            ExportEllipseSolid(a_coll, l_center, l_longAxis, ld_ratio, a_drawRect.m_objProps, true, ab_block);
-
-            DxfCircle dxfCircle = new DxfCircle();
-            DxfEllipse dxfEllipse = new DxfEllipse(l_center, l_longAxis, ld_ratio);
-
-
-            //            dxfEllipse. =  .DefaultStartWidth = drawRect.m_objProps.m_logpen.m_width;
-
-
-
-            a_drawRect.m_objProps.m_logpen.m_width = Calculate_Line_Thickness_Ellipse(a_drawRect.m_objProps.m_logpen.m_width);
+/*
+            a_circle.m_objProps.m_logpen.m_width = Calculate_Line_Thickness_Ellipse(a_drawRect.m_objProps.m_logpen.m_width);
 
             dxfEllipse.LineWeight = (short)(10 * a_drawRect.m_objProps.m_logpen.m_width);
             //99 dxfEllipse.ColorSource = AttributeSource.This;
@@ -1488,11 +1446,13 @@ namespace Loader
             DxfLineType l_lineType = GetLineTypeFromObjProps(a_drawRect.m_objProps);
             dxfEllipse.LineType = l_lineType;
             //9dxfEllipse.LineTypeSource = AttributeSource.This;
+*/
 
-            dxfEllipse.Layer = ExportContext.Current.Layer;
-            a_coll.Add(dxfEllipse);
+            dxfCircle.Layer = ExportContext.Current.Layer;
+            a_coll.Add(dxfCircle);
 
-            ExportTextInRect(a_coll, l_center, a_drawRect.m_text, a_drawRect.m_efont, a_drawRect.m_text_angle);
+//9            ExportTextInRect(a_coll, l_center, a_drawRect.m_text, a_drawRect.m_efont, a_drawRect.m_text_angle);
+
         }
 
 

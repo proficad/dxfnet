@@ -548,14 +548,32 @@ namespace Loader
 
         private static void AddCircle(DrawDoc doc, XmlNode a_node)
         {
-            Rectangle rect = RectFromXml(a_node);
-            DrawRect drawRect = new DrawRect(Shape.ellipse, rect);
+            Point l_center  = XmlAttrToPoint(a_node, "center");
+            Point l_tangent = XmlAttrToPoint(a_node, "tangent");
+            QCircle l_circle = new QCircle(l_center, l_tangent);
+
             ObjProps l_props = ObjPropsFromXml(a_node);
-            drawRect.m_objProps = l_props;
+            l_circle.m_objProps = l_props;
 
-            AddTextToDrawRect(drawRect, a_node);
+            AddTextToQCircle(l_circle, a_node);
 
-            doc.Add(drawRect, ContextP2A.Current.CurrentLayer);
+            doc.Add(l_circle, ContextP2A.Current.CurrentLayer);
+        }
+
+
+        private static void AddTextToQCircle(QCircle a_circle, XmlNode a_node)
+        {
+            XmlNode textNode = a_node.SelectSingleNode("descendant::text");
+            if (textNode != null)
+            {
+                string ls_font = textNode.Attributes["font"].Value;
+                string ls_text = textNode.InnerText;
+                int li_angle = Loader.TurnsToAngle(XmlAttrToInt(textNode.Attributes["turns"]));
+
+                a_circle.m_text = ls_text;
+                a_circle.m_efont = EFont.StringToEfont(ls_font);
+                a_circle.m_text_angle = li_angle;
+            }
         }
 
 
