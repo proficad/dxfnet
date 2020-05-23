@@ -28,6 +28,7 @@ namespace DxfNet
         rectangle, 
         roundRectangle, 
         ellipse, 
+        circle,
         line, 
         poly, 
         polyline, 

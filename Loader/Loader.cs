@@ -546,6 +546,19 @@ namespace Loader
             doc.Add(drawRect, ContextP2A.Current.CurrentLayer);
         }
 
+        private static void AddCircle(DrawDoc doc, XmlNode a_node)
+        {
+            Rectangle rect = RectFromXml(a_node);
+            DrawRect drawRect = new DrawRect(Shape.ellipse, rect);
+            ObjProps l_props = ObjPropsFromXml(a_node);
+            drawRect.m_objProps = l_props;
+
+            AddTextToDrawRect(drawRect, a_node);
+
+            doc.Add(drawRect, ContextP2A.Current.CurrentLayer);
+        }
+
+
         private static void AddTextToDrawRect(DrawRect a_drawRect, XmlNode a_node)
         {
             XmlNode textNode = a_node.SelectSingleNode("descendant::text");
@@ -909,6 +922,7 @@ namespace Loader
                         case "roundRect":   AddRoundRect    (a_drawDoc, nodeElement); break;
                         case "rect":        AddRect         (a_drawDoc, nodeElement); break;
                         case "ellipse":     AddEllipse      (a_drawDoc, nodeElement); break;
+                        case "circle":      AddCircle       (a_drawDoc, nodeElement); break;
                         case "pie": 
                         case "chord": 
                         case "arc":         AddArcPieChord  (a_drawDoc, nodeElement); break;

@@ -450,20 +450,21 @@ namespace Loader
 
                 switch (obj.m_nShape)
                 {
-                    case Shape.poly:            ExportPolygon(a_coll, obj as DrawPoly, ab_block); break;
+                    case Shape.poly:            ExportPolygon   (a_coll, obj as DrawPoly, ab_block); break;
                     case Shape.polyline:        ExportPolyline  (a_coll, obj as DrawPoly, ab_block); break;
                     case Shape.spoj:            ExportWire      (a_coll, obj as DxfNet.Wire, a_doc as PCadDoc); break;
-                    case Shape.bezier:          ExportBezier(a_coll, obj as DrawPoly, ab_block); break;
+                    case Shape.bezier:          ExportBezier    (a_coll, obj as DrawPoly, ab_block); break;
                     case Shape.ellipse:         ExportEllipse   (a_coll, obj as DrawRect, ab_block); break;
+                    case Shape.circle:          ExportCircle    (a_coll, obj as DrawRect, ab_block); break;
                     case Shape.pie:
-                    case Shape.chord:           ExportPieChord(a_coll, obj as DrawRect, ab_block); break;
+                    case Shape.chord:           ExportPieChord  (a_coll, obj as DrawRect, ab_block); break;
                     case Shape.arc:             ExportArc       (a_coll, obj as DrawRect, ab_block); break;
                     case Shape.rectangle:       ExportRect      (a_coll, obj as DrawRect, ab_block); break;
                     case Shape.roundRectangle:  ExportRoundRect (a_coll, obj as DrawRect, ab_block); break;
-                    case Shape.text:            ExportFreeText(a_coll, obj as FreeText); break;
-                    case Shape.cable:           ExportCable(a_coll, obj as CableSymbol, a_doc as PCadDoc); break;
-                    case Shape.dim_line:        ExportDimLine(a_coll, obj as QDimLine, ab_block); break;
-                    case Shape.dim_circle:      ExportDimCircle(a_coll, obj as QDimCircle, ab_block); break;
+                    case Shape.text:            ExportFreeText  (a_coll, obj as FreeText); break;
+                    case Shape.cable:           ExportCable     (a_coll, obj as CableSymbol, a_doc as PCadDoc); break;
+                    case Shape.dim_line:        ExportDimLine   (a_coll, obj as QDimLine, ab_block); break;
+                    case Shape.dim_circle:      ExportDimCircle (a_coll, obj as QDimCircle, ab_block); break;
                 }
             }
         }
@@ -1427,6 +1428,73 @@ namespace Loader
 
             ExportTextInRect(a_coll, l_center, a_drawRect.m_text, a_drawRect.m_efont, a_drawRect.m_text_angle);
         }
+
+        private static void ExportCircle(DxfEntityCollection a_coll, DrawRect a_drawRect, bool ab_block)
+        {
+            //need center, long axis and min/maj ratio
+            Point3D l_center = GetRectCenterPoint(a_drawRect.m_position);
+            l_center.Y *= REVERSE_Y;
+
+            Vector3D l_longAxis = new Vector3D();
+            double li_otherDimensionHalf;
+            double ld_ratio;
+            //which axis is longer?
+            double li_width = Math.Abs(a_drawRect.m_position.Width);
+            double li_height = Math.Abs(a_drawRect.m_position.Height);
+
+            if (li_width > li_height)
+            {
+                l_longAxis.X = li_width / 2;
+                l_longAxis.Y = l_longAxis.Z = 0;
+                li_otherDimensionHalf = li_height / 2;
+                if (li_otherDimensionHalf == 0)
+                {
+                    return;
+                }
+                ld_ratio = li_otherDimensionHalf / l_longAxis.X;
+            }
+            else
+            {
+                l_longAxis.Y = li_height / 2;
+                l_longAxis.X = l_longAxis.Z = 0;
+                li_otherDimensionHalf = li_width / 2;
+                if (li_otherDimensionHalf == 0)
+                {
+                    return;
+                }
+                ld_ratio = li_otherDimensionHalf / l_longAxis.Y;
+            }
+
+            if (a_drawRect.m_objProps.m_bBrush)
+            {
+                ExportEllipseSolid(a_coll, l_center, l_longAxis, ld_ratio, a_drawRect.m_objProps, false, ab_block);
+            }
+            ExportEllipseSolid(a_coll, l_center, l_longAxis, ld_ratio, a_drawRect.m_objProps, true, ab_block);
+
+            DxfCircle dxfCircle = new DxfCircle();
+            DxfEllipse dxfEllipse = new DxfEllipse(l_center, l_longAxis, ld_ratio);
+
+
+            //            dxfEllipse. =  .DefaultStartWidth = drawRect.m_objProps.m_logpen.m_width;
+
+
+
+            a_drawRect.m_objProps.m_logpen.m_width = Calculate_Line_Thickness_Ellipse(a_drawRect.m_objProps.m_logpen.m_width);
+
+            dxfEllipse.LineWeight = (short)(10 * a_drawRect.m_objProps.m_logpen.m_width);
+            //99 dxfEllipse.ColorSource = AttributeSource.This;
+            dxfEllipse.Color = Helper.MakeEntityColorByBlock(a_drawRect.m_objProps.m_logpen.m_color, ab_block);
+
+            DxfLineType l_lineType = GetLineTypeFromObjProps(a_drawRect.m_objProps);
+            dxfEllipse.LineType = l_lineType;
+            //9dxfEllipse.LineTypeSource = AttributeSource.This;
+
+            dxfEllipse.Layer = ExportContext.Current.Layer;
+            a_coll.Add(dxfEllipse);
+
+            ExportTextInRect(a_coll, l_center, a_drawRect.m_text, a_drawRect.m_efont, a_drawRect.m_text_angle);
+        }
+
 
         public static int Calculate_Line_Thickness_Ellipse(int ai_width)
         {
