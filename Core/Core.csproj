@@ -85,6 +85,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PtbDoc.cs" />
     <Compile Include="PtbPosition.cs" />
+    <Compile Include="QCircle.cs" />
     <Compile Include="QDimCircle.cs" />
     <Compile Include="QDimLine.cs" />
     <Compile Include="QDimStyle.cs" />
