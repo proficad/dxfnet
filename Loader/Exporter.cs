@@ -1434,19 +1434,33 @@ namespace Loader
             int li_radius = DxfNet.Helper.Distance2Points(a_circle.m_center, a_circle.m_tangent);
             Point3D l_center = new Point3D(a_circle.m_center.X, a_circle.m_center.Y * REVERSE_Y, 0);
 
+
+            Vector3D l_longAxis = new Vector3D();
+            l_longAxis.X = li_radius;
+
+            if (a_circle.m_objProps.m_bBrush)
+            {
+                ExportEllipseSolid(a_coll, l_center, l_longAxis, 1, a_circle.m_objProps, false, ab_block);
+            }
+            ExportEllipseSolid(a_coll, l_center, l_longAxis, 1, a_circle.m_objProps, true, ab_block);
+
+
+
+
+
             DxfCircle dxfCircle = new DxfCircle(l_center, li_radius);
 
-/*
-            a_circle.m_objProps.m_logpen.m_width = Calculate_Line_Thickness_Ellipse(a_drawRect.m_objProps.m_logpen.m_width);
 
-            dxfEllipse.LineWeight = (short)(10 * a_drawRect.m_objProps.m_logpen.m_width);
+            a_circle.m_objProps.m_logpen.m_width = Calculate_Line_Thickness_Ellipse(a_circle.m_objProps.m_logpen.m_width);
+
+            dxfCircle.LineWeight = (short)(10 * a_circle.m_objProps.m_logpen.m_width);
             //99 dxfEllipse.ColorSource = AttributeSource.This;
-            dxfEllipse.Color = Helper.MakeEntityColorByBlock(a_drawRect.m_objProps.m_logpen.m_color, ab_block);
+            dxfCircle.Color = Helper.MakeEntityColorByBlock(a_circle.m_objProps.m_logpen.m_color, ab_block);
 
-            DxfLineType l_lineType = GetLineTypeFromObjProps(a_drawRect.m_objProps);
-            dxfEllipse.LineType = l_lineType;
+            DxfLineType l_lineType = GetLineTypeFromObjProps(a_circle.m_objProps);
+            dxfCircle.LineType = l_lineType;
             //9dxfEllipse.LineTypeSource = AttributeSource.This;
-*/
+
 
             dxfCircle.Layer = ExportContext.Current.Layer;
             a_coll.Add(dxfCircle);
