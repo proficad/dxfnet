@@ -118,9 +118,13 @@ namespace A2IDLL
 
                 using (Stream streamSvg = File.Create(as_fileOut))
                 {
-
                     SvgExporter exporter = new SvgExporter(streamSvg);
-                    exporter.Draw(model, GraphicsConfig.WhiteBackgroundCorrectForBackColor, to2DTransform);
+                    
+                    GraphicsConfig l_conf = GraphicsConfig.WhiteBackgroundCorrectForBackColor;
+                    GraphicsConfig l_conf2 = (GraphicsConfig)l_conf.Clone();
+                    l_conf2.TryDrawingTextAsText = true;
+                    
+                    exporter.Draw(model, l_conf2, to2DTransform);
                 }
             }
             else if (as_format == "xaml")
