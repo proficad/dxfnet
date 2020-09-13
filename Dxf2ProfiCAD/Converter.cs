@@ -24,20 +24,20 @@ namespace Dxf2ProfiCAD
 
         public static int MyShiftScaleX(double ai_what)
         {
-            return (int) ((ai_what + m_shift_x) * m_scaleX);
+            return (int)Math.Round((ai_what + m_shift_x) * m_scaleX);
         }
         public static int MyShiftScaleY(double ai_what)
         {
-            return m_shift_target_y + (int)((ai_what + m_shift_y) * m_scaleY);
+            return m_shift_target_y + (int)Math.Round((ai_what + m_shift_y) * m_scaleY);
         }
 
         public static int MyScaleX(double ai_what)
         {
-            return (int)(ai_what * m_scaleX);
+            return (int)Math.Round(ai_what * m_scaleX);
         }
         public static int MyScaleY(double ai_what)
         {
-            return (int)(ai_what * m_scaleY);
+            return (int)Math.Round(ai_what * m_scaleY);
         }
 
 
@@ -76,7 +76,7 @@ namespace Dxf2ProfiCAD
             }
             if (a_entity is DxfLwPolyline)
             {
-                return ConvertDxfLwPolyline(a_entity);
+               return ConvertDxfLwPolyline(a_entity);
             }
             if (a_entity is DxfPolyline2D)
             {
@@ -84,7 +84,7 @@ namespace Dxf2ProfiCAD
             }
             if (a_entity is DxfDimension.Aligned)
             {
-                return ConvertDxfDimension_Aligned(a_entity);
+                //99 return ConvertDxfDimension_Aligned(a_entity);
             }
 
             System.Console.WriteLine("did not convert type {0}", a_entity.ToString());

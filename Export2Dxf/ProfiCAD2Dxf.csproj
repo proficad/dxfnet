@@ -65,18 +65,6 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="WW, Version=3.5.0.14, Culture=neutral, PublicKeyToken=87d16b8f7b531b65, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\WW.dll</HintPath>
-    </Reference>
-    <Reference Include="WW.Cad, Version=3.5.5.19, Culture=neutral, PublicKeyToken=87d16b8f7b531b65, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\WW.Cad.dll</HintPath>
-    </Reference>
-    <Reference Include="WW.License, Version=3.5.0.0, Culture=neutral, PublicKeyToken=87d16b8f7b531b65, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\WW.License.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />

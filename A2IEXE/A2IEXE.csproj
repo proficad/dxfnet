@@ -59,7 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\A2IDLL\A2IDLL.csproj">
-      <Project>{667333E1-9350-4BCD-91CD-A6D7784E9E0E}</Project>
+      <Project>{667333e1-9350-4bcd-91cd-a6d7784e9e0e}</Project>
       <Name>A2IDLL</Name>
     </ProjectReference>
   </ItemGroup>

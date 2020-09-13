@@ -53,13 +53,11 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="WW, Version=3.5.0.6, Culture=neutral, PublicKeyToken=87d16b8f7b531b65, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\WW.dll</HintPath>
+    <Reference Include="WW">
+      <HintPath>W:\P\i18n\bin\lib\WW.dll</HintPath>
     </Reference>
-    <Reference Include="WW.Cad, Version=3.5.3.38, Culture=neutral, PublicKeyToken=87d16b8f7b531b65, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\WW.Cad.dll</HintPath>
+    <Reference Include="WW.Cad">
+      <HintPath>W:\P\i18n\bin\lib\WW.Cad.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
