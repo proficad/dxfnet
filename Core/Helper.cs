@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using Core;
+using System.Xml;
 
 namespace DxfNet
 {
@@ -153,6 +154,13 @@ namespace DxfNet
 
             return l_list;
         }
-     //------------------------------------  
+
+        public static void Point2Attrib(System.Xml.XmlWriter a_xmlWriter, String as_attrib, Point a_point)
+        {
+            a_xmlWriter.WriteAttributeString(as_attrib + "x", a_point.X.ToString());
+            a_xmlWriter.WriteAttributeString(as_attrib + "y", a_point.Y.ToString());
+        }
+
+        //------------------------------------  
     }
 }

@@ -266,10 +266,14 @@ namespace Dxf2ProfiCAD
             int li_top = li_center_y - li_radius;
             int li_width = 2 * li_radius;
 
+            Point l_center = new Point(li_center_x, li_center_y);
+            QCircle l_circle = new QCircle(l_center, li_radius);
+
+            /*
+             * old way (before QCircle existed)
             Rectangle l_boundingRect = new Rectangle(li_left, li_top, li_width, li_width);
-
-
             DrawRect l_circle = new DrawRect(Shape.ellipse, l_boundingRect);
+            */
             return l_circle;
         }
 
