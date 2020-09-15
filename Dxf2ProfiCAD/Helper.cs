@@ -10,8 +10,7 @@ namespace Dxf2ProfiCAD
 {
     public static class Helper
     {
-
-
+ 
         public static System.Drawing.Color DxfEntityColor2Color(DxfEntity a_dxf_entity)
         {
             if(a_dxf_entity.DxfColor != null)
@@ -52,5 +51,12 @@ namespace Dxf2ProfiCAD
                 return l_color;
             }
         }
+
+        public static bool IsSame(Double ad_1, Double ad_2)
+        {
+            return ad_1 - ad_2 < 0.0001;
+        }
+
+
     }
 }

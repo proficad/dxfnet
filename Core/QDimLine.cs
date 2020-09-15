@@ -24,7 +24,18 @@ namespace DxfNet
 
         internal override void Write2Xml(System.Xml.XmlWriter a_xmlWriter)
         {
-            
+            a_xmlWriter.WriteStartElement("dim_line");
+
+            Helper.Point2Attrib(a_xmlWriter, "a", A);
+            Helper.Point2Attrib(a_xmlWriter, "b", B);
+            Helper.Point2Attrib(a_xmlWriter, "c", C);
+
+            a_xmlWriter.WriteAttributeString("dir", ((int)m_dir).ToString());
+
+            m_objProps.SaveToXml(a_xmlWriter);
+
+            a_xmlWriter.WriteEndElement();
+
         }
 
         internal override void RecalcBounds(ref MyRect l_bounds)

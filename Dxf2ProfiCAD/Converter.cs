@@ -82,9 +82,13 @@ namespace Dxf2ProfiCAD
             {
                 return ConvertDxfPolyline2D(a_entity);
             }
+            if (a_entity is DxfDimension.Linear)
+            {
+                return ConvertDxfDimension_Linear(a_entity);
+            }
             if (a_entity is DxfDimension.Aligned)
             {
-                //99 return ConvertDxfDimension_Aligned(a_entity);
+                return ConvertDxfDimension_Aligned(a_entity);
             }
 
             System.Console.WriteLine("did not convert type {0}", a_entity.ToString());
@@ -246,17 +250,46 @@ namespace Dxf2ProfiCAD
 
             return l_drawPoly;
         }
+        private static DrawObj ConvertDxfDimension_Linear(DxfEntity a_entity)
+        {
+            DxfDimension.Linear l_dxf_dim = a_entity as DxfDimension.Linear;
+            if (l_dxf_dim != null)
+            {
+                QDimLine.DimDirection l_dir = Helper.IsSame(Math.PI / 2, l_dxf_dim.Rotation)
+                    ?
+                    QDimLine.DimDirection.dimdir_ver
+                    :
+                    QDimLine.DimDirection.dimdir_hor
+                    ;
 
+                QDimLine l_dim = new QDimLine(
+                    Point3D_To_Point(l_dxf_dim.ExtensionLine1StartPoint),
+                    Point3D_To_Point(l_dxf_dim.ExtensionLine2StartPoint),
+                    Point3D_To_Point(l_dxf_dim.DimensionLineLocation),
+                    l_dir
+                );
+
+//                l_dim.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(l_dxf_dim);
+
+                return l_dim;
+            }
+            return null;
+        }
         private static DrawObj ConvertDxfDimension_Aligned(DxfEntity a_entity)
         {
-            DxfDimension.Aligned l_dim = a_entity as DxfDimension.Aligned;
-            if(l_dim != null)
+            DxfDimension.Aligned l_dxf_dim = a_entity as DxfDimension.Aligned;
+            if(l_dxf_dim != null)
             {
-                DrawPoly l_drawPoly = new DrawPoly(Shape.polyline);
-                l_drawPoly.AddPoint(MyShiftScaleX(l_dim.ExtensionLine1StartPoint.X), MyShiftScaleY(l_dim.ExtensionLine1StartPoint.Y));
-                l_drawPoly.AddPoint(MyShiftScaleX(l_dim.ExtensionLine2StartPoint.X), MyShiftScaleY(l_dim.ExtensionLine2StartPoint.Y));
-                l_drawPoly.RecalcPosition();
-                return l_drawPoly;
+                QDimLine l_dim = new QDimLine(
+                    Point3D_To_Point(l_dxf_dim.ExtensionLine1StartPoint),
+                    Point3D_To_Point(l_dxf_dim.ExtensionLine2StartPoint),
+                    Point3D_To_Point(l_dxf_dim.DimensionLineLocation), 
+                    QDimLine.DimDirection.dimdir_aligned
+                );
+
+//                l_dim.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(l_dxf_dim);
+
+                return l_dim;
             }
             return null;
         }
@@ -464,6 +497,8 @@ namespace Dxf2ProfiCAD
 
             m_scaleX = ai_scale;
             m_scaleY = -m_scaleX;
+
+            
         }
 
         public static void SetShift(int ai_shift_x, int ai_shift_y, int ai_shift_target_y )
@@ -479,6 +514,14 @@ namespace Dxf2ProfiCAD
         }
 
 
-
+        internal static System.Drawing.Point Point3D_To_Point(WW.Math.Point3D a_point)
+        {
+            int li_x = (int)Math.Round(a_point.X);
+            int li_y = (int)Math.Round(a_point.Y);
+            return new System.Drawing.Point(
+                MyShiftScaleX(li_x),
+                MyShiftScaleY(li_y)
+                );
+        }
     }
 }

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30503.244
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProfiCAD2Dxf", "Export2Dxf\ProfiCAD2Dxf.csproj", "{CADCC099-D6E1-4D90-86B8-85D7DB1EFE6D}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -42,6 +42,7 @@ Global
 		{E4692CFB-F467-4F4B-A70E-A33C8E4A4948}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4692CFB-F467-4F4B-A70E-A33C8E4A4948}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6E7E7363-AF2E-4BCE-855D-B5BB9FC643B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E7E7363-AF2E-4BCE-855D-B5BB9FC643B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E7E7363-AF2E-4BCE-855D-B5BB9FC643B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{667333E1-9350-4BCD-91CD-A6D7784E9E0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{667333E1-9350-4BCD-91CD-A6D7784E9E0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
@@ -64,5 +65,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {97263FE6-5E2F-4B7F-B833-423CBD552AF3}
 	EndGlobalSection
 EndGlobal

@@ -52,12 +52,19 @@ namespace DxfNet
 
 
         public void SaveToXml(System.Xml.XmlWriter a_xmlWriter)
-        { 
+        {
+            SaveLineToXml(a_xmlWriter);
         }
 
         public void SaveLineToXml(System.Xml.XmlWriter a_xmlWriter)
-        { 
+        {
+            a_xmlWriter.WriteAttributeString("op-lc", Helper.RGB_2_Int(m_logpen.m_color).ToString());
         }
+
+
+
+
+
 
     }
 }
