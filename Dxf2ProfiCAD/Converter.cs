@@ -204,6 +204,7 @@ namespace Dxf2ProfiCAD
 
 
             l_drawPoly.RecalcPosition();
+            l_drawPoly.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(l_dxfLine);
             return l_drawPoly;
 
         }
@@ -227,6 +228,9 @@ namespace Dxf2ProfiCAD
 
 
             l_drawPoly.RecalcPosition();
+
+            l_drawPoly.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(l_lw_polyline);
+
             return l_drawPoly;
         }
 
@@ -237,6 +241,9 @@ namespace Dxf2ProfiCAD
             l_drawPoly.AddPoint(MyShiftScaleX(l_line.Start.X), MyShiftScaleY(l_line.Start.Y));
             l_drawPoly.AddPoint(MyShiftScaleX(l_line.End.X), MyShiftScaleY(l_line.End.Y));
             l_drawPoly.RecalcPosition();
+
+            l_drawPoly.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(l_line);
+
             return l_drawPoly;
         }
 
@@ -269,6 +276,9 @@ namespace Dxf2ProfiCAD
             Point l_center = new Point(li_center_x, li_center_y);
             QCircle l_circle = new QCircle(l_center, li_radius);
 
+            l_circle.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(l_dxfCircle);
+
+
             /*
              * old way (before QCircle existed)
             Rectangle l_boundingRect = new Rectangle(li_left, li_top, li_width, li_width);
@@ -294,6 +304,9 @@ namespace Dxf2ProfiCAD
 
             l_arc.m_arcBegin = Angle2Size(l_dxfArc.StartAngle);
             l_arc.m_arcEnd = Angle2Size(l_dxfArc.EndAngle);
+
+            l_arc.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(l_dxfArc);
+
 
             return l_arc;
         }

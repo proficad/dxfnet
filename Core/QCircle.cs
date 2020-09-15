@@ -37,6 +37,8 @@ namespace DxfNet
             Helper.Point2Attrib(a_xmlWriter, "center", m_center);
             Helper.Point2Attrib(a_xmlWriter, "tangent", m_tangent);
 
+            m_objProps.SaveToXml(a_xmlWriter);
+
             a_xmlWriter.WriteEndElement();
         }
 

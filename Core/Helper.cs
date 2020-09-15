@@ -6,6 +6,7 @@ using System.Drawing;
 using Core;
 using System.Xml;
 
+
 namespace DxfNet
 {
     public static class Helper
@@ -38,6 +39,12 @@ namespace DxfNet
             return ls_color;
         }
 
+        internal static int RGB_2_Int(Color a_input)
+        {
+            return a_input.R 
+                + 256 * a_input.G 
+                + 256 * 256 * a_input.B;
+        }
 
         public static Point GetRectCenterPoint(MyRect a_rect)
         {
@@ -160,6 +167,7 @@ namespace DxfNet
             a_xmlWriter.WriteAttributeString(as_attrib + "x", a_point.X.ToString());
             a_xmlWriter.WriteAttributeString(as_attrib + "y", a_point.Y.ToString());
         }
+
 
         //------------------------------------  
     }
