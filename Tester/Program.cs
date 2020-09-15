@@ -32,7 +32,8 @@ namespace Tester
             //Test_Diametric();
             //Read_Dxf();
             //TestImageTransform();
-            ExportAll();
+            //ExportAll();
+            TextColors();
         }
 
 
@@ -257,6 +258,15 @@ namespace Tester
                 DxfColor l_color = l_e.DxfColor;
             }
             
+        }
+
+        private static void TextColors()
+        {
+            System.Drawing.Color l_color_green = System.Drawing.Color.FromArgb(0, 255, 0);//green
+
+            EntityColor l_color = EntityColor.CreateFrom((WW.Drawing.ArgbColor)l_color_green);
+
+            string ls_color = l_color.ToString();
         }
 
 
