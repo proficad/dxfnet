@@ -99,6 +99,9 @@ namespace DxfNet
             a_xmlWriter.WriteStartElement("page");
             a_xmlWriter.WriteAttributeString("name", "1");
 
+            WritePageSizeSettings(a_xmlWriter);
+            WritePagePrintSettings(a_xmlWriter);
+
             a_xmlWriter.WriteStartElement("layers");
             a_xmlWriter.WriteStartElement("layer");
             a_xmlWriter.WriteAttributeString("name", "0");
@@ -162,14 +165,17 @@ namespace DxfNet
         {
             a_xmlWriter.WriteStartElement("document");
             a_xmlWriter.WriteAttributeString("type", "ProfiCAD sxe");
-            a_xmlWriter.WriteAttributeString("version", "7.0");
+            a_xmlWriter.WriteAttributeString("version", "10.0");
             
 //99            a_xmlWriter.WriteAttributeString("pgsHor", Parent.m_pagesHor.ToString());
 //99            a_xmlWriter.WriteAttributeString("pgsVer", Parent.m_pagesVer.ToString());
+
+            /*
             a_xmlWriter.WriteAttributeString("pgsOri", "LANDSCAPE");
             a_xmlWriter.WriteAttributeString("pgsMrgn", "0, 0, 1, 1");
             a_xmlWriter.WriteAttributeString("zoom", "100");
             a_xmlWriter.WriteAttributeString("rastr", "20");
+            */
         }
 
 
@@ -438,6 +444,25 @@ namespace DxfNet
             Size l_size = GetSize();
             Rectangle l_rect = new Rectangle(0, 0, l_size.Width, l_size.Height);
             return l_rect;
+        }
+
+        private void WritePageSizeSettings(XmlWriter a_xmlWriter)
+        {
+            a_xmlWriter.WriteStartElement("PageSizeSettings");
+            a_xmlWriter.WriteAttributeString("paper_size_enum", "1");
+            a_xmlWriter.WriteAttributeString("sheet_size_x", "216");
+            a_xmlWriter.WriteAttributeString("sheet_size_y", "279");
+            a_xmlWriter.WriteAttributeString("source", "0");
+            a_xmlWriter.WriteEndElement();
+        }
+
+        private void WritePagePrintSettings(XmlWriter a_xmlWriter)
+        {
+            a_xmlWriter.WriteStartElement("PagePrintSettings");
+            a_xmlWriter.WriteAttributeString("paper_size_enum", "9");
+            a_xmlWriter.WriteAttributeString("sheet_size_x", "210");
+            a_xmlWriter.WriteAttributeString("sheet_size_y", "297");
+            a_xmlWriter.WriteEndElement();
         }
 
     }

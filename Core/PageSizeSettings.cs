@@ -15,7 +15,7 @@ namespace Core
         public enum EnumPaperSizeSource { PSS_Print /*by print settings*/, PSS_Custom, PSS_Predefined };
         public EnumPaperSizeSource m_source;
 
-        public MyRect PageMargins;
+        public MyRect PageMargins = new MyRect { Left = 10, Top = 10, Right = 10, Bottom = 10 };
         public Size SheetsCount { get; set; }
 
 
