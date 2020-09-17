@@ -209,6 +209,8 @@ namespace Dxf2ProfiCAD
 
             l_drawPoly.RecalcPosition();
             l_drawPoly.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(l_dxfLine);
+            l_drawPoly.m_objProps.m_lin = Helper.DxfLineType_2_QLin(l_dxfLine.LineType, m_scaleX, l_dxfLine.LineTypeScale);
+
             return l_drawPoly;
 
         }
@@ -234,6 +236,8 @@ namespace Dxf2ProfiCAD
             l_drawPoly.RecalcPosition();
 
             l_drawPoly.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(l_lw_polyline);
+            l_drawPoly.m_objProps.m_lin = Helper.DxfLineType_2_QLin(l_lw_polyline.LineType, m_scaleX, l_lw_polyline.LineTypeScale);
+
 
             return l_drawPoly;
         }
@@ -252,39 +256,8 @@ namespace Dxf2ProfiCAD
             l_drawPoly.RecalcPosition();
 
             l_drawPoly.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(l_line);
-
-
-            if(0 == string.Compare(l_line.LineType.Name, DxfLineType.LineTypeNameByLayer, true))
-            {
-                Console.WriteLine("YES");
-            }
-            else
-            {
-                Console.WriteLine("NO");
-
-
-
-                l_drawPoly.m_objProps.m_lin = new QLin();
-                l_drawPoly.m_objProps.m_lin.m_name = l_line.LineType.Name;
-                //                l_drawPoly.m_objProps.m_lin.m_body = "A," + String.Join(",", l_line.LineType.Elements.Select(p => p.ToString("G", CultureInfo.InvariantCulture)).ToArray());
-
-                string ls_body = "A,";
-                bool lb_first = true;
-                foreach (DxfLineType.Element l_item in l_line.LineType.Elements)
-                {
-                    if(!lb_first)
-                    {
-                        ls_body += ",";
-                    }
-
-                    double ld_item = l_item.Length / 100d;
-                    string ls_item = ld_item.ToString(CultureInfo.InvariantCulture);
-                    ls_body += ls_item;
-                    lb_first = false;
-                }
-                l_drawPoly.m_objProps.m_lin.m_body = ls_body;
-            }
-
+     
+            l_drawPoly.m_objProps.m_lin = Helper.DxfLineType_2_QLin(l_line.LineType, m_scaleX, l_line.LineTypeScale);
 
             return l_drawPoly;
         }

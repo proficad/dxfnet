@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using WW.Cad.Base;
 using WW.Cad.Model;
 using WW.Cad.Model.Entities;
+using WW.Cad.Model.Tables;
+using DxfNet;
 
 namespace Dxf2ProfiCAD
 {
@@ -54,6 +57,45 @@ namespace Dxf2ProfiCAD
         public static bool IsSame(Double ad_1, Double ad_2)
         {
             return Math.Abs(ad_1 - ad_2) < 0.0001;
+        }
+
+        public static DxfNet.QLin DxfLineType_2_QLin(DxfLineType a_dxf_line_type, double a_scale_drawing, double a_scale_line_type)
+        {
+            QLin l_lin = new QLin();
+
+            if (0 == string.Compare(a_dxf_line_type.Name, DxfLineType.LineTypeNameByLayer, true))
+            {
+                return l_lin;
+            }
+
+
+            if (a_dxf_line_type == null)
+            {
+                return l_lin;
+            }
+
+            l_lin.m_name = a_dxf_line_type.Name;
+
+
+            
+
+            string ls_body = "A,";
+            bool lb_first = true;
+            foreach (DxfLineType.Element l_item in a_dxf_line_type.Elements)
+            {
+                if (!lb_first)
+                {
+                    ls_body += ",";
+                }
+
+                double ld_item = a_scale_drawing * a_scale_line_type * l_item.Length / 100d;
+                string ls_item = ld_item.ToString(CultureInfo.InvariantCulture);
+                ls_body += ls_item;
+                lb_first = false;
+            }
+            l_lin.m_body = ls_body;
+
+            return l_lin;
         }
 
 
