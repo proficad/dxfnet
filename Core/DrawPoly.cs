@@ -97,14 +97,7 @@ namespace DxfNet
                 throw new Exception("invalid shape");
 		        
 	        }
-            if (m_nShape == Shape.poly)
-	        {
-                m_objProps.SaveToXml(a_xmlWriter);
-	        }
-	        else
-	        {
-                m_objProps.SaveLineToXml(a_xmlWriter);
-	        }
+  
 
 
         	System.Text.StringBuilder ls_points = new StringBuilder();
@@ -114,6 +107,16 @@ namespace DxfNet
             }
 
             a_xmlWriter.WriteAttributeString("pts", ls_points.ToString());
+
+
+            if (m_nShape == Shape.poly)
+	        {
+                m_objProps.SaveToXml(a_xmlWriter);
+	        }
+	        else
+	        {
+                m_objProps.SaveLineToXml(a_xmlWriter);
+	        }
 
             a_xmlWriter.WriteEndElement();
 

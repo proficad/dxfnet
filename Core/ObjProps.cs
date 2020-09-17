@@ -59,6 +59,15 @@ namespace DxfNet
         public void SaveLineToXml(System.Xml.XmlWriter a_xmlWriter)
         {
             a_xmlWriter.WriteAttributeString("op-lc", Helper.RGB_2_Int(m_logpen.m_color).ToString());
+
+            if (!string.IsNullOrEmpty(m_lin.m_name)) //if line not solid
+            {
+                a_xmlWriter.WriteStartElement("op-lt");
+                a_xmlWriter.WriteAttributeString("head", m_lin.m_name);
+                a_xmlWriter.WriteAttributeString("body", m_lin.m_body);
+                a_xmlWriter.WriteEndElement();
+            }
+
         }
 
 

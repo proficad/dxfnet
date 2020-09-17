@@ -2054,7 +2054,7 @@ namespace Loader
                 ld_arraySegments[i] = 100 * MyString2Double(ls_item);
             }
 
-//            string ls_lineName = RemoveDiacritics(a_objProps.m_lin.m_name).Trim();
+
             string ls_lineName = a_objProps.m_lin.m_name;
             DxfLineType l_lineType = new DxfLineType(ls_lineName, ld_arraySegments);
 

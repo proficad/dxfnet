@@ -28,7 +28,6 @@ namespace Dxf2ProfiCAD
                 if (a_dxf_entity.Color == EntityColor.ByLayer)
                 {
 
-                    int li_i = a_dxf_entity.Layer.Color.ToArgb(3);
 
                     //                    int li_rgb = a_dxf_entity.Layer.Color.Rgb;
                     WW.Drawing.ArgbColor li_rgb = a_dxf_entity.Layer.Color.ToArgbColor(DxfIndexedColorSet.AcadClassicIndexedColors);

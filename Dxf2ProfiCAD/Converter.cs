@@ -9,6 +9,7 @@ using WW.Cad.Model.Entities;
 
 using DxfNet;
 using WW.Cad.Model.Tables;
+using System.Globalization;
 
 namespace Dxf2ProfiCAD
 {
@@ -245,6 +246,14 @@ namespace Dxf2ProfiCAD
 
             //if(l_line.LineType.Name == DxfLineType.LineTypeNameByLayer)
 
+            DrawPoly l_drawPoly = new DrawPoly(Shape.polyline);
+            l_drawPoly.AddPoint(MyShiftScaleX(l_line.Start.X), MyShiftScaleY(l_line.Start.Y));
+            l_drawPoly.AddPoint(MyShiftScaleX(l_line.End.X), MyShiftScaleY(l_line.End.Y));
+            l_drawPoly.RecalcPosition();
+
+            l_drawPoly.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(l_line);
+
+
             if(0 == string.Compare(l_line.LineType.Name, DxfLineType.LineTypeNameByLayer, true))
             {
                 Console.WriteLine("YES");
@@ -252,17 +261,30 @@ namespace Dxf2ProfiCAD
             else
             {
                 Console.WriteLine("NO");
+
+
+
+                l_drawPoly.m_objProps.m_lin = new QLin();
+                l_drawPoly.m_objProps.m_lin.m_name = l_line.LineType.Name;
+                //                l_drawPoly.m_objProps.m_lin.m_body = "A," + String.Join(",", l_line.LineType.Elements.Select(p => p.ToString("G", CultureInfo.InvariantCulture)).ToArray());
+
+                string ls_body = "A,";
+                bool lb_first = true;
+                foreach (DxfLineType.Element l_item in l_line.LineType.Elements)
+                {
+                    if(!lb_first)
+                    {
+                        ls_body += ",";
+                    }
+
+                    double ld_item = l_item.Length / 100d;
+                    string ls_item = ld_item.ToString(CultureInfo.InvariantCulture);
+                    ls_body += ls_item;
+                    lb_first = false;
+                }
+                l_drawPoly.m_objProps.m_lin.m_body = ls_body;
             }
 
-
-
-
-            DrawPoly l_drawPoly = new DrawPoly(Shape.polyline);
-            l_drawPoly.AddPoint(MyShiftScaleX(l_line.Start.X), MyShiftScaleY(l_line.Start.Y));
-            l_drawPoly.AddPoint(MyShiftScaleX(l_line.End.X), MyShiftScaleY(l_line.End.Y));
-            l_drawPoly.RecalcPosition();
-
-            l_drawPoly.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(l_line);
 
             return l_drawPoly;
         }
