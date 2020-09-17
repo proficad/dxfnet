@@ -10,5 +10,19 @@ namespace DxfNet
         public Point Center;
         public string Text;
         public int AngleTenths;
+
+
+        internal void Write2Xml(System.Xml.XmlWriter a_xmlWriter)
+        {
+            a_xmlWriter.WriteStartElement("label");
+
+            Helper.Point2Attrib(a_xmlWriter, "pos_", Center);
+
+            a_xmlWriter.WriteAttributeString("text", Text);
+
+
+            a_xmlWriter.WriteEndElement();
+        }
+
     }
 }

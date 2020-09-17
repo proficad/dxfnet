@@ -54,7 +54,7 @@ namespace Dxf2ProfiCAD
 
         public static bool IsSame(Double ad_1, Double ad_2)
         {
-            return ad_1 - ad_2 < 0.0001;
+            return Math.Abs(ad_1 - ad_2) < 0.0001;
         }
 
 

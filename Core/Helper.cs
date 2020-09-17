@@ -35,7 +35,7 @@ namespace DxfNet
 
         internal static string Color2String(Color a_input)
         {
-            string ls_color = string.Format("{0:D2}{1:D2}{2:D2}", a_input.R, a_input.G, a_input.B);
+            string ls_color = string.Format("{0:X2}{1:X2}{2:X2}", a_input.R, a_input.G, a_input.B);
             return ls_color;
         }
 

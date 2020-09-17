@@ -8,8 +8,7 @@ using System.Drawing;
 using WW.Cad.Model.Entities;
 
 using DxfNet;
-
-
+using WW.Cad.Model.Tables;
 
 namespace Dxf2ProfiCAD
 {
@@ -241,6 +240,23 @@ namespace Dxf2ProfiCAD
         private static DrawObj ConvertDxfLine(DxfEntity a_entity)
         {
             DxfLine l_line = a_entity as DxfLine;
+
+            Console.WriteLine("line type: " + l_line.LineType.Name);
+
+            //if(l_line.LineType.Name == DxfLineType.LineTypeNameByLayer)
+
+            if(0 == string.Compare(l_line.LineType.Name, DxfLineType.LineTypeNameByLayer, true))
+            {
+                Console.WriteLine("YES");
+            }
+            else
+            {
+                Console.WriteLine("NO");
+            }
+
+
+
+
             DrawPoly l_drawPoly = new DrawPoly(Shape.polyline);
             l_drawPoly.AddPoint(MyShiftScaleX(l_line.Start.X), MyShiftScaleY(l_line.Start.Y));
             l_drawPoly.AddPoint(MyShiftScaleX(l_line.End.X), MyShiftScaleY(l_line.End.Y));
@@ -269,6 +285,11 @@ namespace Dxf2ProfiCAD
                     l_dir
                 );
 
+                l_dim.Label.Text = l_dxf_dim.Text ?? l_dxf_dim.Measurement.ToString();
+                // we might call GetActualMeasurement() but it will probably better to calculate it in ProfiCAD 
+
+                l_dim.Label.Center = Point3D_To_Point(l_dxf_dim.TextMiddlePoint);
+
 //                l_dim.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(l_dxf_dim);
 
                 return l_dim;
@@ -287,7 +308,8 @@ namespace Dxf2ProfiCAD
                     QDimLine.DimDirection.dimdir_aligned
                 );
 
-//                l_dim.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(l_dxf_dim);
+                l_dim.Label.Text = l_dxf_dim.Text ?? l_dxf_dim.Measurement.ToString();
+                // we might call GetActualMeasurement() but it will probably better to calculate it in ProfiCAD 
 
                 return l_dim;
             }
@@ -363,6 +385,8 @@ namespace Dxf2ProfiCAD
             FreeText l_text = new FreeText(l_dxgMText.Text, l_efont, l_rect, 0);
 
             l_text.m_alignment = ConvertAlignment(l_dxgMText);
+
+            l_text.m_efont.m_color = Helper.DxfEntityColor2Color(l_dxgMText);
 
             return l_text;
         }

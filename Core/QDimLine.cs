@@ -10,6 +10,7 @@ namespace DxfNet
     public class QDimLine : DrawObj
     {
         public Point A, B, C;
+        public QLabel Label = new QLabel();
 
         public enum DimDirection { dimdir_none, dimdir_hor, dimdir_ver, dimdir_aligned };
         public DimDirection m_dir;
@@ -32,7 +33,8 @@ namespace DxfNet
 
             a_xmlWriter.WriteAttributeString("dir", ((int)m_dir).ToString());
 
-            m_objProps.SaveToXml(a_xmlWriter);
+            //m_objProps.SaveToXml(a_xmlWriter);
+            Label.Write2Xml(a_xmlWriter);
 
             a_xmlWriter.WriteEndElement();
 

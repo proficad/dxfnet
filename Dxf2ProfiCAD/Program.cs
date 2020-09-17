@@ -25,7 +25,7 @@ namespace Dxf2ProfiCAD
             
 //            string ls_path = @"C:\down\ProfiCAD1.dxf";
 //            const string ls_path = @"H:\f\dxf\Grundriss.dwg";
-            const string ls_path = @"H:\t\4.dxf";
+            const string ls_path = @"H:\t\5.dxf";
 
             if (!System.IO.File.Exists(ls_path))
             {
@@ -35,7 +35,7 @@ namespace Dxf2ProfiCAD
 
             //string ls_path = @"H:\temp\PES_MCOE_proj_2.dxf";
             //            string ls_path = @"C:\temp\elektronický gong.dxf";
-            const string ls_outputPath = @"H:\t\output.sxe";
+            const string ls_outputPath = @"H:\t\output-5.sxe";
 
             DxfModel model = null;
             string extension = Path.GetExtension(ls_path);
@@ -69,6 +69,7 @@ namespace Dxf2ProfiCAD
 
             CollPages l_collPages = new CollPages();
             PCadDoc l_pcadDoc = new PCadDoc(l_collPages);
+    
 
             
 
