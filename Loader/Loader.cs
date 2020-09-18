@@ -185,8 +185,8 @@ namespace Loader
 
                 if (ld_version < 6)
                 {
-                    l_page.m_layers.Add(new Layer { Name = "-1" });
-                    l_page.m_layers.Add(new Layer { Name = "0" });
+                    l_page.m_layers.Add(new Layer("-1"));
+                    l_page.m_layers.Add(new Layer("0"));
                 }
 
                 
@@ -377,8 +377,7 @@ namespace Loader
             foreach (XmlNode l_node in layerNodes)
             {
                 string ls_nodeName = l_node.Attributes["name"].Value;
-                Layer l_layer = new Layer();
-                l_layer.Name = Helper.SanitizeLayerName(ls_nodeName);
+                Layer l_layer = new Layer(Helper.SanitizeLayerName(ls_nodeName));
                 l_page.m_layers.Add(l_layer);
 
                 //setup current layer, any object added to a doc will be set to that layer
@@ -934,7 +933,7 @@ namespace Loader
             XmlAttribute l_layername = a_node.Attributes["name"];
             if(l_layername != null)
             {
-                Layer l_layer = new Layer { Name = l_layername.Value };
+                Layer l_layer = new Layer(l_layername.Value);
                 a_drawDoc.AddLayer(l_layer);
                 ContextP2A.Current.CurrentLayer = l_layer;
             }

@@ -103,7 +103,7 @@ namespace Dxf2ProfiCAD
                     }
 
 
-                    l_pcadDoc.Add(l_drawObj, null);//99
+                    l_pcadDoc.Add(l_drawObj, l_entity.Layer.Name);
                 }
             }
 
@@ -171,7 +171,7 @@ namespace Dxf2ProfiCAD
                     DrawObj l_drawObj = Converter.Convert(l_entity);
                     if (l_drawObj != null)
                     {
-                        l_ppdDoc.Add(l_drawObj, null);//99
+                        l_ppdDoc.Add(l_drawObj, l_entity.Layer.Name);
                     }
                 }
 

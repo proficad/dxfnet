@@ -27,6 +27,7 @@ namespace DxfNet
 
 
 
+        //used in ProfiCAD->DXF
         public void Add(DrawObj a_drawObj, Layer a_layer)
         {
             a_drawObj.m_layer = a_layer;
@@ -35,6 +36,20 @@ namespace DxfNet
             {
                 l_layer.Add(a_drawObj);
             }
+        }
+
+        //used in DXF->ProfiCAD
+        public void Add(DrawObj a_drawObj, string as_layer_name)
+        {
+            Layer l_layer = FindLayer(as_layer_name);
+            if (l_layer == null)
+            {
+                l_layer = new Layer(as_layer_name);
+                AddLayer(l_layer);
+            }
+
+            a_drawObj.m_layer = l_layer;
+            l_layer.Add(a_drawObj);
         }
 
         internal void WriteElements(XmlWriter a_xmlWriter)

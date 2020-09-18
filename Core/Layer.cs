@@ -9,6 +9,13 @@ namespace DxfNet
 {
     public class Layer : IEnumerable
     {
+        public Layer(string as_name)
+        {
+            Name = as_name;
+           
+        }
+
+
         public IEnumerator GetEnumerator()
         { 
             foreach(DrawObj l_item in m_objects)
@@ -37,6 +44,7 @@ namespace DxfNet
         {
             a_xmlWriter.WriteStartElement("layer");
             a_xmlWriter.WriteAttributeString("name", Name);
+            a_xmlWriter.WriteAttributeString("v", "1");//visible
 
             foreach (DrawObj a_obj in m_objects)
             {
