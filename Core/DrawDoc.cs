@@ -4,34 +4,48 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.Xml;
+using System.Collections;
 
 namespace DxfNet
 {
-    public class DrawDoc
+    public class DrawDoc : IEnumerable
     {
 
-        public List<DrawObj> m_objects = new List<DrawObj>();
-  
+        public IEnumerator GetEnumerator()
+        {
+            foreach (Layer l_layer in m_layers)
+            {
+                foreach(DrawObj l_obj in l_layer)
+                {
+                    yield return l_obj;
+                }
+            }
+        }
+
+
+        public List<Layer> m_layers = new List<Layer>();
+
 
 
         public void Add(DrawObj a_drawObj, Layer a_layer)
         {
             a_drawObj.m_layer = a_layer;
-            m_objects.Add(a_drawObj);
+            Layer l_layer = FindLayer(a_layer.Name);
+            if(l_layer != null)
+            {
+                l_layer.Add(a_drawObj);
+            }
         }
 
         internal void WriteElements(XmlWriter a_xmlWriter)
         {
             a_xmlWriter.WriteStartElement("layers");
-            a_xmlWriter.WriteStartElement("layer");
-            a_xmlWriter.WriteAttributeString("name", "0");
 
-            foreach (DrawObj a_obj in m_objects)
+            foreach(Layer l_layer in m_layers)
             {
-                a_obj.Write2Xml(a_xmlWriter);
+                l_layer.SaveToXml(a_xmlWriter);
             }
 
-            a_xmlWriter.WriteEndElement();
             a_xmlWriter.WriteEndElement();
         }
 
@@ -41,7 +55,7 @@ namespace DxfNet
             Rectangle l_position = new Rectangle();
 	        bool	  lb_first = true;
 
-	        foreach(DrawObj l_obj in m_objects)
+	        foreach(DrawObj l_obj in this)
 	        {
                 l_obj.RecalcPosition();//2012-11-05
                 l_position = l_obj.m_position;
@@ -63,6 +77,24 @@ namespace DxfNet
 	        {
 		        return l_usedrect;
 	        }
+        }
+
+        private Layer FindLayer(string as_layername)
+        {
+            foreach(Layer l_layer in m_layers)
+            {
+                if(l_layer.Name == as_layername)
+                {
+                    return l_layer;
+                }
+            }
+
+            return null;
+        }
+
+        public void AddLayer(Layer a_layer)
+        {
+            m_layers.Add(a_layer);
         }
 
     }

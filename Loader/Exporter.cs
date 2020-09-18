@@ -394,7 +394,7 @@ namespace Loader
 
         private static void ExportDrawDoc(DxfEntityCollection a_coll, DrawDoc a_doc, HybridDictionary a_dict, bool ab_block)
         {
-            foreach (DrawObj obj in a_doc.m_objects)
+            foreach (DrawObj obj in a_doc)
             {
                 if(obj.m_layer != null)
                 {
@@ -1020,13 +1020,7 @@ namespace Loader
             }
         }
 
-        public static void SetupLayerObsolete(DxfEntity a_entity, DrawObj a_obj)
-        {
-            if (a_obj.m_layer != null)
-            {
-                a_entity.Layer = ExportContext.Current.Model.Layers[a_obj.m_layer.Name];
-            }
-        }
+
 
         
         /// <summary>

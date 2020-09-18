@@ -31,12 +31,12 @@ namespace DxfNet
         public PageSizeSettings m_page_size_settings = new PageSizeSettings();
         public PagePrintSettings m_page_print_settings = new PagePrintSettings();
 
-        public List<Layer> m_layers;
+
 
         public PCadDoc(CollPages a_parent)
         {
             m_parent = a_parent;
-            m_layers = new List<Layer>();
+
         }
         //-------------------
 
@@ -102,18 +102,15 @@ namespace DxfNet
             WritePageSizeSettings(a_xmlWriter);
             WritePagePrintSettings(a_xmlWriter);
 
+            
+
             a_xmlWriter.WriteStartElement("layers");
-            a_xmlWriter.WriteStartElement("layer");
-            a_xmlWriter.WriteAttributeString("name", "0");
-            a_xmlWriter.WriteAttributeString("v", "1");
 
-
-            foreach (DrawObj a_obj in m_objects)
+            foreach(Layer l_layer in m_layers)
             {
-                a_obj.Write2Xml(a_xmlWriter);
+                l_layer.SaveToXml(a_xmlWriter);
             }
 
-            a_xmlWriter.WriteEndElement();
             a_xmlWriter.WriteEndElement();
             a_xmlWriter.WriteEndElement();
             a_xmlWriter.WriteEndElement();
@@ -194,6 +191,7 @@ namespace DxfNet
             
         }
 
+        /*
         public void RecalcToFitInPaper()
         {
             Rectangle l_rectDocument;
@@ -247,6 +245,7 @@ namespace DxfNet
             Parent.m_settingsPage.PagesVer = 1 + (l_rectDocument.Height / l_paperSize.Height);
 
         }
+        */
 
         public void SetSize(Size a_size)
         {
@@ -387,7 +386,7 @@ namespace DxfNet
 
         private void GetAllWiresFromThisPage(List<Wire> a_list_of_wires)
         {
-           foreach(DrawObj l_obj in m_objects)
+           foreach(DrawObj l_obj in this)
            {
                if(l_obj is Wire)
                {
@@ -429,7 +428,7 @@ namespace DxfNet
 
         private void GetAllCElems(List<Insert> l_list_CElems)
         {
-            foreach (DrawObj l_obj in m_objects)
+            foreach (DrawObj l_obj in this)
             {
                 if (l_obj is Insert)
                 {

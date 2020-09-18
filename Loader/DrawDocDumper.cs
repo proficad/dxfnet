@@ -43,7 +43,7 @@ namespace Loader
         //--------------------------------------------
         public static void DumpObjects(DrawDoc a_doc, StringCollection a_list)
         {
-            foreach (DrawObj drawObj in a_doc.m_objects)
+            foreach (DrawObj drawObj in a_doc)
             {
                 if (drawObj is Insert)
                 {

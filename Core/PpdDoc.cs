@@ -34,12 +34,13 @@ namespace DxfNet
 
         public void RecalcToBeInCenterPoint(Point a_basePoint)
         {
+            DrawObj l_obj = (DrawObj)this.GetEnumerator().Current;
 
-            if (m_objects.Count == 0)
-            {
+            if (l_obj == null)
+            { 
                 return;
             }
-
+            
 
             //verify it
             Rectangle l_rectPos = GetPosition();
@@ -49,13 +50,13 @@ namespace DxfNet
             //calc bounds
             MyRect l_bounds = new MyRect();
             //init the rect from the 1st object
-            l_bounds.Left = m_objects[0].m_position.Left;
-            l_bounds.Right = m_objects[0].m_position.Right;
-            l_bounds.Top = m_objects[0].m_position.Top;
-            l_bounds.Bottom = m_objects[0].m_position.Bottom;
+            l_bounds.Left   = l_obj.m_position.Left;
+            l_bounds.Right  = l_obj.m_position.Right;
+            l_bounds.Top    = l_obj.m_position.Top;
+            l_bounds.Bottom = l_obj.m_position.Bottom;
 
 
-            foreach (DrawObj a_obj in m_objects)
+            foreach (DrawObj a_obj in this)
             {
                 System.Diagnostics.Debug.WriteLine(a_obj.GetType());
                 a_obj.RecalcBounds(ref l_bounds);
@@ -68,7 +69,7 @@ namespace DxfNet
 
             //move all points to make the centerpoint be 0,0
             Size l_offsetOpposite = new Size(-m_offset.Width, -m_offset.Height);
-            foreach (DrawObj a_obj in m_objects)
+            foreach (DrawObj a_obj in this)
             {
                 string ls_debugEcho = "moving from " + a_obj.m_position.ToString();
                 a_obj.MoveBy(l_offsetOpposite);
@@ -89,15 +90,17 @@ namespace DxfNet
 
         public Rectangle GetPosition()
         {
+            DrawObj l_obj = (DrawObj)this.GetEnumerator().Current;
 
-            if (m_objects.Count == 0)
+            if (l_obj == null)
             {
                 return new Rectangle();
             }
 
-            m_objects[0].RecalcPosition();
-            Rectangle l_rect = m_objects[0].m_position;
-            foreach (DrawObj a_obj in m_objects)
+
+            l_obj.RecalcPosition();
+            Rectangle l_rect = l_obj.m_position;
+            foreach (DrawObj a_obj in this)
             {
                 a_obj.RecalcPosition();
                 System.Diagnostics.Debug.WriteLine("GetPosition Union with " + a_obj.m_position.ToString());
@@ -111,7 +114,7 @@ namespace DxfNet
             get
             {
                 List<Point> l_vyvody = new List<Point>();
-                foreach(var l_object in m_objects)
+                foreach(var l_object in this)
                 {
                     if(l_object is Outlet)
                     {

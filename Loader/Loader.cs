@@ -227,8 +227,13 @@ namespace Loader
 
                     XmlNode l_summaryNode = l_node.SelectSingleNode("summary");
                     LoadSummary(l_page.m_summInfo, l_summaryNode);
-                    XmlNodeList layerNodes = l_node.SelectNodes("layers/layer[@v='1']");
-                    LoadLayers(layerNodes, l_page);
+                    //XmlNodeList layerNodes = l_node.SelectNodes("layers/layer[@v='1']");
+                    //LoadLayers(layerNodes, l_page);
+                    XmlNodeList layerNodes = l_node.SelectNodes("layers/layer");
+                    foreach (XmlNode l_node_layer in layerNodes)
+                    {
+                        LoadDrawDoc(l_page, l_node_layer);
+                    }
 
                     XmlNode l_node_page_ptb = l_node.SelectSingleNode("tb");
                     if (l_node_page_ptb != null)
@@ -926,6 +931,15 @@ namespace Loader
 
         public static void LoadDrawDoc(DrawDoc a_drawDoc, XmlNode a_node)
         {
+            XmlAttribute l_layername = a_node.Attributes["name"];
+            if(l_layername != null)
+            {
+                Layer l_layer = new Layer { Name = l_layername.Value };
+                a_drawDoc.AddLayer(l_layer);
+                ContextP2A.Current.CurrentLayer = l_layer;
+            }
+
+
 
             foreach (XmlNode nodeElement in a_node)
             {
