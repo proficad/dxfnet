@@ -19,122 +19,53 @@ namespace Dxf2ProfiCAD
 {
     class Program
     {
+        enum InputFormat { input_format_file, input_format_folder };
+        enum OutputFormat { output_format_sxe, output_format_pxf };
+
+
+        OutputFormat l_output_format;
+
+
         static void Main(string[] args)
         {
-
-            
-//            string ls_path = @"C:\down\ProfiCAD1.dxf";
-//            const string ls_path = @"H:\f\dxf\Grundriss.dwg";
-            const string ls_path = @"H:\t\5.dxf";
-
-            if (!System.IO.File.Exists(ls_path))
+            ShowIntro();
+            if (args.Length == 0)
             {
-                throw new Exception("input path does not exist");
+                Console.WriteLine("input parameter missing");
+                ShowUsage();
+                return;
+            }
+            if (args.Length > 2)
+            {
+                Console.WriteLine("too many parameters");
+                ShowUsage();
+                return;
             }
 
+            InputFormat l_input_format;
 
-            //string ls_path = @"H:\temp\PES_MCOE_proj_2.dxf";
-            //            string ls_path = @"C:\temp\elektronický gong.dxf";
-            const string ls_outputPath = @"H:\t\output-5.sxe";
-
-            DxfModel model = null;
-            string extension = Path.GetExtension(ls_path);
-            if (string.Compare(extension, ".dwg", true) == 0)
+            string ls_in = args[0];
+            if (System.IO.File.Exists(ls_in))
             {
-                model = DwgReader.Read(ls_path);
+                l_input_format = InputFormat.input_format_file;
+                ConvertOneFile(ls_in);
+            }
+            else if (System.IO.Directory.Exists(ls_in))
+            {
+                l_input_format = InputFormat.input_format_folder;
+                string[] ls_filenames = Directory.GetFiles(ls_in, "dxf", SearchOption.AllDirectories);
+                foreach (string ls_path in ls_filenames)
+                {
+                    ConvertOneFile(ls_path);
+                }
             }
             else
             {
-                model = DxfReader.Read(ls_path);
+                return;
             }
 
-
-            //try to convert using the WireFrameGraphicsFactory
-            //Covert_To_ProfiCAD_Lines(model, @"H:\lines.sxe");
-
-            
-            double ld_smallest_font_size = PrintStats(model);
-
-/*
-            const double ld_target_smallest_font_size = 70;
-            double ld_scale = ld_target_smallest_font_size / ld_smallest_font_size;
-
-            Size l_size_target = AdjustShiftReturnSize(model, ld_scale);
-*/
-
-            const int li_size = 2800;
-            Size l_size_target = new Size(li_size, li_size);
-            AdjustScaleAndShift(model, l_size_target);
-            
-
-            CollPages l_collPages = new CollPages();
-            PCadDoc l_pcadDoc = new PCadDoc(l_collPages);
-    
-
-            
-
-            ConvertRepo(l_pcadDoc, model);
-
-            foreach (DxfEntity l_entity in model.Entities)
-            {
-                DrawObj l_drawObj = Converter.Convert(l_entity);
-
-                if (l_drawObj != null)
-                {
-                    // if it is an insert move it by the offset of its PPD
-                    if (l_drawObj is Insert)
-                    {
-                        Insert l_insert = l_drawObj as Insert;
-                        string ls_lastGuid = l_insert.m_lG;
-
-                        /*
-                        if (ls_lastGuid == "A32")
-                        {
-                            int o = 5;
-                        }
-                        */
-
-                        System.Diagnostics.Debug.Assert(ls_lastGuid.Length > 0);
-                        PpdDoc l_ppdDoc = l_pcadDoc.FindPpdDocInRepo(ls_lastGuid);
-                        l_insert.SetPpdDoc(l_ppdDoc);
-
-                        System.Drawing.Size l_offset = l_ppdDoc.m_offset;
-                        l_insert.Offset(l_offset);
-                    }
-
-
-                    l_pcadDoc.Add(l_drawObj, l_entity.Layer.Name);
-                }
-            }
-
-            //l_pcadDoc.RecalcToFitInPaper();
-            l_pcadDoc.SetSize(l_size_target);
-
-
-            l_pcadDoc.Save(ls_outputPath);
         }
 
-        /*
-        private static Size AdjustShiftReturnSize(DxfModel a_model, double ad_scale)
-        {
-            BoundsCalculator l_bc = new BoundsCalculator();
-            l_bc.GetBounds(a_model);
-            Bounds3D l_bounds3D = l_bc.Bounds;
-
-            int li_target_size_x = (int) (l_bounds3D.Delta.X * ad_scale);
-            int li_target_size_y = (int) (l_bounds3D.Delta.Y * ad_scale);
-
-            Converter.SetScale(ad_scale);
-
-            int li_shift_x = (int)(-l_bounds3D.Corner1.X);
-            int li_shift_y = (int)(-l_bounds3D.Corner1.Y);
-            Converter.SetShift(li_shift_x, li_shift_y);
-
-            Size l_size_target = new Size(li_target_size_x, li_target_size_y);
-
-            return l_size_target;
-        }
-        */
 
         private static void AdjustScaleAndShift(DxfModel a_model, Size a_size_target)
         {
@@ -149,7 +80,7 @@ namespace Dxf2ProfiCAD
 
             int li_shift_x = (int)(-l_bounds3D.Corner1.X);
             int li_shift_y = (int)(-l_bounds3D.Corner2.Y);
-//            Converter.SetShift(li_shift_x, li_shift_y, a_size_target.Height);
+            //            Converter.SetShift(li_shift_x, li_shift_y, a_size_target.Height);
             Converter.SetShift(li_shift_x, li_shift_y, 0);
         }
 
@@ -164,7 +95,7 @@ namespace Dxf2ProfiCAD
 
                 System.Diagnostics.Debug.Assert(l_ppdDoc.m_name.Length > 0);
 
-            
+
 
                 foreach (DxfEntity l_entity in l_block.Entities)
                 {
@@ -180,7 +111,7 @@ namespace Dxf2ProfiCAD
                 int l_baseY = Converter.MyShiftScaleY(l_block.BasePoint.Y);
                 Point l_basePoint = new Point(l_baseX, l_baseY);
                 l_ppdDoc.RecalcToBeInCenterPoint(l_basePoint);
-                
+
                 //verify it is in the center
                 /*
                 Rectangle l_rect = l_ppdDoc.GetPosition();
@@ -195,7 +126,7 @@ namespace Dxf2ProfiCAD
 
         private static void PrintSep()
         {
-            System.Console.WriteLine("------------------------------------"); 
+            System.Console.WriteLine("------------------------------------");
         }
 
         private static double PrintStats(DxfModel model)
@@ -240,8 +171,8 @@ namespace Dxf2ProfiCAD
                 DxfText l_dxfText = l_entity as DxfText;
                 if (l_dxfText != null)
                 {
-                    CalculateTextSize(l_dxfText.Height, l_dxfText.Text, 
-                        ref l_hash_entities, ref l_hash_text_heights, 
+                    CalculateTextSize(l_dxfText.Height, l_dxfText.Text,
+                        ref l_hash_entities, ref l_hash_text_heights,
                         ref ld_smallest_text_height, ref ls_smallest_text_wording);
                 }
                 DxfMText l_dxfMText = l_entity as DxfMText;
@@ -272,8 +203,8 @@ namespace Dxf2ProfiCAD
             return ld_smallest_text_height;
         }
 
-        private static void CalculateTextSize(double ai_height, string as_text, 
-            ref System.Collections.Hashtable l_hash_entities, 
+        private static void CalculateTextSize(double ai_height, string as_text,
+            ref System.Collections.Hashtable l_hash_entities,
             ref System.Collections.Hashtable l_hash_text_heights,
             ref double ld_smallest_text_height, ref string ls_smallest_text_wording)
         {
@@ -300,70 +231,70 @@ namespace Dxf2ProfiCAD
             }
         }
 
-/*
-        private static void Covert_To_ProfiCAD_Lines(DxfModel model, String as_path)
-        {
-            List<Polyline2D> collectedPolylines = PolygonWireframeGraphicsFactory.ConvertModelToPolylines(model, GraphicsConfig.BlackBackground);
-
-            double l_min_x = 0, l_max_x = 0, l_min_y = 0, l_max_y = 0;
-
-            bool lb_first = true;
-            foreach (Polyline2D x in collectedPolylines)
-            {
-                foreach(WW.Math.Point2D l_point in x)
+        /*
+                private static void Covert_To_ProfiCAD_Lines(DxfModel model, String as_path)
                 {
-                    if (lb_first)
+                    List<Polyline2D> collectedPolylines = PolygonWireframeGraphicsFactory.ConvertModelToPolylines(model, GraphicsConfig.BlackBackground);
+
+                    double l_min_x = 0, l_max_x = 0, l_min_y = 0, l_max_y = 0;
+
+                    bool lb_first = true;
+                    foreach (Polyline2D x in collectedPolylines)
                     {
-                        l_min_x = l_max_x = l_point.X;
-                        l_min_y = l_max_y = l_point.Y;
-                        lb_first = false;
+                        foreach(WW.Math.Point2D l_point in x)
+                        {
+                            if (lb_first)
+                            {
+                                l_min_x = l_max_x = l_point.X;
+                                l_min_y = l_max_y = l_point.Y;
+                                lb_first = false;
+                            }
+                            else
+                            {
+                                l_min_x = System.Math.Min(l_min_x, l_point.X);
+                                l_max_x = System.Math.Max(l_max_x, l_point.X);
+                                l_min_y = System.Math.Min(l_min_y, l_point.Y);
+                                l_max_y = System.Math.Max(l_max_y, l_point.Y);
+                            }
+                        }
                     }
-                    else
+
+                    double li_size_x = l_max_x - l_min_x;
+                    double li_size_y = l_max_y - l_min_y;
+
+                    if (li_size_x == 0)
                     {
-                        l_min_x = System.Math.Min(l_min_x, l_point.X);
-                        l_max_x = System.Math.Max(l_max_x, l_point.X);
-                        l_min_y = System.Math.Min(l_min_y, l_point.Y);
-                        l_max_y = System.Math.Max(l_max_y, l_point.Y);
+                        li_size_x = 1;
                     }
+                    if (li_size_y == 0)
+                    {
+                        li_size_y = 1;
+                    }
+
+                    const int li_paper_x = 3000;
+                    const int li_paper_y = 3000;
+
+                    double l_ratio_x = li_paper_x / li_size_x;
+                    double l_ratio_y = li_paper_y / li_size_y;
+
+                    double l_ratio = System.Math.Min(l_ratio_x, l_ratio_y);
+
+                    CollPages l_collPages = new CollPages();
+                    PCadDoc l_pcadDoc = new PCadDoc(l_collPages);
+
+                    foreach (Polyline2D l_polyline in collectedPolylines)
+                    {
+                        DrawObj l_drawObj = Convert(l_polyline, l_ratio, l_min_x, l_min_y);
+                        if (l_drawObj != null)
+                        {
+                            l_pcadDoc.Add(l_drawObj, null);
+                        }
+                    }
+
+                    l_pcadDoc.Save(as_path);
+
                 }
-            }
-
-            double li_size_x = l_max_x - l_min_x;
-            double li_size_y = l_max_y - l_min_y;
-
-            if (li_size_x == 0)
-            {
-                li_size_x = 1;
-            }
-            if (li_size_y == 0)
-            {
-                li_size_y = 1;
-            }
-
-            const int li_paper_x = 3000;
-            const int li_paper_y = 3000;
-
-            double l_ratio_x = li_paper_x / li_size_x;
-            double l_ratio_y = li_paper_y / li_size_y;
-
-            double l_ratio = System.Math.Min(l_ratio_x, l_ratio_y);
-
-            CollPages l_collPages = new CollPages();
-            PCadDoc l_pcadDoc = new PCadDoc(l_collPages);
-
-            foreach (Polyline2D l_polyline in collectedPolylines)
-            {
-                DrawObj l_drawObj = Convert(l_polyline, l_ratio, l_min_x, l_min_y);
-                if (l_drawObj != null)
-                {
-                    l_pcadDoc.Add(l_drawObj, null);
-                }
-            }
-
-            l_pcadDoc.Save(as_path);
-            
-        }
-*/
+        */
         static DrawObj Convert(Polyline2D a_line, double a_ratio, double ai_min_x, double ai_min_y)
         {
             DrawPoly l_drawPoly = new DrawPoly(Shape.polyline);
@@ -383,6 +314,94 @@ namespace Dxf2ProfiCAD
             return l_drawPoly;
         }
 
+        private static void ShowIntro()
+        {
+            throw new NotImplementedException();
+        }
 
+        private static void ShowUsage()
+        {
+            throw new NotImplementedException();
+        }
+
+        private static void ConvertOneFile(string as_input_path)
+        {
+
+
+            const string ls_outputPath = @"H:\t\output-5.sxe";
+
+            DxfModel model = null;
+            string extension = Path.GetExtension(as_input_path);
+            if (string.Compare(extension, ".dwg", true) == 0)
+            {
+                model = DwgReader.Read(as_input_path);
+            }
+            else
+            {
+                model = DxfReader.Read(as_input_path);
+            }
+
+
+            //try to convert using the WireFrameGraphicsFactory
+            //Covert_To_ProfiCAD_Lines(model, @"H:\lines.sxe");
+
+            //            double ld_smallest_font_size = PrintStats(model);
+
+
+
+            const int li_size = 2800;
+            Size l_size_target = new Size(li_size, li_size);
+            AdjustScaleAndShift(model, l_size_target);
+
+
+            CollPages l_collPages = new CollPages();
+            PCadDoc l_pcadDoc = new PCadDoc(l_collPages);
+
+
+
+
+            ConvertRepo(l_pcadDoc, model);
+
+            foreach (DxfEntity l_entity in model.Entities)
+            {
+                DrawObj l_drawObj = Converter.Convert(l_entity);
+
+                if (l_drawObj != null)
+                {
+                    // if it is an insert move it by the offset of its PPD
+                    if (l_drawObj is Insert)
+                    {
+                        Insert l_insert = l_drawObj as Insert;
+                        string ls_lastGuid = l_insert.m_lG;
+
+                        /*
+                        if (ls_lastGuid == "A32")
+                        {
+                            int o = 5;
+                        }
+                        */
+
+                        System.Diagnostics.Debug.Assert(ls_lastGuid.Length > 0);
+                        PpdDoc l_ppdDoc = l_pcadDoc.FindPpdDocInRepo(ls_lastGuid);
+                        l_insert.SetPpdDoc(l_ppdDoc);
+
+                        System.Drawing.Size l_offset = l_ppdDoc.m_offset;
+                        l_insert.Offset(l_offset);
+                    }
+
+
+                    l_pcadDoc.Add(l_drawObj, l_entity.Layer.Name);
+                }
+            }
+
+            //l_pcadDoc.RecalcToFitInPaper();
+            l_pcadDoc.SetSize(l_size_target);
+
+
+            l_pcadDoc.Save(ls_outputPath);
+        }
     }
+
+
+
 }
