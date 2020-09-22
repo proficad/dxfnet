@@ -7,6 +7,10 @@ using System.Xml;
 
 namespace DxfNet
 {
+
+    /// <summary>
+    /// Hu la la la.
+    /// </summary>
     public class Layer : IEnumerable
     {
         public Layer(string as_name)

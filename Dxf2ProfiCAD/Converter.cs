@@ -4,7 +4,7 @@ using System.Linq;
 using System.Drawing;
 
 
-//using WW.ComponentModel;
+
 using WW.Cad.Model.Entities;
 
 using DxfNet;

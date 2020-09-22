@@ -14,16 +14,15 @@ using WW.Cad.Model.Entities;
 using WW.Cad.Drawing;
 using DxfNet;
 using System.IO;
+using System.Reflection;
 
 namespace Dxf2ProfiCAD
 {
     class Program
     {
-        enum InputFormat { input_format_file, input_format_folder };
         enum OutputFormat { output_format_sxe, output_format_pxf };
 
-
-        OutputFormat l_output_format;
+        static OutputFormat l_output_format;
 
 
         static void Main(string[] args)
@@ -42,29 +41,49 @@ namespace Dxf2ProfiCAD
                 return;
             }
 
-            InputFormat l_input_format;
 
             string ls_in = args[0];
+
+            string ls_out_format = args[1];
+            if (ls_out_format == "sxe")
+            {
+                l_output_format = OutputFormat.output_format_sxe;
+            }
+            else if (ls_out_format == "pxf")
+            {
+                l_output_format = OutputFormat.output_format_pxf;
+            }
+            else
+            {
+                ShowUsage();
+                return;
+            }
+
             if (System.IO.File.Exists(ls_in))
             {
-                l_input_format = InputFormat.input_format_file;
-                ConvertOneFile(ls_in);
+                ConvertOneFile(ls_in, l_output_format);
             }
             else if (System.IO.Directory.Exists(ls_in))
             {
-                l_input_format = InputFormat.input_format_folder;
                 string[] ls_filenames = Directory.GetFiles(ls_in, "dxf", SearchOption.AllDirectories);
                 foreach (string ls_path in ls_filenames)
                 {
-                    ConvertOneFile(ls_path);
+                    ConvertOneFile(ls_path, l_output_format);
                 }
             }
             else
             {
+                ShowUsage();
                 return;
             }
 
+
+
         }
+
+
+
+
 
 
         private static void AdjustScaleAndShift(DxfModel a_model, Size a_size_target)
@@ -316,19 +335,22 @@ namespace Dxf2ProfiCAD
 
         private static void ShowIntro()
         {
-            throw new NotImplementedException();
+            AssemblyName l_an = Assembly.GetExecutingAssembly().GetName(false);
+            string ls_echo = string.Format("Dxf2ProfiCAD version {0}", l_an.Version.ToString());
+            Console.WriteLine(ls_echo);
         }
 
         private static void ShowUsage()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Syntax:");
+            Console.WriteLine("Dxf2ProfiCAD input(path) output(sxe|pxf)");
+
         }
 
-        private static void ConvertOneFile(string as_input_path)
+        private static void ConvertOneFile(string as_input_path, OutputFormat a_format)
         {
 
-
-            const string ls_outputPath = @"H:\t\output-5.sxe";
+            string ls_outputPath = as_input_path.Replace("dxf", "sxe");
 
             DxfModel model = null;
             string extension = Path.GetExtension(as_input_path);
@@ -394,11 +416,12 @@ namespace Dxf2ProfiCAD
                 }
             }
 
-            //l_pcadDoc.RecalcToFitInPaper();
             l_pcadDoc.SetSize(l_size_target);
 
 
             l_pcadDoc.Save(ls_outputPath);
+
+            Console.WriteLine("Conversion completed");
         }
     }
 
