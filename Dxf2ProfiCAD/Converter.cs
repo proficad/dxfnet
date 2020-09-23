@@ -363,25 +363,62 @@ namespace Dxf2ProfiCAD
 
         private static FreeText ConvertDxfText(DxfEntity a_entity)
         {
-            DxfText l_dxgMText = a_entity as DxfText;
-            if (l_dxgMText.Text.Trim().Length == 0)
+            DxfText l_dxfMText = a_entity as DxfText;
+            if (l_dxfMText.Text.Trim().Length == 0)
             {
                 //System.Console.WriteLine("skipping empty text");
                 return null;
             }
 
 
+
             EFont l_efont = new EFont();
-            l_efont.m_size = (int)(l_efont.m_size * l_dxgMText.Height * 0.06);
+            l_efont.m_size = (int)(l_efont.m_size * l_dxfMText.Height * 0.06);
             l_efont.m_size = MyScaleX(l_efont.m_size);
 
-            Rectangle l_rect = new Rectangle(MyShiftScaleX(l_dxgMText.AlignmentPoint1.X), MyShiftScaleY(l_dxgMText.AlignmentPoint1.Y), 0, 0);
 
-            FreeText l_text = new FreeText(l_dxgMText.Text, l_efont, l_rect, 0);
+            
 
-            l_text.m_alignment = ConvertAlignment(l_dxgMText);
+            double ld_x = l_dxfMText.AlignmentPoint1.X;
+            double ld_y = l_dxfMText.AlignmentPoint1.Y;
+            if(l_dxfMText.HorizontalAlignment == TextHorizontalAlignment.Center)
+            {
+                if (l_dxfMText.AlignmentPoint2.HasValue)
+                {
+                    ld_x = l_dxfMText.AlignmentPoint2.Value.X;
+                    ld_y = l_dxfMText.AlignmentPoint2.Value.Y;
+                }
+            }
+            else if(l_dxfMText.HorizontalAlignment == TextHorizontalAlignment.Left)
+            {
+                if(l_dxfMText.VerticalAlignment == TextVerticalAlignment.Baseline)
+                {
+                    //rotate 
+                    double ld_half_height = (l_dxfMText.Height / 2);
+                    double ld_fi = l_dxfMText.Rotation - (Math.PI / 2);
+                    double ld_shift_x = Math.Cos(ld_fi) * ld_half_height;
+                    double ld_shift_y = Math.Sin(ld_fi) * ld_half_height;
 
-            l_text.m_efont.m_color = Helper.DxfEntityColor2Color(l_dxgMText);
+                    ld_x -= ld_shift_x;
+                    ld_y -= ld_shift_y;
+
+                    //double ld_shift = m_scaleY * (l_dxfMText.Height / 2);
+                    //ld_y += (l_dxfMText.Height / 2);//we should move it up, but the DXF coordinate system is positive up
+                }
+
+            }
+
+            
+            
+            Rectangle l_rect = new Rectangle(MyShiftScaleX(ld_x), MyShiftScaleY(ld_y), 0, 0);
+
+            FreeText l_text = new FreeText(l_dxfMText.Text, l_efont, l_rect, 0);
+
+            l_text.m_alignment = ConvertAlignment(l_dxfMText);
+
+            l_text.m_efont.m_color = Helper.DxfEntityColor2Color(l_dxfMText);
+
+            l_text.m_angle = RadiansToAnglePositive(l_dxfMText.Rotation);
 
             return l_text;
         }
@@ -530,6 +567,11 @@ namespace Dxf2ProfiCAD
         private static int RadiansToAngle(double ad_radians)
         {
             return (int)(-1800 * ad_radians / Math.PI);
+        }
+        
+        private static int RadiansToAnglePositive(double ad_radians)
+        {
+            return (int)(1800 * ad_radians / Math.PI);
         }
 
 
