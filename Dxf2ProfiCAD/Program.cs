@@ -28,7 +28,7 @@ namespace Dxf2ProfiCAD
         static void Main(string[] args)
         {
             ShowIntro();
-            if (args.Length == 0)
+            if (args.Length < 2)
             {
                 Console.WriteLine("input parameter missing");
                 ShowUsage();
@@ -65,7 +65,7 @@ namespace Dxf2ProfiCAD
             }
             else if (System.IO.Directory.Exists(ls_in))
             {
-                string[] ls_filenames = Directory.GetFiles(ls_in, "dxf", SearchOption.AllDirectories);
+                string[] ls_filenames = Directory.GetFiles(ls_in, "*.dxf", SearchOption.AllDirectories);
                 foreach (string ls_path in ls_filenames)
                 {
                     ConvertOneFile(ls_path, l_output_format);
@@ -350,7 +350,7 @@ namespace Dxf2ProfiCAD
         private static void ConvertOneFile(string as_input_path, OutputFormat a_format)
         {
 
-            string ls_outputPath = as_input_path.Replace("dxf", "sxe");
+            string ls_outputPath = as_input_path.Replace(".dxf", ".sxe");
 
             DxfModel model = null;
             string extension = Path.GetExtension(as_input_path);
@@ -405,10 +405,13 @@ namespace Dxf2ProfiCAD
 
                         System.Diagnostics.Debug.Assert(ls_lastGuid.Length > 0);
                         PpdDoc l_ppdDoc = l_pcadDoc.FindPpdDocInRepo(ls_lastGuid);
-                        l_insert.SetPpdDoc(l_ppdDoc);
+                        if (l_ppdDoc != null)
+                        {
+                            l_insert.SetPpdDoc(l_ppdDoc);
 
-                        System.Drawing.Size l_offset = l_ppdDoc.m_offset;
-                        l_insert.Offset(l_offset);
+                            System.Drawing.Size l_offset = l_ppdDoc.m_offset;
+                            l_insert.Offset(l_offset);
+                        }
                     }
 
 
