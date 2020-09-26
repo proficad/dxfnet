@@ -393,7 +393,7 @@ namespace Dxf2ProfiCAD
             {
                 if(l_dxfMText.VerticalAlignment == TextVerticalAlignment.Baseline)
                 {
-                    //rotate 
+                    //rotate to compensate for the fact the ProfiCAD rotates around middle point of the left edge
                     double ld_half_height = (l_dxfMText.Height / 2);
                     double ld_fi = l_dxfMText.Rotation - (Math.PI / 2);
                     double ld_shift_x = Math.Cos(ld_fi) * ld_half_height;
