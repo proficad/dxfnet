@@ -66,7 +66,6 @@ namespace DxfNet
 
         public void Save(string as_path)
         {
-            //XmlDocument l_xmlDoc = new XmlDocument();
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.OmitXmlDeclaration = true;
             settings.Indent = true;
@@ -146,16 +145,7 @@ namespace DxfNet
         }
 
 
-        /*
-        private void WriteElement(XmlWriter a_xmlWriter, DrawObj a_obj)
-        {
-            a_xmlWriter.WriteStartElement("polyline");
-            a_xmlWriter.WriteAttributeString("op-lw", "10");
-            a_xmlWriter.WriteAttributeString("op-lc", "33023");
-            a_xmlWriter.WriteAttributeString("pts", "0,0,200,400,");
-            a_xmlWriter.WriteEndElement();
-        }
-        */
+
 
 
         private void WriteIntroElement(XmlWriter a_xmlWriter)
@@ -163,19 +153,7 @@ namespace DxfNet
             a_xmlWriter.WriteStartElement("document");
             a_xmlWriter.WriteAttributeString("type", "ProfiCAD sxe");
             a_xmlWriter.WriteAttributeString("version", "10.0");
-            
-//99            a_xmlWriter.WriteAttributeString("pgsHor", Parent.m_pagesHor.ToString());
-//99            a_xmlWriter.WriteAttributeString("pgsVer", Parent.m_pagesVer.ToString());
-
-            /*
-            a_xmlWriter.WriteAttributeString("pgsOri", "LANDSCAPE");
-            a_xmlWriter.WriteAttributeString("pgsMrgn", "0, 0, 1, 1");
-            a_xmlWriter.WriteAttributeString("zoom", "100");
-            a_xmlWriter.WriteAttributeString("rastr", "20");
-            */
         }
-
-
 
         //----------------------------
 
