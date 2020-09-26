@@ -18,7 +18,6 @@ namespace Dxf2ProfiCAD
         {
             if(a_dxf_entity.DxfColor != null)
             {
-
                 byte l_b_R = a_dxf_entity.DxfColor.Color.R;
                 byte l_b_G = a_dxf_entity.DxfColor.Color.G;
                 byte l_b_B = a_dxf_entity.DxfColor.Color.B;
@@ -30,13 +29,11 @@ namespace Dxf2ProfiCAD
             {
                 if (a_dxf_entity.Color == EntityColor.ByLayer)
                 {
-
-
-                    //                    int li_rgb = a_dxf_entity.Layer.Color.Rgb;
+                    // this works
                     WW.Drawing.ArgbColor li_rgb = a_dxf_entity.Layer.Color.ToArgbColor(DxfIndexedColorSet.AcadClassicIndexedColors);
 
                     System.Drawing.Color l_color_layer = System.Drawing.Color.FromArgb(li_rgb.Argb);
-                    //Console.WriteLine(l_color_layer.ToString());
+                    
                     if(l_color_layer == System.Drawing.Color.FromArgb(255,255,255))
                     {
                         l_color_layer = System.Drawing.Color.FromArgb(0, 0, 0);
@@ -44,6 +41,19 @@ namespace Dxf2ProfiCAD
                     return l_color_layer;
                 }
 
+                if(a_dxf_entity.Color.ColorType == ColorType.ByColorIndex)
+                {
+                    //does not work
+                    WW.Drawing.ArgbColor li_rgb = a_dxf_entity.Layer.Color.ToArgbColor(DxfIndexedColorSet.AcadClassicIndexedColors);
+                    System.Drawing.Color l_color_layer = System.Drawing.Color.FromArgb(li_rgb.Argb);
+                    
+                    if (l_color_layer == System.Drawing.Color.FromArgb(255, 255, 255))
+                    {
+                        l_color_layer = System.Drawing.Color.FromArgb(0, 0, 0);
+                    }
+                    return l_color_layer;
+                }
+               
 
                 byte l_b_R = a_dxf_entity.Color.R;
                 byte l_b_G = a_dxf_entity.Color.G;

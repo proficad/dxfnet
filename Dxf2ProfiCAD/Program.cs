@@ -350,7 +350,7 @@ namespace Dxf2ProfiCAD
         private static void ConvertOneFile(string as_input_path, OutputFormat a_format)
         {
 
-            string ls_outputPath = as_input_path.Replace(".dxf", ".sxe");
+            string ls_outputPath = Path.ChangeExtension(as_input_path, "sxe");
 
             DxfModel model = null;
             string extension = Path.GetExtension(as_input_path);
