@@ -112,5 +112,15 @@ namespace DxfNet
             m_layers.Add(a_layer);
         }
 
+        public virtual void Save(string ls_outputPath)
+        {
+            
+        }
+
+        public virtual void SetSize(Size a_size)
+        {
+            
+        }
+
     }
 }

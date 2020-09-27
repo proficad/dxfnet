@@ -64,7 +64,7 @@ namespace DxfNet
 
 
 
-        public void Save(string as_path)
+        public override void Save(string as_path)
         {
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.OmitXmlDeclaration = true;
@@ -225,7 +225,7 @@ namespace DxfNet
         }
         */
 
-        public void SetSize(Size a_size)
+        public override void SetSize(Size a_size)
         {
             Size l_paperSize = GetPaperSize();
 

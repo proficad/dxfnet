@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using System.Drawing;
 
 
 namespace Core
@@ -11,9 +12,13 @@ namespace Core
     /// <summary>
     /// Format similar to DXF that is insertable into ProfiCAD 
     /// </summary>
-    class PxfDoc : DrawDoc
+    public class PxfDoc : DrawDoc
     {
-        public void Save(string as_path)
+        public Repo m_repo = new Repo();
+
+
+
+        public override void Save(string as_path)
         {
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.OmitXmlDeclaration = true;
@@ -33,19 +38,14 @@ namespace Core
             //close the Intro element
             l_xmlWriter.WriteEndElement();
 
-
-
             l_xmlWriter.WriteEndDocument();
+
             l_xmlWriter.Close();
         }
 
         internal new void WriteElements(XmlWriter a_xmlWriter)
         {
-            a_xmlWriter.WriteStartElement("pages");
             a_xmlWriter.WriteStartElement("page");
-            a_xmlWriter.WriteAttributeString("name", "1");
-
-
 
             a_xmlWriter.WriteStartElement("layers");
 
@@ -54,7 +54,6 @@ namespace Core
                 l_layer.SaveToXml(a_xmlWriter);
             }
 
-            a_xmlWriter.WriteEndElement();
             a_xmlWriter.WriteEndElement();
             a_xmlWriter.WriteEndElement();
         }
@@ -69,12 +68,24 @@ namespace Core
         private void WriteRepo(XmlWriter a_xmlWriter)
         {
             a_xmlWriter.WriteStartElement("repo");
-            foreach (PpdDoc l_ppdDoc in GetRepo().m_listPpd)
+            foreach (PpdDoc l_ppdDoc in m_repo.m_listPpd)
             {
                 l_ppdDoc.SaveToXml(a_xmlWriter);
             }
             a_xmlWriter.WriteEndElement();
         }
+
+        public Repo GetRepo()
+        {
+            return m_repo;
+        }
+
+
+        public override void SetSize(Size a_size)
+        {
+
+        }
+
 
 
     }

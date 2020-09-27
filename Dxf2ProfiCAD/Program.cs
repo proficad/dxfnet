@@ -103,7 +103,7 @@ namespace Dxf2ProfiCAD
             Converter.SetShift(li_shift_x, li_shift_y, 0);
         }
 
-        private static void ConvertRepo(PCadDoc l_pcadDoc, DxfModel model)
+        private static void ConvertRepo(Repo a_repo, DxfModel model)
         {
             foreach (WW.Cad.Model.Tables.DxfBlock l_block in model.Blocks)
             {
@@ -113,7 +113,6 @@ namespace Dxf2ProfiCAD
                 l_ppdDoc.m_lG = l_block.Name; //yes, we do not have GUID, let us try name instead
 
                 System.Diagnostics.Debug.Assert(l_ppdDoc.m_name.Length > 0);
-
 
 
                 foreach (DxfEntity l_entity in l_block.Entities)
@@ -131,14 +130,9 @@ namespace Dxf2ProfiCAD
                 Point l_basePoint = new Point(l_baseX, l_baseY);
                 l_ppdDoc.RecalcToBeInCenterPoint(l_basePoint);
 
-                //verify it is in the center
-                /*
-                Rectangle l_rect = l_ppdDoc.GetPosition();
-                Point l_center = Helper.GetRectCenterPoint(l_rect);
-                */
 
                 //add it to PCadDoc
-                l_pcadDoc.AddPpdDoc(l_ppdDoc);
+                a_repo.AddPpd(l_ppdDoc);
             }
 
         }
@@ -349,8 +343,8 @@ namespace Dxf2ProfiCAD
 
         private static void ConvertOneFile(string as_input_path, OutputFormat a_format)
         {
-
-            string ls_outputPath = Path.ChangeExtension(as_input_path, "sxe");
+            string ls_extension = a_format == OutputFormat.output_format_sxe ? "sxe" : "pxf";
+            string ls_outputPath = Path.ChangeExtension(as_input_path, ls_extension);
 
             DxfModel model = null;
             string extension = Path.GetExtension(as_input_path);
@@ -376,13 +370,26 @@ namespace Dxf2ProfiCAD
             AdjustScaleAndShift(model, l_size_target);
 
 
-            CollPages l_collPages = new CollPages();
-            PCadDoc l_pcadDoc = new PCadDoc(l_collPages);
+            Repo l_repo = null;
+            DrawDoc l_drawDoc = null;
+
+            if(a_format == OutputFormat.output_format_sxe)
+            {
+                CollPages l_collPages = new CollPages();
+                PCadDoc l_pcadDoc = new PCadDoc(l_collPages);
+                l_repo = l_pcadDoc.GetRepo();
+                l_drawDoc = l_pcadDoc;
+            }
+            else
+            {
+                Core.PxfDoc l_pxfDoc = new Core.PxfDoc();
+                l_repo = l_pxfDoc.GetRepo();
+                l_drawDoc = l_pxfDoc;
+            }
 
 
 
-
-            ConvertRepo(l_pcadDoc, model);
+            ConvertRepo(l_repo, model);
 
             foreach (DxfEntity l_entity in model.Entities)
             {
@@ -404,7 +411,7 @@ namespace Dxf2ProfiCAD
                         */
 
                         System.Diagnostics.Debug.Assert(ls_lastGuid.Length > 0);
-                        PpdDoc l_ppdDoc = l_pcadDoc.FindPpdDocInRepo(ls_lastGuid);
+                        PpdDoc l_ppdDoc = l_repo.FindPpdDocInRepo(ls_lastGuid);
                         if (l_ppdDoc != null)
                         {
                             l_insert.SetPpdDoc(l_ppdDoc);
@@ -415,14 +422,14 @@ namespace Dxf2ProfiCAD
                     }
 
 
-                    l_pcadDoc.Add(l_drawObj, l_entity.Layer.Name);
+                    l_drawDoc.Add(l_drawObj, l_entity.Layer.Name);
                 }
             }
 
-            l_pcadDoc.SetSize(l_size_target);
+            l_drawDoc.SetSize(l_size_target);
 
 
-            l_pcadDoc.Save(ls_outputPath);
+            l_drawDoc.Save(ls_outputPath);
 
             Console.WriteLine("Conversion completed");
         }
