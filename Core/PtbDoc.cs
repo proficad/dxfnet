@@ -8,7 +8,7 @@ namespace DxfNet
     
     public class PtbDoc : DrawDoc
     {
-        public Repo m_repo = new Repo();
+
         public string Path;
     }
 }

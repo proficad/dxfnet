@@ -19,7 +19,7 @@ namespace DxfNet
         public string m_memo;
 
         public Size m_offset;
-        public Repo m_repo = new Repo();
+
 
         public PpdDoc()
         {
@@ -65,17 +65,7 @@ namespace DxfNet
         }
 
 
-        private void WriteRepo(XmlWriter a_xmlWriter)
-        {
-            a_xmlWriter.WriteStartElement("repo");
-            foreach (PpdDoc l_ppdDoc in m_repo.m_listPpd)
-            {
-                l_ppdDoc.SaveToXml(a_xmlWriter);
-            }
-            a_xmlWriter.WriteEndElement();
-        }
-
-
+  
         public void RecalcToBeInCenterPoint(Point a_basePoint)
         {
             DrawObj l_obj = (DrawObj)this.GetEnumerator().Current;

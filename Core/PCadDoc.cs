@@ -124,7 +124,7 @@ namespace DxfNet
             a_xmlWriter.WriteEndElement();
         }
 
-        private void WriteRepo(XmlWriter a_xmlWriter)
+        private new void WriteRepo(XmlWriter a_xmlWriter)
         {
             a_xmlWriter.WriteStartElement("repo");
             foreach (PpdDoc l_ppdDoc in GetRepo().m_listPpd)

@@ -14,10 +14,6 @@ namespace Core
     /// </summary>
     public class PxfDoc : DrawDoc
     {
-        public Repo m_repo = new Repo();
-
-
-
         public override void Save(string as_path)
         {
             XmlWriterSettings settings = new XmlWriterSettings();
@@ -60,16 +56,6 @@ namespace Core
             a_xmlWriter.WriteStartElement("document");
             a_xmlWriter.WriteAttributeString("type", "ProfiCAD pxf");
             a_xmlWriter.WriteAttributeString("version", "10.0");
-        }
-
-        private void WriteRepo(XmlWriter a_xmlWriter)
-        {
-            a_xmlWriter.WriteStartElement("repo");
-            foreach (PpdDoc l_ppdDoc in m_repo.m_listPpd)
-            {
-                l_ppdDoc.SaveToXml(a_xmlWriter);
-            }
-            a_xmlWriter.WriteEndElement();
         }
 
         public Repo GetRepo()

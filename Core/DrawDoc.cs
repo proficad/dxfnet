@@ -24,7 +24,7 @@ namespace DxfNet
 
 
         public List<Layer> m_layers = new List<Layer>();
-
+        public Repo m_repo = new Repo();
 
 
         //used in ProfiCAD->DXF
@@ -122,5 +122,14 @@ namespace DxfNet
             
         }
 
+        protected void WriteRepo(XmlWriter a_xmlWriter)
+        {
+            a_xmlWriter.WriteStartElement("repo");
+            foreach (PpdDoc l_ppdDoc in m_repo.m_listPpd)
+            {
+                l_ppdDoc.SaveToXml(a_xmlWriter);
+            }
+            a_xmlWriter.WriteEndElement();
+        }
     }
 }
