@@ -25,7 +25,6 @@ namespace Core
             settings.Indent = true;
 
             XmlWriter l_xmlWriter = XmlWriter.Create(as_path, settings);
-
             l_xmlWriter.WriteStartDocument();
 
             WriteIntroElement(l_xmlWriter);
@@ -40,13 +39,12 @@ namespace Core
 
             l_xmlWriter.WriteEndDocument();
 
+  
             l_xmlWriter.Close();
         }
 
         internal new void WriteElements(XmlWriter a_xmlWriter)
         {
-            a_xmlWriter.WriteStartElement("page");
-
             a_xmlWriter.WriteStartElement("layers");
 
             foreach (Layer l_layer in m_layers)
@@ -54,7 +52,6 @@ namespace Core
                 l_layer.SaveToXml(a_xmlWriter);
             }
 
-            a_xmlWriter.WriteEndElement();
             a_xmlWriter.WriteEndElement();
         }
 
