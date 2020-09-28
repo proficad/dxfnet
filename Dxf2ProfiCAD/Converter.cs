@@ -220,7 +220,7 @@ namespace Dxf2ProfiCAD
 
         private static DrawObj ConvertDxfLine(DxfLine a_line)
         {
-            Console.WriteLine("line type: " + a_line.LineType.Name);
+            //Console.WriteLine("line type: " + a_line.LineType.Name);
 
             //if(l_line.LineType.Name == DxfLineType.LineTypeNameByLayer)
 
