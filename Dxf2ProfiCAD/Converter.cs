@@ -48,37 +48,36 @@ namespace Dxf2ProfiCAD
             
             switch (a_entity)
             {
-                case DxfInsert _:
-                    return ConvertInsert(a_entity);
-                case DxfMText _:
-                    return ConvertDxfMText(a_entity);
-                case DxfText _:
-                    return ConvertDxfText(a_entity);
-                case DxfArc _:
-                    return ConvertArc(a_entity);
-                case DxfCircle _:
-                    return ConvertCircle(a_entity);
-                case DxfHatch _:
-                    return ConvertDxfHatch(a_entity);
-                case DxfLine _:
-                    return ConvertDxfLine(a_entity);
-                case DxfLwPolyline _:
-                    return ConvertDxfLwPolyline(a_entity);
-                case DxfPolyline2D _:
-                    return ConvertDxfPolyline2D(a_entity);
-                case DxfDimension.Linear _:
-                    return ConvertDxfDimension_Linear(a_entity);
-                case DxfDimension.Aligned _:
-                    return ConvertDxfDimension_Aligned(a_entity);
+                case DxfInsert l_insert:
+                    return ConvertInsert(l_insert);
+                case DxfMText l_dxf_mtext:
+                    return ConvertDxfMText(l_dxf_mtext);
+                case DxfText l_dxf_text:
+                    return ConvertDxfText(l_dxf_text);
+                case DxfArc  l_arc:
+                    return ConvertArc(l_arc);
+                case DxfCircle l_circle:
+                    return ConvertCircle(l_circle);
+                case DxfHatch l_hatch:
+                    return ConvertDxfHatch(l_hatch);
+                case DxfLine l_dxf_line:
+                    return ConvertDxfLine(l_dxf_line);
+                case DxfLwPolyline l_dxf_lw_line:
+                    return ConvertDxfLwPolyline(l_dxf_lw_line);
+                case DxfPolyline2D l_dxf_line_2D:
+                    return ConvertDxfPolyline2D(l_dxf_line_2D);
+                case DxfDimension.Linear l_dim_linear:
+                    return ConvertDxfDimension_Linear(l_dim_linear);
+                case DxfDimension.Aligned l_dim_align:
+                    return ConvertDxfDimension_Aligned(l_dim_align);
                 default:
                     System.Console.WriteLine("did not convert type {0}", a_entity.ToString());
                     return null;
             }
         }
 
-        private static Insert ConvertInsert(DxfEntity a_entity)
+        private static Insert ConvertInsert(DxfInsert a_dxfInsert)
         {
-            DxfInsert l_dxfInsert = a_entity as DxfInsert;
 
             /*
             if (l_dxfInsert.Block.Name == "A24")
@@ -89,13 +88,13 @@ namespace Dxf2ProfiCAD
 
             //turns
             int li_turns = 0;
-            if (l_dxfInsert.Rotation != 0)
+            if (a_dxfInsert.Rotation != 0)
             {
-                li_turns = (int)Math.Round(4d * l_dxfInsert.Rotation / Math.PI);
+                li_turns = (int)Math.Round(4d * a_dxfInsert.Rotation / Math.PI);
                 //Console.WriteLine("l_dxfInsert.Rotation {0}", l_dxfInsert.Rotation);
             }
-            bool lb_flipX = (l_dxfInsert.ScaleFactor.X == -1d);
-            bool lb_flipY = (l_dxfInsert.ScaleFactor.Y == -1d);
+            bool lb_flipX = a_dxfInsert.ScaleFactor.X == -1d;
+            bool lb_flipY = a_dxfInsert.ScaleFactor.Y == -1d;
 
             if (lb_flipX)
             {
@@ -106,13 +105,13 @@ namespace Dxf2ProfiCAD
                 //Console.WriteLine("flip Y");
             }
 
-            string ls_blockName = l_dxfInsert.Block.Name;
+            string ls_blockName = a_dxfInsert.Block.Name;
 
             float fl = (float)1.1; //pouze pro zkompilovani
-            Insert l_insert = new Insert(Shape.soucastka, MyShiftScaleX(l_dxfInsert.InsertionPoint.X), MyShiftScaleY(l_dxfInsert.InsertionPoint.Y), fl, fl);//99
-            l_insert.m_angle = RadiansToAngle(l_dxfInsert.Rotation);
-            l_insert.m_scaleX = (float)l_dxfInsert.ScaleFactor.X;
-            l_insert.m_scaleY = (float)l_dxfInsert.ScaleFactor.Y;
+            Insert l_insert = new Insert(Shape.soucastka, MyShiftScaleX(a_dxfInsert.InsertionPoint.X), MyShiftScaleY(a_dxfInsert.InsertionPoint.Y), fl, fl);//99
+            l_insert.m_angle = RadiansToAngle(a_dxfInsert.Rotation);
+            l_insert.m_scaleX = (float)a_dxfInsert.ScaleFactor.X;
+            l_insert.m_scaleY = (float)a_dxfInsert.ScaleFactor.Y;
 
 
             //instead of GUID it will be just a name of the block
@@ -121,7 +120,7 @@ namespace Dxf2ProfiCAD
             l_insert.m_ver = lb_flipX;
 
 
-            foreach (DxfAttribute l_attr in l_dxfInsert.Attributes)
+            foreach (DxfAttribute l_attr in a_dxfInsert.Attributes)
             {
                 string ls_text = l_attr.Text;
                 string ls_tagString = l_attr.TagString;
@@ -147,10 +146,9 @@ namespace Dxf2ProfiCAD
             return l_insert;
         }
 
-        private static DrawObj ConvertDxfHatch(DxfEntity a_entity)
+        private static DrawObj ConvertDxfHatch(DxfHatch a_hatch)
         {
-            DxfHatch l_hatch = a_entity as DxfHatch;
-            if (l_hatch.Pattern == null)
+            if (a_hatch.Pattern == null)
             {
                 return null;
                 //System.Console.WriteLine("Solid DxfHatch");
@@ -162,10 +160,9 @@ namespace Dxf2ProfiCAD
             return null;
         }
 
-        private static DrawObj ConvertDxfPolyline2D(DxfEntity a_entity)
+        private static DrawObj ConvertDxfPolyline2D(DxfPolyline2D a_dxfLine)
         {
-            DxfPolyline2D l_dxfLine = a_entity as DxfPolyline2D;
-            DrawRect l_circle = TryMakeCircle(l_dxfLine);
+            DrawRect l_circle = TryMakeCircle(a_dxfLine);
             if (l_circle != null)
             {
                 return l_circle;
@@ -173,131 +170,119 @@ namespace Dxf2ProfiCAD
 
             DrawPoly l_drawPoly = new DrawPoly(Shape.polyline);
 
-            foreach (DxfVertex2D l_vertex in l_dxfLine.Vertices)
+            foreach (DxfVertex2D l_vertex in a_dxfLine.Vertices)
             {
                 l_drawPoly.AddPoint(MyShiftScaleX(l_vertex.X), MyShiftScaleY(l_vertex.Y));
             }
 
 
 
-            if (l_dxfLine.Closed)
+            if (a_dxfLine.Closed)
             {
-                DxfVertex2D l_vertex = l_dxfLine.Vertices[0];
+                DxfVertex2D l_vertex = a_dxfLine.Vertices[0];
                 l_drawPoly.AddPoint(MyShiftScaleX(l_vertex.X), MyShiftScaleY(l_vertex.Y));
             }
 
 
             l_drawPoly.RecalcPosition();
-            l_drawPoly.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(l_dxfLine);
-            l_drawPoly.m_objProps.m_lin = Helper.DxfLineType_2_QLin(l_dxfLine.LineType, m_scaleX, l_dxfLine.LineTypeScale);
+            l_drawPoly.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(a_dxfLine);
+            l_drawPoly.m_objProps.m_lin = Helper.DxfLineType_2_QLin(a_dxfLine.LineType, m_scaleX, a_dxfLine.LineTypeScale);
 
             return l_drawPoly;
 
         }
 
-        private static DrawObj ConvertDxfLwPolyline(DxfEntity a_entity)
+        private static DrawObj ConvertDxfLwPolyline(DxfLwPolyline a_lw_polyline)
         {
-            DxfLwPolyline l_lw_polyline = a_entity as DxfLwPolyline;
             DrawPoly l_drawPoly = new DrawPoly(Shape.polyline);
 
-            foreach (DxfLwPolyline.Vertex l_vertex in l_lw_polyline.Vertices)
+            foreach (DxfLwPolyline.Vertex l_vertex in a_lw_polyline.Vertices)
             {
                 l_drawPoly.AddPoint(MyShiftScaleX(l_vertex.X), MyShiftScaleY(l_vertex.Y));
             }
 
 
-            if (l_lw_polyline.Closed)
+            if (a_lw_polyline.Closed)
             {
-                DxfLwPolyline.Vertex l_vertex = l_lw_polyline.Vertices[0];
+                DxfLwPolyline.Vertex l_vertex = a_lw_polyline.Vertices[0];
                 l_drawPoly.AddPoint(MyShiftScaleX(l_vertex.X), MyShiftScaleY(l_vertex.Y));
             }
 
 
             l_drawPoly.RecalcPosition();
 
-            l_drawPoly.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(l_lw_polyline);
-            l_drawPoly.m_objProps.m_lin = Helper.DxfLineType_2_QLin(l_lw_polyline.LineType, m_scaleX, l_lw_polyline.LineTypeScale);
+            l_drawPoly.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(a_lw_polyline);
+            l_drawPoly.m_objProps.m_lin = Helper.DxfLineType_2_QLin(a_lw_polyline.LineType, m_scaleX, a_lw_polyline.LineTypeScale);
 
 
             return l_drawPoly;
         }
 
-        private static DrawObj ConvertDxfLine(DxfEntity a_entity)
+        private static DrawObj ConvertDxfLine(DxfLine a_line)
         {
-            DxfLine l_line = a_entity as DxfLine;
-
-            Console.WriteLine("line type: " + l_line.LineType.Name);
+            Console.WriteLine("line type: " + a_line.LineType.Name);
 
             //if(l_line.LineType.Name == DxfLineType.LineTypeNameByLayer)
 
             DrawPoly l_drawPoly = new DrawPoly(Shape.polyline);
-            l_drawPoly.AddPoint(MyShiftScaleX(l_line.Start.X), MyShiftScaleY(l_line.Start.Y));
-            l_drawPoly.AddPoint(MyShiftScaleX(l_line.End.X), MyShiftScaleY(l_line.End.Y));
+            l_drawPoly.AddPoint(MyShiftScaleX(a_line.Start.X), MyShiftScaleY(a_line.Start.Y));
+            l_drawPoly.AddPoint(MyShiftScaleX(a_line.End.X), MyShiftScaleY(a_line.End.Y));
             l_drawPoly.RecalcPosition();
 
-            l_drawPoly.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(l_line);
+            l_drawPoly.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(a_line);
      
-            l_drawPoly.m_objProps.m_lin = Helper.DxfLineType_2_QLin(l_line.LineType, m_scaleX, l_line.LineTypeScale);
+            l_drawPoly.m_objProps.m_lin = Helper.DxfLineType_2_QLin(a_line.LineType, m_scaleX, a_line.LineTypeScale);
 
             return l_drawPoly;
         }
-        private static DrawObj ConvertDxfDimension_Linear(DxfEntity a_entity)
+
+        private static DrawObj ConvertDxfDimension_Linear(DxfDimension.Linear a_dxf_dim)
         {
-            DxfDimension.Linear l_dxf_dim = a_entity as DxfDimension.Linear;
-            if (l_dxf_dim != null)
-            {
-                QDimLine.DimDirection l_dir = Helper.IsSame(Math.PI / 2, l_dxf_dim.Rotation)
-                    ?
-                    QDimLine.DimDirection.dimdir_ver
-                    :
-                    QDimLine.DimDirection.dimdir_hor
-                    ;
+            QDimLine.DimDirection l_dir = Helper.IsSame(Math.PI / 2, a_dxf_dim.Rotation)
+                ?
+                QDimLine.DimDirection.dimdir_ver
+                :
+                QDimLine.DimDirection.dimdir_hor
+                ;
 
-                QDimLine l_dim = new QDimLine(
-                    Point3D_To_Point(l_dxf_dim.ExtensionLine1StartPoint),
-                    Point3D_To_Point(l_dxf_dim.ExtensionLine2StartPoint),
-                    Point3D_To_Point(l_dxf_dim.DimensionLineLocation),
-                    l_dir
-                );
+            QDimLine l_dim = new QDimLine(
+                Point3D_To_Point(a_dxf_dim.ExtensionLine1StartPoint),
+                Point3D_To_Point(a_dxf_dim.ExtensionLine2StartPoint),
+                Point3D_To_Point(a_dxf_dim.DimensionLineLocation),
+                l_dir
+            );
 
-                l_dim.Label.Text = l_dxf_dim.Text ?? l_dxf_dim.Measurement.ToString();
-                // we might call GetActualMeasurement() but it will probably better to calculate it in ProfiCAD 
+            l_dim.Label.Text = a_dxf_dim.Text ?? a_dxf_dim.Measurement.ToString();
+            // we might call GetActualMeasurement() but it will probably better to calculate it in ProfiCAD 
 
-                l_dim.Label.Center = Point3D_To_Point(l_dxf_dim.TextMiddlePoint);
+            l_dim.Label.Center = Point3D_To_Point(a_dxf_dim.TextMiddlePoint);
 
 //                l_dim.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(l_dxf_dim);
 
-                return l_dim;
-            }
-            return null;
+            return l_dim;
+      
+         
         }
-        private static DrawObj ConvertDxfDimension_Aligned(DxfEntity a_entity)
+        private static DrawObj ConvertDxfDimension_Aligned(DxfDimension.Aligned a_dxf_dim)
         {
-            DxfDimension.Aligned l_dxf_dim = a_entity as DxfDimension.Aligned;
-            if(l_dxf_dim != null)
-            {
-                QDimLine l_dim = new QDimLine(
-                    Point3D_To_Point(l_dxf_dim.ExtensionLine1StartPoint),
-                    Point3D_To_Point(l_dxf_dim.ExtensionLine2StartPoint),
-                    Point3D_To_Point(l_dxf_dim.DimensionLineLocation), 
-                    QDimLine.DimDirection.dimdir_aligned
-                );
+            QDimLine l_dim = new QDimLine(
+                Point3D_To_Point(a_dxf_dim.ExtensionLine1StartPoint),
+                Point3D_To_Point(a_dxf_dim.ExtensionLine2StartPoint),
+                Point3D_To_Point(a_dxf_dim.DimensionLineLocation), 
+                QDimLine.DimDirection.dimdir_aligned
+            );
 
-                l_dim.Label.Text = l_dxf_dim.Text ?? l_dxf_dim.Measurement.ToString();
-                // we might call GetActualMeasurement() but it will probably better to calculate it in ProfiCAD 
+            l_dim.Label.Text = a_dxf_dim.Text ?? a_dxf_dim.Measurement.ToString();
+            // we might call GetActualMeasurement() but it will probably better to calculate it in ProfiCAD 
 
-                return l_dim;
-            }
-            return null;
+            return l_dim;
         }
 
-        private static DrawObj ConvertCircle(DxfEntity a_entity)
+        private static DrawObj ConvertCircle(DxfCircle a_dxfCircle)
         {
-            DxfCircle l_dxfCircle = a_entity as DxfCircle;
-
-            int li_radius = Math.Abs(MyScaleX(l_dxfCircle.Radius));
-            int li_center_x = MyShiftScaleX(l_dxfCircle.Center.X);
-            int li_center_y = MyShiftScaleY(l_dxfCircle.Center.Y);
+            int li_radius = Math.Abs(MyScaleX(a_dxfCircle.Radius));
+            int li_center_x = MyShiftScaleX(a_dxfCircle.Center.X);
+            int li_center_y = MyShiftScaleY(a_dxfCircle.Center.Y);
 
             int li_left = li_center_x - li_radius;
             int li_top = li_center_y - li_radius;
@@ -306,7 +291,7 @@ namespace Dxf2ProfiCAD
             Point l_center = new Point(li_center_x, li_center_y);
             QCircle l_circle = new QCircle(l_center, li_radius);
 
-            l_circle.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(l_dxfCircle);
+            l_circle.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(a_dxfCircle);
 
 
             /*
@@ -317,12 +302,12 @@ namespace Dxf2ProfiCAD
             return l_circle;
         }
 
-        private static DrawObj ConvertArc(DxfEntity a_entity)
+        private static DrawObj ConvertArc(DxfArc a_dxf_arc)
         {
-            DxfArc l_dxfArc = a_entity as DxfArc;
-            int li_radius = Math.Abs(MyScaleX(l_dxfArc.Radius));
-            int li_center_x = MyShiftScaleX(l_dxfArc.Center.X);
-            int li_center_y = MyShiftScaleY(l_dxfArc.Center.Y);
+
+            int li_radius = Math.Abs(MyScaleX(a_dxf_arc.Radius));
+            int li_center_x = MyShiftScaleX(a_dxf_arc.Center.X);
+            int li_center_y = MyShiftScaleY(a_dxf_arc.Center.Y);
 
             int li_left = li_center_x - li_radius;
             int li_top = li_center_y - li_radius;
@@ -332,19 +317,18 @@ namespace Dxf2ProfiCAD
 
             DrawRect l_arc = new DrawRect(Shape.arc, l_boundingRect);
 
-            l_arc.m_arcBegin = Angle2Size(l_dxfArc.StartAngle);
-            l_arc.m_arcEnd = Angle2Size(l_dxfArc.EndAngle);
+            l_arc.m_arcBegin = Angle2Size(a_dxf_arc.StartAngle);
+            l_arc.m_arcEnd = Angle2Size(a_dxf_arc.EndAngle);
 
-            l_arc.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(l_dxfArc);
+            l_arc.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(a_dxf_arc);
 
 
             return l_arc;
         }
 
-        private static FreeText ConvertDxfText(DxfEntity a_entity)
+        private static FreeText ConvertDxfText(DxfText a_dxfMText)
         {
-            DxfText l_dxfMText = a_entity as DxfText;
-            if (l_dxfMText.Text.Trim().Length == 0)
+            if (a_dxfMText.Text.Trim().Length == 0)
             {
                 //System.Console.WriteLine("skipping empty text");
                 return null;
@@ -353,29 +337,29 @@ namespace Dxf2ProfiCAD
 
 
             EFont l_efont = new EFont();
-            l_efont.m_size = (int)(l_efont.m_size * l_dxfMText.Height * 0.06);
+            l_efont.m_size = (int)(l_efont.m_size * a_dxfMText.Height * 0.06);
             l_efont.m_size = MyScaleX(l_efont.m_size);
 
 
             
 
-            double ld_x = l_dxfMText.AlignmentPoint1.X;
-            double ld_y = l_dxfMText.AlignmentPoint1.Y;
-            if(l_dxfMText.HorizontalAlignment == TextHorizontalAlignment.Center)
+            double ld_x = a_dxfMText.AlignmentPoint1.X;
+            double ld_y = a_dxfMText.AlignmentPoint1.Y;
+            if(a_dxfMText.HorizontalAlignment == TextHorizontalAlignment.Center)
             {
-                if (l_dxfMText.AlignmentPoint2.HasValue)
+                if (a_dxfMText.AlignmentPoint2.HasValue)
                 {
-                    ld_x = l_dxfMText.AlignmentPoint2.Value.X;
-                    ld_y = l_dxfMText.AlignmentPoint2.Value.Y;
+                    ld_x = a_dxfMText.AlignmentPoint2.Value.X;
+                    ld_y = a_dxfMText.AlignmentPoint2.Value.Y;
                 }
             }
-            else if(l_dxfMText.HorizontalAlignment == TextHorizontalAlignment.Left)
+            else if(a_dxfMText.HorizontalAlignment == TextHorizontalAlignment.Left)
             {
-                if(l_dxfMText.VerticalAlignment == TextVerticalAlignment.Baseline)
+                if(a_dxfMText.VerticalAlignment == TextVerticalAlignment.Baseline)
                 {
                     //rotate to compensate for the fact the ProfiCAD rotates around middle point of the left edge
-                    double ld_half_height = (l_dxfMText.Height / 2);
-                    double ld_fi = l_dxfMText.Rotation - (Math.PI / 2);
+                    double ld_half_height = (a_dxfMText.Height / 2);
+                    double ld_fi = a_dxfMText.Rotation - (Math.PI / 2);
                     double ld_shift_x = Math.Cos(ld_fi) * ld_half_height;
                     double ld_shift_y = Math.Sin(ld_fi) * ld_half_height;
 
@@ -392,31 +376,30 @@ namespace Dxf2ProfiCAD
             
             Rectangle l_rect = new Rectangle(MyShiftScaleX(ld_x), MyShiftScaleY(ld_y), 0, 0);
 
-            FreeText l_text = new FreeText(l_dxfMText.Text, l_efont, l_rect, 0);
+            FreeText l_text = new FreeText(a_dxfMText.Text, l_efont, l_rect, 0);
 
-            l_text.m_alignment = ConvertAlignment(l_dxfMText);
+            l_text.m_alignment = ConvertAlignment(a_dxfMText);
 
-            l_text.m_efont.m_color = Helper.DxfEntityColor2Color(l_dxfMText);
+            l_text.m_efont.m_color = Helper.DxfEntityColor2Color(a_dxfMText);
 
-            l_text.m_angle = RadiansToAnglePositive(l_dxfMText.Rotation);
+            l_text.m_angle = RadiansToAnglePositive(a_dxfMText.Rotation);
 
             return l_text;
         }
 
-        private static FreeText ConvertDxfMText(DxfEntity a_entity)
+        private static FreeText ConvertDxfMText(DxfMText a_dxfMText)
         {
-            DxfMText l_dxfMText = a_entity as DxfMText;
             EFont l_efont = new EFont();
-            l_efont.m_size = (int)(l_efont.m_size * l_dxfMText.Height * 0.06);
+            l_efont.m_size = (int)(l_efont.m_size * a_dxfMText.Height * 0.06);
             l_efont.m_size = MyScaleX(l_efont.m_size);
 
-            Rectangle l_rect = new Rectangle(MyShiftScaleX(l_dxfMText.InsertionPoint.X), MyShiftScaleY(l_dxfMText.InsertionPoint.Y), 0, 0);
+            Rectangle l_rect = new Rectangle(MyShiftScaleX(a_dxfMText.InsertionPoint.X), MyShiftScaleY(a_dxfMText.InsertionPoint.Y), 0, 0);
 
-            string ls_text = l_dxfMText.SimplifiedText;
+            string ls_text = a_dxfMText.SimplifiedText;
 
             double l_angle = 0;
-            double l_axis_x = l_dxfMText.XAxis.X;
-            double l_axis_y = l_dxfMText.XAxis.Y;
+            double l_axis_x = a_dxfMText.XAxis.X;
+            double l_axis_y = a_dxfMText.XAxis.Y;
 
             if ((l_axis_x == 1) && (l_axis_y == 0))
             {
