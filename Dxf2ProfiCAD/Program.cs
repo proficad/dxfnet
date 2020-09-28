@@ -20,7 +20,7 @@ namespace Dxf2ProfiCAD
 {
     class Program
     {
-        enum OutputFormat { output_format_sxe, output_format_pxf };
+        enum OutputFormat { output_format_sxe, output_format_pxf, output_format_ppd };
 
         static OutputFormat l_output_format;
 
@@ -52,6 +52,10 @@ namespace Dxf2ProfiCAD
             else if (ls_out_format == "pxf")
             {
                 l_output_format = OutputFormat.output_format_pxf;
+            }
+            else if (ls_out_format == "ppd")
+            {
+                l_output_format = OutputFormat.output_format_ppd;
             }
             else
             {
@@ -97,8 +101,10 @@ namespace Dxf2ProfiCAD
             double li_scale = Math.Min(li_scale_x, li_scale_y);
             Converter.SetScale(li_scale);
 
-            int li_shift_x = (int)(-l_bounds3D.Corner1.X);
-            int li_shift_y = (int)(-l_bounds3D.Corner2.Y);
+            int li_shift_x = (int)(-l_bounds3D.Center.X);
+            int li_shift_y = (int)(-l_bounds3D.Center.Y);
+
+
             //            Converter.SetShift(li_shift_x, li_shift_y, a_size_target.Height);
             Converter.SetShift(li_shift_x, li_shift_y, 0);
         }
@@ -337,13 +343,42 @@ namespace Dxf2ProfiCAD
         private static void ShowUsage()
         {
             Console.WriteLine("Syntax:");
-            Console.WriteLine("Dxf2ProfiCAD input(path) output(sxe|pxf)");
+            Console.WriteLine("Dxf2ProfiCAD input(path) output(sxe|pxf|ppd)");
 
         }
 
         private static void ConvertOneFile(string as_input_path, OutputFormat a_format)
         {
-            string ls_extension = a_format == OutputFormat.output_format_sxe ? "sxe" : "pxf";
+            string ls_extension;
+
+            Repo l_repo = null;
+            DrawDoc l_drawDoc = null;
+
+            switch (a_format)
+            {
+                case OutputFormat.output_format_sxe:
+                    ls_extension = "sxe";
+                    CollPages l_collPages = new CollPages();
+                    PCadDoc l_pcadDoc = new PCadDoc(l_collPages);
+                    l_repo = l_pcadDoc.GetRepo();
+                    l_drawDoc = l_pcadDoc;
+                    break;
+                case OutputFormat.output_format_pxf:
+                    ls_extension = "pxf";
+                    Core.PxfDoc l_pxfDoc = new Core.PxfDoc();
+                    l_repo = l_pxfDoc.GetRepo();
+                    l_drawDoc = l_pxfDoc;
+                    break;
+                case OutputFormat.output_format_ppd:
+                    ls_extension = "ppd";
+                    PpdDoc l_ppdDoc = new PpdDoc();
+                    l_repo = l_ppdDoc.GetRepo();
+                    l_drawDoc = l_ppdDoc;
+                    break;
+                default:
+                    return;
+            }
+
             string ls_outputPath = Path.ChangeExtension(as_input_path, ls_extension);
 
             DxfModel model = null;
@@ -358,35 +393,12 @@ namespace Dxf2ProfiCAD
             }
 
 
-            //try to convert using the WireFrameGraphicsFactory
-            //Covert_To_ProfiCAD_Lines(model, @"H:\lines.sxe");
-
-            //            double ld_smallest_font_size = PrintStats(model);
-
-
-
+   
             const int li_size = 2800;
             Size l_size_target = new Size(li_size, li_size);
             AdjustScaleAndShift(model, l_size_target);
 
-
-            Repo l_repo = null;
-            DrawDoc l_drawDoc = null;
-
-            if(a_format == OutputFormat.output_format_sxe)
-            {
-                CollPages l_collPages = new CollPages();
-                PCadDoc l_pcadDoc = new PCadDoc(l_collPages);
-                l_repo = l_pcadDoc.GetRepo();
-                l_drawDoc = l_pcadDoc;
-            }
-            else
-            {
-                Core.PxfDoc l_pxfDoc = new Core.PxfDoc();
-                l_repo = l_pxfDoc.GetRepo();
-                l_drawDoc = l_pxfDoc;
-            }
-
+                                     
 
 
             ConvertRepo(l_repo, model);

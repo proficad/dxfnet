@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Xml;
 
 namespace DxfNet
 {
@@ -20,14 +21,57 @@ namespace DxfNet
         public Size m_offset;
         public Repo m_repo = new Repo();
 
+        public PpdDoc()
+        {
+            m_fG = m_lG = Guid.NewGuid().ToString();
+        }
+
+
+        public override void Save(string as_path)
+        {
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.OmitXmlDeclaration = true;
+            settings.Indent = true;
+
+            XmlWriter l_xmlWriter = XmlWriter.Create(as_path, settings);
+            l_xmlWriter.WriteStartDocument();
+
+            SaveToXml(l_xmlWriter);
+            
+            l_xmlWriter.Close();
+        }
+
+        private void WriteIntroElement(XmlWriter a_xmlWriter)
+        {
+            a_xmlWriter.WriteStartElement("document");
+            a_xmlWriter.WriteAttributeString("type", "ProfiCAD ppd");
+            a_xmlWriter.WriteAttributeString("version", "10.0");
+
+            //a_xmlWriter.WriteAttributeString("name", m_name);
+
+            a_xmlWriter.WriteAttributeString("fG", m_fG);
+            a_xmlWriter.WriteAttributeString("lG", m_lG);
+        }
 
         internal void SaveToXml(System.Xml.XmlWriter a_xmlWriter)
         {
-            a_xmlWriter.WriteStartElement("ppd");//name lG fG
-            a_xmlWriter.WriteAttributeString("name", m_name);
-            a_xmlWriter.WriteAttributeString("fG", m_fG);
-            a_xmlWriter.WriteAttributeString("lG", m_lG);
+            WriteIntroElement(a_xmlWriter);
+
+            WriteRepo(a_xmlWriter);
             WriteElements(a_xmlWriter);
+
+            a_xmlWriter.WriteEndElement();
+
+        }
+
+
+        private void WriteRepo(XmlWriter a_xmlWriter)
+        {
+            a_xmlWriter.WriteStartElement("repo");
+            foreach (PpdDoc l_ppdDoc in m_repo.m_listPpd)
+            {
+                l_ppdDoc.SaveToXml(a_xmlWriter);
+            }
             a_xmlWriter.WriteEndElement();
         }
 
@@ -107,6 +151,11 @@ namespace DxfNet
                 l_rect = Rectangle.Union(l_rect, a_obj.m_position);
             }
             return l_rect;
+        }
+
+        public Repo GetRepo()
+        {
+            return m_repo;
         }
 
         public List<Point> Vyvody
