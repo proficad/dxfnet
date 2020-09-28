@@ -46,54 +46,34 @@ namespace Dxf2ProfiCAD
             //DrawObj l_obj;
             //System.Diagnostics.Debug.WriteLine("converting " + a_entity.ToString());
             
-            if (a_entity is DxfInsert)
+            switch (a_entity)
             {
-                return ConvertInsert(a_entity);
+                case DxfInsert _:
+                    return ConvertInsert(a_entity);
+                case DxfMText _:
+                    return ConvertDxfMText(a_entity);
+                case DxfText _:
+                    return ConvertDxfText(a_entity);
+                case DxfArc _:
+                    return ConvertArc(a_entity);
+                case DxfCircle _:
+                    return ConvertCircle(a_entity);
+                case DxfHatch _:
+                    return ConvertDxfHatch(a_entity);
+                case DxfLine _:
+                    return ConvertDxfLine(a_entity);
+                case DxfLwPolyline _:
+                    return ConvertDxfLwPolyline(a_entity);
+                case DxfPolyline2D _:
+                    return ConvertDxfPolyline2D(a_entity);
+                case DxfDimension.Linear _:
+                    return ConvertDxfDimension_Linear(a_entity);
+                case DxfDimension.Aligned _:
+                    return ConvertDxfDimension_Aligned(a_entity);
+                default:
+                    System.Console.WriteLine("did not convert type {0}", a_entity.ToString());
+                    return null;
             }
-            if (a_entity is DxfMText)
-            {
-                return ConvertDxfMText(a_entity);
-            }
-            if (a_entity is DxfText)
-            {
-                return ConvertDxfText(a_entity);
-            }
-            if (a_entity is DxfArc)
-            {
-                return ConvertArc(a_entity);
-            }
-            if (a_entity is DxfCircle)
-            {
-                return ConvertCircle(a_entity);
-            }
-            if (a_entity is DxfHatch)
-            {
-                return ConvertDxfHatch(a_entity);
-            }
-            if (a_entity is DxfLine)
-            {
-                return ConvertDxfLine(a_entity);
-            }
-            if (a_entity is DxfLwPolyline)
-            {
-               return ConvertDxfLwPolyline(a_entity);
-            }
-            if (a_entity is DxfPolyline2D)
-            {
-                return ConvertDxfPolyline2D(a_entity);
-            }
-            if (a_entity is DxfDimension.Linear)
-            {
-                return ConvertDxfDimension_Linear(a_entity);
-            }
-            if (a_entity is DxfDimension.Aligned)
-            {
-                return ConvertDxfDimension_Aligned(a_entity);
-            }
-
-            System.Console.WriteLine("did not convert type {0}", a_entity.ToString());
-            return null;
-
         }
 
         private static Insert ConvertInsert(DxfEntity a_entity)
