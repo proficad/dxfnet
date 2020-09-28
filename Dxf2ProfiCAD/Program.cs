@@ -187,6 +187,7 @@ namespace Dxf2ProfiCAD
 
 
 
+/*
                 DxfText l_dxfText = l_entity as DxfText;
                 if (l_dxfText != null)
                 {
@@ -201,6 +202,7 @@ namespace Dxf2ProfiCAD
                         ref l_hash_entities, ref l_hash_text_heights,
                         ref ld_smallest_text_height, ref ls_smallest_text_wording);
                 }
+*/
 
 
 
@@ -250,70 +252,7 @@ namespace Dxf2ProfiCAD
             }
         }
 
-        /*
-                private static void Covert_To_ProfiCAD_Lines(DxfModel model, String as_path)
-                {
-                    List<Polyline2D> collectedPolylines = PolygonWireframeGraphicsFactory.ConvertModelToPolylines(model, GraphicsConfig.BlackBackground);
-
-                    double l_min_x = 0, l_max_x = 0, l_min_y = 0, l_max_y = 0;
-
-                    bool lb_first = true;
-                    foreach (Polyline2D x in collectedPolylines)
-                    {
-                        foreach(WW.Math.Point2D l_point in x)
-                        {
-                            if (lb_first)
-                            {
-                                l_min_x = l_max_x = l_point.X;
-                                l_min_y = l_max_y = l_point.Y;
-                                lb_first = false;
-                            }
-                            else
-                            {
-                                l_min_x = System.Math.Min(l_min_x, l_point.X);
-                                l_max_x = System.Math.Max(l_max_x, l_point.X);
-                                l_min_y = System.Math.Min(l_min_y, l_point.Y);
-                                l_max_y = System.Math.Max(l_max_y, l_point.Y);
-                            }
-                        }
-                    }
-
-                    double li_size_x = l_max_x - l_min_x;
-                    double li_size_y = l_max_y - l_min_y;
-
-                    if (li_size_x == 0)
-                    {
-                        li_size_x = 1;
-                    }
-                    if (li_size_y == 0)
-                    {
-                        li_size_y = 1;
-                    }
-
-                    const int li_paper_x = 3000;
-                    const int li_paper_y = 3000;
-
-                    double l_ratio_x = li_paper_x / li_size_x;
-                    double l_ratio_y = li_paper_y / li_size_y;
-
-                    double l_ratio = System.Math.Min(l_ratio_x, l_ratio_y);
-
-                    CollPages l_collPages = new CollPages();
-                    PCadDoc l_pcadDoc = new PCadDoc(l_collPages);
-
-                    foreach (Polyline2D l_polyline in collectedPolylines)
-                    {
-                        DrawObj l_drawObj = Convert(l_polyline, l_ratio, l_min_x, l_min_y);
-                        if (l_drawObj != null)
-                        {
-                            l_pcadDoc.Add(l_drawObj, null);
-                        }
-                    }
-
-                    l_pcadDoc.Save(as_path);
-
-                }
-        */
+     
         static DrawObj Convert(Polyline2D a_line, double a_ratio, double ai_min_x, double ai_min_y)
         {
             DrawPoly l_drawPoly = new DrawPoly(Shape.polyline);
