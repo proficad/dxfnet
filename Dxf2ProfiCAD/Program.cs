@@ -15,6 +15,8 @@ using WW.Cad.Drawing;
 using DxfNet;
 using System.IO;
 using System.Reflection;
+using Core;
+using WW.Cad.Model.Tables;
 
 namespace Dxf2ProfiCAD
 {
@@ -126,6 +128,11 @@ namespace Dxf2ProfiCAD
                     DrawObj l_drawObj = Converter.Convert(l_entity);
                     if (l_drawObj != null)
                     {
+                        if (l_drawObj is Insert l_insert)
+                        {
+                            Add_To_Repo(l_ppdDoc.m_repo, model, l_insert.m_lG);
+                        }
+
                         l_ppdDoc.Add(l_drawObj, l_entity.Layer.Name);
                     }
                 }
@@ -384,6 +391,47 @@ namespace Dxf2ProfiCAD
 
             Console.WriteLine("Conversion completed");
         }
+
+        private static void Add_To_Repo(Repo a_repo, DxfModel a_model, string as_block_name)
+        {
+            DxfBlock l_block = a_model.Blocks[as_block_name];
+            if (l_block != null)
+            {
+                //vyrob PpdDoc
+                PpdDoc l_ppdDoc = new PpdDoc();
+                l_ppdDoc.m_name = l_block.Name;
+                l_ppdDoc.m_lG = l_block.Name; //yes, we do not have GUID, let us try name instead
+
+                System.Diagnostics.Debug.Assert(l_ppdDoc.m_name.Length > 0);
+
+
+                foreach (DxfEntity l_entity in l_block.Entities)
+                {
+                    DrawObj l_drawObj = Converter.Convert(l_entity);
+                    if (l_drawObj != null)
+                    {
+                        if (l_drawObj is Insert l_insert)
+                        {
+                            Add_To_Repo(l_ppdDoc.m_repo, a_model, l_insert.m_lG);
+                        }
+
+                        l_ppdDoc.Add(l_drawObj, l_entity.Layer.Name);
+                    }
+                }
+
+                //calc center point of this ppd
+                int l_baseX = Converter.MyShiftScaleX(l_block.BasePoint.X);
+                int l_baseY = Converter.MyShiftScaleY(l_block.BasePoint.Y);
+                Point l_basePoint = new Point(l_baseX, l_baseY);
+                l_ppdDoc.RecalcToBeInCenterPoint(l_basePoint);
+
+
+                //add it to PCadDoc
+                a_repo.AddPpd(l_ppdDoc);
+            }
+
+        }
+
     }
 
 
