@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Xml;
+using DxfNet;
 
-namespace DxfNet
+namespace Core
 {
     public class PpdDoc : DrawDoc
     {
@@ -34,31 +32,39 @@ namespace DxfNet
             settings.Indent = true;
 
             XmlWriter l_xmlWriter = XmlWriter.Create(as_path, settings);
-            l_xmlWriter.WriteStartDocument();
 
-            SaveToXml(l_xmlWriter);
-            
-            l_xmlWriter.Close();
+            if (l_xmlWriter != null)
+            {
+                l_xmlWriter.WriteStartDocument();
+
+                l_xmlWriter.WriteStartElement("document");
+                l_xmlWriter.WriteAttributeString("type", "ProfiCAD ppd");
+                l_xmlWriter.WriteAttributeString("version", "10.0");
+                
+                //a_xmlWriter.WriteAttributeString("name", m_name);
+                
+                l_xmlWriter.WriteAttributeString("fG", m_fG);
+                l_xmlWriter.WriteAttributeString("lG", m_lG);
+
+                SaveToXmlInner(l_xmlWriter);
+               
+                l_xmlWriter.Close();
+            }
+
         }
 
-        private void WriteIntroElement(XmlWriter a_xmlWriter)
-        {
-            a_xmlWriter.WriteStartElement("document");
-            a_xmlWriter.WriteAttributeString("type", "ProfiCAD ppd");
-            a_xmlWriter.WriteAttributeString("version", "10.0");
-
-            //a_xmlWriter.WriteAttributeString("name", m_name);
-
-            a_xmlWriter.WriteAttributeString("fG", m_fG);
-            a_xmlWriter.WriteAttributeString("lG", m_lG);
-        }
 
         internal void SaveToXml(System.Xml.XmlWriter a_xmlWriter)
         {
-            WriteIntroElement(a_xmlWriter);
+            a_xmlWriter.WriteStartElement("ppd");
+            a_xmlWriter.WriteAttributeString("name", m_name);
+            a_xmlWriter.WriteAttributeString("version", "10.0");
 
-            WriteRepo(a_xmlWriter);
-            WriteElements(a_xmlWriter);
+            a_xmlWriter.WriteAttributeString("fG", m_fG);
+            a_xmlWriter.WriteAttributeString("lG", m_lG);
+
+
+            SaveToXmlInner(a_xmlWriter);
 
             a_xmlWriter.WriteEndElement();
 
@@ -148,6 +154,12 @@ namespace DxfNet
             return m_repo;
         }
 
+        private void SaveToXmlInner(System.Xml.XmlWriter a_xmlWriter)
+        {
+            WriteRepo(a_xmlWriter);
+            WriteElements(a_xmlWriter);
+        }
+
         public List<Point> Vyvody
         {
             get
@@ -155,12 +167,11 @@ namespace DxfNet
                 List<Point> l_vyvody = new List<Point>();
                 foreach(var l_object in this)
                 {
-                    if(l_object is Outlet)
+                    if(l_object is Outlet lOutlet)
                     {
-                        Outlet l_outlet = l_object as Outlet;
                         Point l_point = new Point();
-                        l_point.X = l_outlet.X;
-                        l_point.Y = l_outlet.Y;
+                        l_point.X = lOutlet.X;
+                        l_point.Y = lOutlet.Y;
                         l_vyvody.Add(l_point);
                     }
                 }
