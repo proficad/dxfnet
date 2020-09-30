@@ -1,14 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using DxfNet;
 
-namespace DxfNet
+namespace Core
 {
     
     public class PtbDoc : DrawDoc
     {
 
         public string Path;
+
+        public override void Save(string ls_outputPath)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

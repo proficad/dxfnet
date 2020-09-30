@@ -17,6 +17,7 @@ using DxfNet;
 using System.Globalization;
 using System.IO;
 using System.Collections;
+using Core;
 using Microsoft.Win32;
 using WW.Cad.Drawing;
 

@@ -86,13 +86,7 @@ namespace Dxf2ProfiCAD
             }
             */
 
-            //turns
-            int li_turns = 0;
-            if (a_dxfInsert.Rotation != 0)
-            {
-                li_turns = (int)Math.Round(4d * a_dxfInsert.Rotation / Math.PI);
-                //Console.WriteLine("l_dxfInsert.Rotation {0}", l_dxfInsert.Rotation);
-            }
+    
             bool lb_flipX = a_dxfInsert.ScaleFactor.X == -1d;
             bool lb_flipY = a_dxfInsert.ScaleFactor.Y == -1d;
 
@@ -107,12 +101,14 @@ namespace Dxf2ProfiCAD
 
             string ls_blockName = a_dxfInsert.Block.Name;
 
-            float fl = (float)1.1; //pouze pro zkompilovani
+            const float fl = (float)1.1; //pouze pro zkompilovani
             Insert l_insert = new Insert(Shape.soucastka, MyShiftScaleX(a_dxfInsert.InsertionPoint.X), MyShiftScaleY(a_dxfInsert.InsertionPoint.Y), fl, fl);//99
             l_insert.m_angle = RadiansToAngle(a_dxfInsert.Rotation);
             l_insert.m_scaleX = (float)a_dxfInsert.ScaleFactor.X;
             l_insert.m_scaleY = (float)a_dxfInsert.ScaleFactor.Y;
 
+
+            Console.WriteLine(ls_blockName);
 
             //instead of GUID it will be just a name of the block
             l_insert.m_lG = ls_blockName;
@@ -284,9 +280,6 @@ namespace Dxf2ProfiCAD
             int li_center_x = MyShiftScaleX(a_dxfCircle.Center.X);
             int li_center_y = MyShiftScaleY(a_dxfCircle.Center.Y);
 
-            int li_left = li_center_x - li_radius;
-            int li_top = li_center_y - li_radius;
-            int li_width = 2 * li_radius;
 
             Point l_center = new Point(li_center_x, li_center_y);
             QCircle l_circle = new QCircle(l_center, li_radius);
@@ -538,7 +531,7 @@ namespace Dxf2ProfiCAD
         }
 
 
-        internal static System.Drawing.Point Point3D_To_Point(WW.Math.Point3D a_point)
+        private static System.Drawing.Point Point3D_To_Point(WW.Math.Point3D a_point)
         {
             int li_x = (int)Math.Round(a_point.X);
             int li_y = (int)Math.Round(a_point.Y);

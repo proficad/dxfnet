@@ -5,10 +5,11 @@ using System.Text;
 using System.Drawing;
 using System.Xml;
 using System.Collections;
+using Core;
 
 namespace DxfNet
 {
-    public class DrawDoc : IEnumerable
+    public abstract class DrawDoc : IEnumerable
     {
 
         public IEnumerator GetEnumerator()
@@ -23,8 +24,8 @@ namespace DxfNet
         }
 
 
-        public List<Layer> m_layers = new List<Layer>();
-        public Repo m_repo = new Repo();
+        public readonly List<Layer> m_layers = new List<Layer>();
+        public readonly Repo m_repo = new Repo();
 
 
         //used in ProfiCAD->DXF
@@ -32,10 +33,7 @@ namespace DxfNet
         {
             a_drawObj.m_layer = a_layer;
             Layer l_layer = FindLayer(a_layer.Name);
-            if(l_layer != null)
-            {
-                l_layer.Add(a_drawObj);
-            }
+            l_layer?.Add(a_drawObj);
         }
 
         //used in DXF->ProfiCAD
@@ -112,10 +110,8 @@ namespace DxfNet
             m_layers.Add(a_layer);
         }
 
-        public virtual void Save(string ls_outputPath)
-        {
-            
-        }
+        public abstract void Save(string ls_outputPath);
+     
 
         public virtual void SetSize(Size a_size)
         {
