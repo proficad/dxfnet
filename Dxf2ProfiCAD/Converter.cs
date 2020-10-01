@@ -18,9 +18,9 @@ namespace Dxf2ProfiCAD
         static double m_scaleX = 1;
         static double m_scaleY = -m_scaleX;
 
-        static int m_shift_x = 0;
-        static int m_shift_y = 0;
-        static int m_shift_target_y = 0;
+        static int m_shift_x;
+        static int m_shift_y;
+        static int m_shift_target_y;
 
         public static int MyShiftScaleX(double ai_what)
         {
@@ -35,10 +35,7 @@ namespace Dxf2ProfiCAD
         {
             return (int)Math.Round(ai_what * m_scaleX);
         }
-        public static int MyScaleY(double ai_what)
-        {
-            return (int)Math.Round(ai_what * m_scaleY);
-        }
+
 
 
         public static DrawObj Convert(DxfEntity a_entity)
@@ -248,7 +245,7 @@ namespace Dxf2ProfiCAD
                 l_dir
             );
 
-            l_dim.Label.Text = a_dxf_dim.Text ?? a_dxf_dim.Measurement.ToString();
+            l_dim.Label.Text = a_dxf_dim.Text ?? a_dxf_dim.Measurement.ToString(CultureInfo.InvariantCulture);
             // we might call GetActualMeasurement() but it will probably better to calculate it in ProfiCAD 
 
             l_dim.Label.Center = Point3D_To_Point(a_dxf_dim.TextMiddlePoint);
@@ -268,7 +265,7 @@ namespace Dxf2ProfiCAD
                 QDimLine.DimDirection.dimdir_aligned
             );
 
-            l_dim.Label.Text = a_dxf_dim.Text ?? a_dxf_dim.Measurement.ToString();
+            l_dim.Label.Text = a_dxf_dim.Text ?? a_dxf_dim.Measurement.ToString(CultureInfo.InvariantCulture);
             // we might call GetActualMeasurement() but it will probably better to calculate it in ProfiCAD 
 
             return l_dim;
@@ -390,7 +387,7 @@ namespace Dxf2ProfiCAD
 
             string ls_text = a_dxfMText.SimplifiedText;
 
-            double l_angle = 0;
+            double l_angle;
             double l_axis_x = a_dxfMText.XAxis.X;
             double l_axis_y = a_dxfMText.XAxis.Y;
 

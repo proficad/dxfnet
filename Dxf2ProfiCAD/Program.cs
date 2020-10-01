@@ -80,7 +80,6 @@ namespace Dxf2ProfiCAD
             else
             {
                 ShowUsage();
-                return;
             }
 
 
@@ -174,8 +173,8 @@ namespace Dxf2ProfiCAD
         {
             string ls_extension;
 
-            Repo l_repo = null;
-            DrawDoc l_drawDoc = null;
+            Repo l_repo;
+            DrawDoc l_drawDoc;
 
             switch (a_format)
             {
@@ -204,7 +203,7 @@ namespace Dxf2ProfiCAD
 
             string ls_outputPath = Path.ChangeExtension(as_input_path, ls_extension);
 
-            DxfModel model = null;
+            DxfModel model;
             string extension = Path.GetExtension(as_input_path);
             if (string.Compare(extension, ".dwg", true) == 0)
             {

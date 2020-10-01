@@ -73,7 +73,7 @@ namespace Dxf2ProfiCAD
         {
             QLin l_lin = new QLin();
 
-            if (0 == string.Compare(a_dxf_line_type.Name, DxfLineType.LineTypeNameByLayer, true))
+            if (0 == String.Compare(a_dxf_line_type.Name, DxfLineType.LineTypeNameByLayer, StringComparison.OrdinalIgnoreCase))
             {
                 return l_lin;
             }
