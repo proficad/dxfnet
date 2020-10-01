@@ -22,12 +22,12 @@ namespace Dxf2ProfiCAD
 {
     class Program
     {
-        enum OutputFormat { output_format_sxe, output_format_pxf, output_format_ppd };
+        private enum OutputFormat { output_format_sxe, output_format_pxf, output_format_ppd };
 
         static OutputFormat l_output_format;
 
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             ShowIntro();
             if (args.Length < 2)
@@ -155,134 +155,11 @@ namespace Dxf2ProfiCAD
             System.Console.WriteLine("------------------------------------");
         }
 
-        private static double PrintStats(DxfModel model)
-        {
-
-            System.Console.WriteLine("Layouts");
-            foreach (var v in model.Layouts)
-            {
-                System.Console.WriteLine("{0}, Denominator={1}, Numerator={2}", v.Name, v.CustomPrintScaleDenominator, v.CustomPrintScaleNumerator);
-
-            }
-            System.Console.WriteLine("-------");
-
-
-            System.Console.WriteLine("Views");
-            foreach (var v in model.Views)
-            {
-                System.Console.WriteLine("{0}", v.Name);
-
-            }
-            System.Console.WriteLine("-------");
-
-
-            System.Collections.Hashtable l_hash_entities = new Hashtable(500);
-            System.Collections.Hashtable l_hash_text_heights = new Hashtable(500);
-
-
-            double ld_smallest_text_height = -1;
-            string ls_smallest_text_wording = "";
-
-            foreach (DxfEntity l_entity in model.Entities)
-            {
-                int li_count = 0;
-                if (l_hash_entities.Contains(l_entity.GetType()))
-                {
-                    li_count = (int)l_hash_entities[l_entity.GetType()];
-                }
-                l_hash_entities[l_entity.GetType()] = li_count + 1;
-
-
-
-/*
-                DxfText l_dxfText = l_entity as DxfText;
-                if (l_dxfText != null)
-                {
-                    CalculateTextSize(l_dxfText.Height, l_dxfText.Text,
-                        ref l_hash_entities, ref l_hash_text_heights,
-                        ref ld_smallest_text_height, ref ls_smallest_text_wording);
-                }
-                DxfMText l_dxfMText = l_entity as DxfMText;
-                if (l_dxfMText != null)
-                {
-                    CalculateTextSize(l_dxfMText.Height, l_dxfMText.Text,
-                        ref l_hash_entities, ref l_hash_text_heights,
-                        ref ld_smallest_text_height, ref ls_smallest_text_wording);
-                }
-*/
-
-
-
-            }
-            foreach (object l_key in l_hash_entities.Keys)
-            {
-                System.Console.WriteLine("{0} : {1}", l_key.ToString(), l_hash_entities[l_key].ToString());
-            }
-            PrintSep();
-            foreach (object l_key in l_hash_text_heights.Keys)
-            {
-                System.Console.WriteLine("{0} : {1}", l_key.ToString(), l_hash_text_heights[l_key].ToString());
-            }
-            PrintSep();
-            Console.WriteLine("smallest size: {0} for text \"{1}\"", ld_smallest_text_height, ls_smallest_text_wording);
-            PrintSep();
-
-
-            return ld_smallest_text_height;
-        }
-
-        private static void CalculateTextSize(double ai_height, string as_text,
-            ref System.Collections.Hashtable l_hash_entities,
-            ref System.Collections.Hashtable l_hash_text_heights,
-            ref double ld_smallest_text_height, ref string ls_smallest_text_wording)
-        {
-            int li_count_height = 0;
-
-            if (l_hash_text_heights.Contains(ai_height))
-            {
-                li_count_height = (int)l_hash_text_heights[ai_height];
-            }
-            l_hash_text_heights[ai_height] = li_count_height + 1;
-
-            if (ld_smallest_text_height == -1)
-            {
-                ld_smallest_text_height = ai_height;
-                ls_smallest_text_wording = as_text;
-            }
-            else
-            {
-                if (ld_smallest_text_height > ai_height)
-                {
-                    ld_smallest_text_height = ai_height;
-                    ls_smallest_text_wording = as_text;
-                }
-            }
-        }
-
-     
-        static DrawObj Convert(Polyline2D a_line, double a_ratio, double ai_min_x, double ai_min_y)
-        {
-            DrawPoly l_drawPoly = new DrawPoly(Shape.polyline);
-            foreach (WW.Math.Point2D l_point in a_line)
-            {
-                int li_x = (int)((l_point.X - ai_min_x) * a_ratio);
-                int li_y = (int)((l_point.Y - ai_min_y) * a_ratio);
-
-                l_drawPoly.AddPoint(li_x, li_y);
-            }
-
-            if (l_drawPoly.m_points.Count < 2)
-            {
-                return null;
-            }
-
-            return l_drawPoly;
-        }
-
+ 
         private static void ShowIntro()
         {
             AssemblyName l_an = Assembly.GetExecutingAssembly().GetName(false);
-            string ls_echo = string.Format("Dxf2ProfiCAD version {0}", l_an.Version.ToString());
+            string ls_echo = $"Dxf2ProfiCAD version {l_an.Version.ToString()}";
             Console.WriteLine(ls_echo);
         }
 
@@ -356,9 +233,8 @@ namespace Dxf2ProfiCAD
                 if (l_drawObj != null)
                 {
                     // if it is an insert move it by the offset of its PPD
-                    if (l_drawObj is Insert)
+                    if (l_drawObj is Insert l_insert)
                     {
-                        Insert l_insert = l_drawObj as Insert;
                         string ls_lastGuid = l_insert.m_lG;
 
                         /*
