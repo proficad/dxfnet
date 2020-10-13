@@ -15,6 +15,7 @@ using WW.Cad.Drawing;
 using DxfNet;
 using System.IO;
 using System.Reflection;
+using System.Xml;
 using Core;
 using WW.Cad.Model.Tables;
 
@@ -26,27 +27,41 @@ namespace Dxf2ProfiCAD
 
         static OutputFormat l_output_format;
 
+        private static string m_path_log;
 
         private static void Main(string[] args)
         {
             ShowIntro();
-            if (args.Length < 2)
+            if (args.Length < 3)
             {
-                Console.WriteLine("input parameter missing");
+                Report_Error_And_Quit("input parameter missing");
                 ShowUsage();
                 return;
             }
-            if (args.Length > 2)
+            if (args.Length > 4)
             {
-                Console.WriteLine("too many parameters");
+                Report_Error_And_Quit("too many parameters");
+                ShowUsage();
+                return;
+            }
+
+            if (args.Length > 3)
+            {
+                m_path_log = args[3];
+            }
+
+            string ls_in  = args[0];
+            string ls_out = args[1];
+
+            if (!Directory.Exists(ls_out))
+            {
+                Report_Error_And_Quit("output path does not exist");
                 ShowUsage();
                 return;
             }
 
 
-            string ls_in = args[0];
-
-            string ls_out_format = args[1];
+            string ls_out_format = args[2];
             if (ls_out_format == "sxe")
             {
                 l_output_format = OutputFormat.output_format_sxe;
@@ -65,30 +80,96 @@ namespace Dxf2ProfiCAD
                 return;
             }
 
-            if (System.IO.File.Exists(ls_in))
+            try
             {
-                ConvertOneFile(ls_in, l_output_format);
-            }
-            else if (System.IO.Directory.Exists(ls_in))
-            {
-                string[] ls_filenames = Directory.GetFiles(ls_in, "*.dxf", SearchOption.AllDirectories);
-                foreach (string ls_path in ls_filenames)
+                if (File.Exists(ls_in))
                 {
-                    ConvertOneFile(ls_path, l_output_format);
+                    ConvertOneFile(ls_in, ls_out, l_output_format);
+                }
+                else if (Directory.Exists(ls_in))
+                {
+                    string[] ls_filenames = Directory.GetFiles(ls_in, "*.dxf", SearchOption.AllDirectories);
+                    foreach (string ls_path in ls_filenames)
+                    {
+                        string ls_out_path = Calculate_Output_Path(ls_in, ls_path, ls_out);
+
+                        System.IO.Directory.CreateDirectory(ls_out_path);
+
+                        ConvertOneFile(ls_path, ls_out_path, l_output_format);
+                    }
+                }
+                else
+                {
+                    ShowUsage();
                 }
             }
-            else
+            catch (Exception ex)
             {
-                ShowUsage();
+                string ls_error = ex.Message;
+                ls_error += ex.InnerException;
+                ls_error += ex.StackTrace;
+
+                if (!string.IsNullOrEmpty(m_path_log))
+                {
+                    WriteToLogFile(m_path_log, ls_error);
+                }
+                else
+                {
+                    Console.Write(ls_error);
+                }
+                return;
             }
 
-
+            if (!string.IsNullOrEmpty(m_path_log))
+            {
+                WriteToLogFile(m_path_log, "ok");
+            }
 
         }
 
+        private static string Calculate_Output_Path(string as_in_folder, string as_in_file, string as_out_folder)
+        {
+            string ls_folder_of_actual_file = Path.GetDirectoryName(as_in_file);
+
+            int li_len_in = 1 + as_in_folder.Length;
+
+            string ls_relative_path_out = ls_folder_of_actual_file.Substring(li_len_in);
+
+            return Path.Combine(as_out_folder, ls_relative_path_out);
+
+        }
+
+        private static void Report_Error_And_Quit(string as_message)
+        {
+            if (!string.IsNullOrEmpty(m_path_log))
+            {
+                WriteToLogFile(m_path_log, as_message);
+            }
+
+            Console.WriteLine(as_message);
+        }
 
 
+        private static void WriteToLogFile(string as_path, string as_msg)
+        {
+            FileStream l_log_file = File.Create(as_path);
+            StreamWriter l_writer = new StreamWriter(l_log_file);
+            //l_writer.NewLine = "\n";
+            l_writer.Write(as_msg);
+            l_writer.Close();
+        }
 
+        private static void WriteToLogFileXml(string as_path, string as_msg)
+        {
+            XmlWriterSettings l_settings = new XmlWriterSettings();
+            using (XmlWriter l_writer = XmlWriter.Create(as_path, l_settings))
+            {
+                l_writer.WriteStartElement("msg");
+                l_writer.WriteElementString("status", as_msg);
+           
+                l_writer.WriteEndElement();
+            }
+        }
 
 
         private static void AdjustScaleAndShift(DxfModel a_model, Size a_size_target)
@@ -99,6 +180,12 @@ namespace Dxf2ProfiCAD
 
             double li_scale_x = a_size_target.Width / l_bounds3D.Delta.X;
             double li_scale_y = a_size_target.Height / l_bounds3D.Delta.Y;
+
+            if ((li_scale_x == 0) || (li_scale_y == 0))
+            {
+                throw new Exception("problem with model bounds");
+            }
+
             double li_scale = Math.Min(li_scale_x, li_scale_y);
             Converter.SetScale(li_scale);
 
@@ -158,18 +245,19 @@ namespace Dxf2ProfiCAD
         private static void ShowIntro()
         {
             AssemblyName l_an = Assembly.GetExecutingAssembly().GetName(false);
-            string ls_echo = $"Dxf2ProfiCAD version {l_an.Version.ToString()}";
+            string ls_echo = $"ProfiCAD\nA2P version {l_an.Version.ToString()}";
             Console.WriteLine(ls_echo);
         }
+
 
         private static void ShowUsage()
         {
             Console.WriteLine("Syntax:");
-            Console.WriteLine("Dxf2ProfiCAD input(path) output(sxe|pxf|ppd)");
-
+            Console.WriteLine("A2P input_path output_path format(sxe|pxf|ppd) [log_path]");
         }
 
-        private static void ConvertOneFile(string as_input_path, OutputFormat a_format)
+
+        private static void ConvertOneFile(string as_input_path, string as_output_path, OutputFormat a_format)
         {
             string ls_extension;
 
@@ -201,7 +289,6 @@ namespace Dxf2ProfiCAD
                     return;
             }
 
-            string ls_outputPath = Path.ChangeExtension(as_input_path, ls_extension);
 
             DxfModel model;
             string extension = Path.GetExtension(as_input_path);
@@ -261,14 +348,23 @@ namespace Dxf2ProfiCAD
 
             l_drawDoc.SetSize(l_size_target);
 
+            string ls_file_name = Path.GetFileNameWithoutExtension(as_input_path);
+            string ls_output_path = Path.Combine(as_output_path, ls_file_name) + "." + ls_extension;
 
-            l_drawDoc.Save(ls_outputPath);
+
+            l_drawDoc.Save(ls_output_path);
 
             Console.WriteLine("Conversion completed");
         }
 
         private static void Add_To_Repo(Repo a_repo, DxfModel a_model, string as_block_name)
         {
+            if (!a_model.Blocks.Contains(as_block_name))
+            {
+                return;
+            }
+
+
             DxfBlock l_block = a_model.Blocks[as_block_name];
             if (l_block != null)
             {

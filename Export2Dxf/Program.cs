@@ -86,7 +86,6 @@ namespace Export2Dxf
                 WriteToLogFileXml(ls_log, "ok", l_coll);
             }
 
-            Console.WriteLine("Conversion completed");
 
         }
 

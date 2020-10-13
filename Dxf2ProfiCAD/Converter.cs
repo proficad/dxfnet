@@ -4,12 +4,14 @@ using System.Linq;
 using System.Drawing;
 
 
-
+using WW.Math;
 using WW.Cad.Model.Entities;
+using WW.Cad.Drawing;
 
 using DxfNet;
 using WW.Cad.Model.Tables;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 
 namespace Dxf2ProfiCAD
 {
@@ -55,6 +57,8 @@ namespace Dxf2ProfiCAD
                     return ConvertArc(l_arc);
                 case DxfCircle l_circle:
                     return ConvertCircle(l_circle);
+                case DxfEllipse l_ellipse:
+                    return ConvertEllipse(l_ellipse);
                 case DxfHatch l_hatch:
                     return ConvertDxfHatch(l_hatch);
                 case DxfLine l_dxf_line:
@@ -63,6 +67,8 @@ namespace Dxf2ProfiCAD
                     return ConvertDxfLwPolyline(l_dxf_lw_line);
                 case DxfPolyline2D l_dxf_line_2D:
                     return ConvertDxfPolyline2D(l_dxf_line_2D);
+//                case DxfSpline l_dxf_spline:
+//                    return ConvertDxfSpline(l_dxf_spline);
                 case DxfDimension.Linear l_dim_linear:
                     return ConvertDxfDimension_Linear(l_dim_linear);
                 case DxfDimension.Aligned l_dim_align:
@@ -73,8 +79,59 @@ namespace Dxf2ProfiCAD
             }
         }
 
+
+        private static DrawObj ConvertEllipse(DxfEllipse a_lEllipse)
+        {
+            return null;
+        }
+
+
+        private static DrawObj ConvertDxfSpline(DxfSpline a_lDxfSpline)
+        {
+            var iii = new GraphicsConfig();
+            iii.NoOfSplineLineSegments = 10;
+
+
+            CoordinatesCollector coordinatesCollector = new CoordinatesCollector();
+            DrawContext.Wireframe drawContext =
+                new DrawContext.Wireframe.ModelSpace(
+                    a_lDxfSpline.Model,
+                    iii,
+                    Matrix4D.Identity
+                );
+
+            a_lDxfSpline.Draw(drawContext, coordinatesCollector);
+
+
+            int li_points_count = CoordinatesCollector.m_list.Count;
+
+            DrawPoly l_drawPoly = new DrawPoly(Shape.polyline);
+            foreach (Point3D l_point in CoordinatesCollector.m_list)
+            {
+//                Console.WriteLine("   {0}", l_point.ToString());
+                l_drawPoly.AddPoint(
+                    MyShiftScaleX(l_point.X),
+                    MyShiftScaleY(l_point.Y)
+                );
+            }
+
+            l_drawPoly.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(a_lDxfSpline);
+            l_drawPoly.m_objProps.m_lin = Helper.DxfLineType_2_QLin(a_lDxfSpline.LineType, m_scaleX, a_lDxfSpline.LineTypeScale);
+
+
+            return l_drawPoly;
+        }
+
+
         private static Insert ConvertInsert(DxfInsert a_dxfInsert)
         {
+            string ls_blockName = a_dxfInsert.Block.Name;
+
+            if (!a_dxfInsert.Model.Blocks.Contains(ls_blockName))
+            {
+                //this insert does not have a block, we cannot use it
+                return null;
+            }
 
             /*
             if (l_dxfInsert.Block.Name == "A24")
@@ -96,7 +153,6 @@ namespace Dxf2ProfiCAD
                 //Console.WriteLine("flip Y");
             }
 
-            string ls_blockName = a_dxfInsert.Block.Name;
 
             const float fl = (float)1.1; //pouze pro zkompilovani
             Insert l_insert = new Insert(Shape.soucastka, MyShiftScaleX(a_dxfInsert.InsertionPoint.X), MyShiftScaleY(a_dxfInsert.InsertionPoint.Y), fl, fl);//99
@@ -105,7 +161,7 @@ namespace Dxf2ProfiCAD
             l_insert.m_scaleY = (float)a_dxfInsert.ScaleFactor.Y;
 
 
-            Console.WriteLine(ls_blockName);
+            //Console.WriteLine(ls_blockName);
 
             //instead of GUID it will be just a name of the block
             l_insert.m_lG = ls_blockName;
@@ -139,6 +195,7 @@ namespace Dxf2ProfiCAD
             return l_insert;
         }
 
+
         private static DrawObj ConvertDxfHatch(DxfHatch a_hatch)
         {
             if (a_hatch.Pattern == null)
@@ -152,6 +209,7 @@ namespace Dxf2ProfiCAD
             }
             return null;
         }
+
 
         private static DrawObj ConvertDxfPolyline2D(DxfPolyline2D a_dxfLine)
         {
