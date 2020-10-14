@@ -59,6 +59,8 @@ namespace Dxf2ProfiCAD
                     return ConvertCircle(l_circle);
                 case DxfEllipse l_ellipse:
                     return ConvertEllipse(l_ellipse);
+                case DxfSolid l_solid:
+                    return ConvertDxfSolid(l_solid);
                 case DxfHatch l_hatch:
                     return ConvertDxfHatch(l_hatch);
                 case DxfLine l_dxf_line:
@@ -77,6 +79,44 @@ namespace Dxf2ProfiCAD
                     System.Console.WriteLine("did not convert type {0}", a_entity.ToString());
                     return null;
             }
+        }
+
+        private static DrawObj ConvertDxfSolid(DxfSolid a_solid)
+        {
+            if (a_solid.Points.Count != 4)
+            {
+                return null;
+            }
+
+            DrawPoly l_drawPoly = new DrawPoly(Shape.poly);
+
+            l_drawPoly.AddPoint(MyShiftScaleX(a_solid.Points[0].X), MyShiftScaleY(a_solid.Points[0].Y));
+            l_drawPoly.AddPoint(MyShiftScaleX(a_solid.Points[1].X), MyShiftScaleY(a_solid.Points[1].Y));
+
+            l_drawPoly.AddPoint(MyShiftScaleX(a_solid.Points[3].X), MyShiftScaleY(a_solid.Points[3].Y));
+
+            //yes, it is correct, point 3 comes before point 2, because of autocad rules
+            if (a_solid.Points[2] != a_solid.Points[3])
+            {
+                l_drawPoly.AddPoint(MyShiftScaleX(a_solid.Points[2].X), MyShiftScaleY(a_solid.Points[2].Y));
+            }
+
+            l_drawPoly.RecalcPosition();
+
+            //no border
+            //l_drawPoly.m_objProps.m_bPen = false;
+            l_drawPoly.m_objProps.m_logpen.m_width = 0;
+
+
+            l_drawPoly.m_objProps.m_bBrush = true;
+            l_drawPoly.m_objProps.m_logbrush.m_color = Helper.DxfEntityColor2Color(a_solid);
+
+            //workaround for now: ProfiCAD cannot draw polygon without border,
+            //so let us make the line same color as the filling so it will be invisible
+            l_drawPoly.m_objProps.m_logpen.m_color = l_drawPoly.m_objProps.m_logbrush.m_color;
+
+            return l_drawPoly;
+
         }
 
 
@@ -125,6 +165,15 @@ namespace Dxf2ProfiCAD
 
         private static Insert ConvertInsert(DxfInsert a_dxfInsert)
         {
+            if (a_dxfInsert == null)
+            {
+                return null;
+            }
+            if (a_dxfInsert.Block == null)
+            {
+                return null;
+            }
+
             string ls_blockName = a_dxfInsert.Block.Name;
 
             if (!a_dxfInsert.Model.Blocks.Contains(ls_blockName))
@@ -387,6 +436,10 @@ namespace Dxf2ProfiCAD
             EFont l_efont = new EFont();
             l_efont.m_size = (int)(l_efont.m_size * a_dxfMText.Height * 0.06);
             l_efont.m_size = MyScaleX(l_efont.m_size);
+            if (l_efont.m_size == 0)
+            {
+                l_efont.m_size = 100;
+            }
 
 
             

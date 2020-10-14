@@ -201,6 +201,11 @@ namespace Dxf2ProfiCAD
         {
             foreach (WW.Cad.Model.Tables.DxfBlock l_block in model.Blocks)
             {
+                if (string.IsNullOrEmpty(l_block.Name))
+                {
+                    continue;
+                }
+
                 //vyrob PpdDoc
                 PpdDoc l_ppdDoc = new PpdDoc();
                 l_ppdDoc.m_name = l_block.Name;
