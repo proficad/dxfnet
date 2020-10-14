@@ -53,7 +53,16 @@ namespace DxfNet
 
         public void SaveToXml(System.Xml.XmlWriter a_xmlWriter)
         {
-            SaveLineToXml(a_xmlWriter);
+            if (m_bPen)
+            {
+                SaveLineToXml(a_xmlWriter);
+            }
+
+            if (m_bBrush)
+            {
+                a_xmlWriter.WriteAttributeString("op-fd", "1");
+                a_xmlWriter.WriteAttributeString("op-fc", Helper.RGB_2_Int(m_logbrush.m_color).ToString());
+            }
         }
 
         public void SaveLineToXml(System.Xml.XmlWriter a_xmlWriter)
