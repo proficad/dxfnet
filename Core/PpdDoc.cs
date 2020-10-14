@@ -24,9 +24,32 @@ namespace Core
             m_fG = m_lG = Guid.NewGuid().ToString();
         }
 
+        public void Purge()
+        {
+            List<String> l_list_lg = new List<string>();
+
+            foreach (DrawObj l_obj in this)
+            {
+                if (l_obj is Insert l_insert)
+                {
+                    if (!string.IsNullOrEmpty(l_insert.m_lG))
+                    {
+                        l_list_lg.Add(l_insert.m_lG);
+                    }
+                }
+            }
+
+
+            //delete all items from repo that are not in l_list_lg
+            this.m_repo.m_listPpd.RemoveAll(x => !l_list_lg.Contains(x.m_lG));
+        }
+
 
         public override void Save(string as_path)
         {
+            Purge();
+
+
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.OmitXmlDeclaration = true;
             settings.Indent = true;
