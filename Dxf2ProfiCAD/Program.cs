@@ -213,7 +213,9 @@ namespace Dxf2ProfiCAD
 
                 System.Diagnostics.Debug.Assert(l_ppdDoc.m_name.Length > 0);
 
-
+                Converter.m_shifts_x.Push(1);
+                Converter.m_shifts_y.Push(1);
+                
                 foreach (DxfEntity l_entity in l_block.Entities)
                 {
                     DrawObj l_drawObj = Converter.Convert(l_entity);
@@ -228,11 +230,15 @@ namespace Dxf2ProfiCAD
                     }
                 }
 
+
                 //calc center point of this ppd
                 int l_baseX = Converter.MyShiftScaleX(l_block.BasePoint.X);
                 int l_baseY = Converter.MyShiftScaleY(l_block.BasePoint.Y);
                 Point l_basePoint = new Point(l_baseX, l_baseY);
                 l_ppdDoc.RecalcToBeInCenterPoint(l_basePoint);
+
+                Converter.m_shifts_x.Pop();
+                Converter.m_shifts_y.Pop();
 
 
                 //add it to PCadDoc

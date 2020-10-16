@@ -20,20 +20,22 @@ namespace Dxf2ProfiCAD
         static double m_scaleX = 1;
         static double m_scaleY = -m_scaleX;
 
-        static int m_shift_x;
-        static int m_shift_y;
         static int m_shift_target_y;
+
+        public static Stack<int> m_shifts_x = new Stack<int>();
+        public static Stack<int> m_shifts_y = new Stack<int>();
+
 
         public static int MyShiftScaleX(double ai_what)
         {
-            return (int)Math.Round((ai_what + m_shift_x) * m_scaleX);
+            return (int)Math.Round((ai_what + m_shifts_x.Peek()) * m_scaleX);
         }
         public static int MyShiftScaleY(double ai_what)
         {
-            return m_shift_target_y + (int)Math.Round((ai_what + m_shift_y) * m_scaleY);
+            return m_shift_target_y + (int)Math.Round((ai_what + m_shifts_y.Peek()) * m_scaleY);
         }
 
-        public static int MyScaleX(double ai_what)
+        private static int MyScaleX(double ai_what)
         {
             return (int)Math.Round(ai_what * m_scaleX);
         }
@@ -142,8 +144,6 @@ namespace Dxf2ProfiCAD
 
             a_lDxfSpline.Draw(drawContext, coordinatesCollector);
 
-
-            int li_points_count = CoordinatesCollector.m_list.Count;
 
             DrawPoly l_drawPoly = new DrawPoly(Shape.polyline);
             foreach (Point3D l_point in CoordinatesCollector.m_list)
@@ -623,8 +623,8 @@ namespace Dxf2ProfiCAD
 
         public static void SetShift(int ai_shift_x, int ai_shift_y, int ai_shift_target_y )
         {
-            m_shift_x = ai_shift_x;
-            m_shift_y = ai_shift_y;
+            m_shifts_x.Push(ai_shift_x);
+            m_shifts_y.Push(ai_shift_y);
             m_shift_target_y = ai_shift_target_y;
         }
 
