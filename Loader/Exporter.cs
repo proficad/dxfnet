@@ -1055,8 +1055,7 @@ namespace Loader
                 {
                     if (l_entity is DxfMText)
                     {
-                        DxfMText l_text = l_entity as DxfMText;
-                        if (l_text != null)
+                        if (l_entity is DxfMText l_text)
                         {
                             if (IsTemplate(l_text.Text))
                             {
@@ -1119,8 +1118,7 @@ namespace Loader
                 {
                     if (l_entity is DxfMText)
                     {
-                        DxfMText l_text = l_entity as DxfMText;
-                        if (l_text != null)
+                        if (l_entity is DxfMText l_text)
                         {
                             l_text.XAxis = new Vector3D(-1, 0, 0);
                             l_text.ZAxis = new Vector3D(0, 0, -1);

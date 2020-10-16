@@ -65,11 +65,7 @@ namespace Loader
             int li_inner = 0;
             //int li_centeringMarkEnd = 0;
             int li_posTextX = 0;
-            bool lb_turn = false;
-            if ((a_edge == TypeOfEdge.rgEdgeTop) || (a_edge == TypeOfEdge.rgEdgeBottom))
-            {
-                lb_turn = true;
-            }
+            bool lb_turn = (a_edge == TypeOfEdge.rgEdgeTop) || (a_edge == TypeOfEdge.rgEdgeBottom);
 
             switch (a_edge)
             {
