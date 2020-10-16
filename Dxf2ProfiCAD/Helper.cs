@@ -8,13 +8,25 @@ using WW.Cad.Model;
 using WW.Cad.Model.Entities;
 using WW.Cad.Model.Tables;
 using DxfNet;
+using Color = System.Drawing.Color;
 
 namespace Dxf2ProfiCAD
 {
     public static class Helper
     {
- 
+
         public static System.Drawing.Color DxfEntityColor2Color(DxfEntity a_dxf_entity)
+        {
+            System.Drawing.Color l_color = DxfEntityColor2Color_Internal(a_dxf_entity);
+            if (l_color.R + l_color.G + l_color.B > 400)
+            {
+                l_color = Color.Black;
+            }
+
+            return l_color;
+        }
+
+        private static System.Drawing.Color DxfEntityColor2Color_Internal(DxfEntity a_dxf_entity)
         {
             if(a_dxf_entity.DxfColor != null)
             {
