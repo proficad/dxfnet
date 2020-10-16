@@ -213,8 +213,8 @@ namespace Dxf2ProfiCAD
 
                 System.Diagnostics.Debug.Assert(l_ppdDoc.m_name.Length > 0);
 
-                Converter.m_shifts_x.Push(1);
-                Converter.m_shifts_y.Push(1);
+                Converter.m_shifts_x.Push(0);
+                Converter.m_shifts_y.Push(0);
                 
                 foreach (DxfEntity l_entity in l_block.Entities)
                 {

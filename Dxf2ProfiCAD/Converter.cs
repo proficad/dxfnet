@@ -12,6 +12,7 @@ using DxfNet;
 using WW.Cad.Model.Tables;
 using System.Globalization;
 using System.Runtime.CompilerServices;
+using WW.Cad.Model;
 
 namespace Dxf2ProfiCAD
 {
@@ -60,7 +61,7 @@ namespace Dxf2ProfiCAD
                 case DxfCircle l_circle:
                     return ConvertCircle(l_circle);
                 case DxfEllipse l_ellipse:
-                    return ConvertEllipse(l_ellipse);
+                    return ConvertDxfEllipse(l_ellipse);
                 case DxfSolid l_solid:
                     return ConvertDxfSolid(l_solid);
                 case DxfHatch l_hatch:
@@ -122,9 +123,57 @@ namespace Dxf2ProfiCAD
         }
 
 
-        private static DrawObj ConvertEllipse(DxfEllipse a_lEllipse)
+        private static DrawObj ConvertDxfEllipse(DxfEllipse a_dxf_ellipse)
         {
-            return null;
+            if ((a_dxf_ellipse.MajorAxisEndPoint.X != 0) && (a_dxf_ellipse.MajorAxisEndPoint.Y != 0))
+            {
+                Console.WriteLine("did not convert rotated ellipse " + a_dxf_ellipse.Center.ToString());
+                return null;
+            }
+
+            int li_radius_x = 0, li_radius_y = 0;
+
+            if (a_dxf_ellipse.MajorAxisEndPoint.X != 0 && a_dxf_ellipse.MinorAxisEndPoint.Y != 0)
+            {
+                li_radius_x = MyScaleX(a_dxf_ellipse.MajorAxisEndPoint.X);
+                li_radius_y = MyScaleX(a_dxf_ellipse.MinorAxisEndPoint.Y);
+            }
+            else if (a_dxf_ellipse.MajorAxisEndPoint.Y != 0 && a_dxf_ellipse.MinorAxisEndPoint.X != 0)
+            {
+                li_radius_x = MyScaleX(a_dxf_ellipse.MinorAxisEndPoint.X);
+                li_radius_y = MyScaleX(a_dxf_ellipse.MajorAxisEndPoint.Y);
+            }
+
+            if ((li_radius_x == 0) || (li_radius_y == 0))
+            {
+                Console.WriteLine("did not convert flat ellipse " + a_dxf_ellipse.Center.ToString());
+                return null;
+            }
+
+            li_radius_x = Math.Abs(li_radius_x);
+            li_radius_y = Math.Abs(li_radius_y);
+
+            Point l_center_point = new Point(
+                MyShiftScaleX(a_dxf_ellipse.Center.X), 
+                MyShiftScaleY(a_dxf_ellipse.Center.Y));
+
+            Rectangle l_boundingRect = new Rectangle(
+                l_center_point.X - li_radius_x, 
+                l_center_point.Y - li_radius_y,
+                li_radius_x + li_radius_x, 
+                li_radius_y  + li_radius_y
+            );
+
+
+            DrawRect l_ellipse = new DrawRect(Shape.ellipse, l_boundingRect);
+
+
+            l_ellipse.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(a_dxf_ellipse);
+            l_ellipse.m_objProps.m_lin = Helper.DxfLineType_2_QLin(a_dxf_ellipse.LineType, m_scaleX, a_dxf_ellipse.LineTypeScale);
+
+
+            return l_ellipse;
+
         }
 
 
@@ -389,13 +438,7 @@ namespace Dxf2ProfiCAD
             QCircle l_circle = new QCircle(l_center, li_radius);
 
             l_circle.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(a_dxfCircle);
-
-
-            /*
-             * old way (before QCircle existed)
-            Rectangle l_boundingRect = new Rectangle(li_left, li_top, li_width, li_width);
-            DrawRect l_circle = new DrawRect(Shape.ellipse, l_boundingRect);
-            */
+        
             return l_circle;
         }
 
