@@ -399,7 +399,11 @@ namespace Loader
             {
                 if(obj.m_layer != null)
                 {
-                    ExportContext.Current.Layer = ExportContext.Current.Model.Layers[obj.m_layer.Name];
+                    if (ExportContext.Current.Model.Layers.Contains(obj.m_layer.Name))
+                    {
+                        ExportContext.Current.Layer = ExportContext.Current.Model.Layers[obj.m_layer.Name];
+                    }
+
                 }
 
                 if (obj is QImage)

@@ -72,8 +72,10 @@ namespace Dxf2ProfiCAD
                     return ConvertDxfLwPolyline(l_dxf_lw_line);
                 case DxfPolyline2D l_dxf_line_2D:
                     return ConvertDxfPolyline2D(l_dxf_line_2D);
-//                case DxfSpline l_dxf_spline:
-//                    return ConvertDxfSpline(l_dxf_spline);
+                case DxfPolyline2DSpline l_dxf_line_2D_spline:
+                    return ConvertDxfPolyline2D_Spline(l_dxf_line_2D_spline);
+                //                case DxfSpline l_dxf_spline:
+                //                    return ConvertDxfSpline(l_dxf_spline);
                 case DxfDimension.Linear l_dim_linear:
                     return ConvertDxfDimension_Linear(l_dim_linear);
                 case DxfDimension.Aligned l_dim_align:
@@ -83,6 +85,8 @@ namespace Dxf2ProfiCAD
                     return null;
             }
         }
+
+
 
         private static DrawObj ConvertDxfSolid(DxfSolid a_solid)
         {
@@ -239,8 +243,8 @@ namespace Dxf2ProfiCAD
             */
 
     
-            bool lb_flipX = a_dxfInsert.ScaleFactor.X == -1d;
-            bool lb_flipY = a_dxfInsert.ScaleFactor.Y == -1d;
+            bool lb_flipX = a_dxfInsert.ScaleFactor.X < 0d;
+            bool lb_flipY = a_dxfInsert.ScaleFactor.Y < 0d;
 
             if (lb_flipX)
             {
@@ -254,9 +258,9 @@ namespace Dxf2ProfiCAD
 
             const float fl = (float)1.1; //pouze pro zkompilovani
             Insert l_insert = new Insert(Shape.soucastka, MyShiftScaleX(a_dxfInsert.InsertionPoint.X), MyShiftScaleY(a_dxfInsert.InsertionPoint.Y), fl, fl);//99
-            l_insert.m_angle = RadiansToAngle(a_dxfInsert.Rotation);
-            l_insert.m_scaleX = (float)a_dxfInsert.ScaleFactor.X;
-            l_insert.m_scaleY = (float)a_dxfInsert.ScaleFactor.Y;
+            l_insert.m_angle = RadiansToAnglePositive(a_dxfInsert.Rotation);
+            l_insert.m_scaleX = Math.Abs((float)a_dxfInsert.ScaleFactor.X);
+            l_insert.m_scaleY = Math.Abs((float)a_dxfInsert.ScaleFactor.Y);
 
 
             //Console.WriteLine(ls_blockName);
@@ -337,9 +341,40 @@ namespace Dxf2ProfiCAD
             l_drawPoly.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(a_dxfLine);
             l_drawPoly.m_objProps.m_lin = Helper.DxfLineType_2_QLin(a_dxfLine.LineType, m_scaleX, a_dxfLine.LineTypeScale);
 
+            if (a_dxfLine.DefaultStartWidth > 0)
+            {
+                if (a_dxfLine.DefaultStartWidth == a_dxfLine.DefaultEndWidth)
+                {
+                    l_drawPoly.m_objProps.m_logpen.m_width = MyScaleX(a_dxfLine.DefaultStartWidth);
+                }
+            }
+
+
             return l_drawPoly;
 
         }
+
+
+        private static DrawObj ConvertDxfPolyline2D_Spline(DxfPolyline2DSpline a_dxfLine2DSpline)
+        {
+            if (a_dxfLine2DSpline.SplineType != SplineType.CubicBSpline)
+            {
+                return null;
+            }
+
+            DrawPoly l_drawPoly = new DrawPoly(Shape.bezier);
+
+            foreach (DxfVertex2D l_vertex in a_dxfLine2DSpline.ControlPoints)
+            {
+                l_drawPoly.AddPoint(MyShiftScaleX(l_vertex.X), MyShiftScaleY(l_vertex.Y));
+            }
+
+            l_drawPoly.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(a_dxfLine2DSpline);
+            l_drawPoly.m_objProps.m_lin = Helper.DxfLineType_2_QLin(a_dxfLine2DSpline.LineType, m_scaleX, a_dxfLine2DSpline.LineTypeScale);
+
+            return l_drawPoly;
+        }
+
 
         private static DrawObj ConvertDxfLwPolyline(DxfLwPolyline a_lw_polyline)
         {
@@ -367,6 +402,7 @@ namespace Dxf2ProfiCAD
             return l_drawPoly;
         }
 
+
         private static DrawObj ConvertDxfLine(DxfLine a_line)
         {
             //Console.WriteLine("line type: " + a_line.LineType.Name);
@@ -384,6 +420,7 @@ namespace Dxf2ProfiCAD
 
             return l_drawPoly;
         }
+
 
         private static DrawObj ConvertDxfDimension_Linear(DxfDimension.Linear a_dxf_dim)
         {
@@ -427,6 +464,7 @@ namespace Dxf2ProfiCAD
             return l_dim;
         }
 
+
         private static DrawObj ConvertCircle(DxfCircle a_dxfCircle)
         {
             int li_radius = Math.Abs(MyScaleX(a_dxfCircle.Radius));
@@ -441,6 +479,7 @@ namespace Dxf2ProfiCAD
         
             return l_circle;
         }
+
 
         private static DrawObj ConvertArc(DxfArc a_dxf_arc)
         {
@@ -459,6 +498,10 @@ namespace Dxf2ProfiCAD
 
             l_arc.m_arcBegin = Angle2Size(a_dxf_arc.StartAngle);
             l_arc.m_arcEnd = Angle2Size(a_dxf_arc.EndAngle);
+
+            l_arc.m_arcEnd = Angle2Size(a_dxf_arc.StartAngle);
+            l_arc.m_arcBegin = Angle2Size(a_dxf_arc.EndAngle);
+
 
             l_arc.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(a_dxf_arc);
 
@@ -645,8 +688,8 @@ namespace Dxf2ProfiCAD
         private static Size Angle2Size(double a_angle)
         {
 
-            double ld_x =  10000 * Math.Cos(a_angle);
-            double ld_y = -10000 * Math.Sin(a_angle);
+            double ld_x =  1000 * Math.Cos(a_angle);
+            double ld_y = -1000 * Math.Sin(a_angle);
 
             int li_x = (int)Math.Round(ld_x);
             int li_y = (int)Math.Round(ld_y);

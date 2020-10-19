@@ -69,6 +69,11 @@ namespace DxfNet
         {
             a_xmlWriter.WriteAttributeString("op-lc", Helper.RGB_2_Int(m_logpen.m_color).ToString());
 
+            if (m_logpen.m_width > 0)
+            {
+                a_xmlWriter.WriteAttributeString("op-lw", m_logpen.m_width.ToString());
+            }
+
             if (!string.IsNullOrEmpty(m_lin.m_name)) //if line not solid
             {
                 a_xmlWriter.WriteStartElement("op-lt");

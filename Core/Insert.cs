@@ -93,11 +93,11 @@ namespace DxfNet
             {
                 a_xmlWriter.WriteAttributeString("a", m_angle.ToString());
             }
-            if (m_scaleX != 1f)
+            if ((m_scaleX != 1f) && (m_scaleX > 0))
             {
                 a_xmlWriter.WriteAttributeString("sX", m_scaleX.ToString());
             }
-            if (m_scaleY != 1f)
+            if ((m_scaleY != 1f) && (m_scaleY > 0))
             {
                 a_xmlWriter.WriteAttributeString("sY", m_scaleY.ToString());
             }
