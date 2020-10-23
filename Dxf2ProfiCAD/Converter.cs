@@ -600,18 +600,14 @@ namespace Dxf2ProfiCAD
                 return null;
             }
 
-//            Console.WriteLine("text" + a_dxfMText.Text);
 
             EFont l_efont = new EFont();
-//            l_efont.m_size = (int)(l_efont.m_size * a_dxfMText.Height * 0.06);
-            l_efont.m_size = MyScaleX(a_dxfMText.Height * 8);
-            if (l_efont.m_size == 0)
-            {
-                l_efont.m_size = 100;
-            }
+            l_efont.m_size = (int)(l_efont.m_size * a_dxfMText.Height);
+            l_efont.m_size = MyScaleX(l_efont.m_size);
+            l_efont.m_size = (int)Math.Round(l_efont.m_size * 0.06);
 
 
-            
+
 
             double ld_x = a_dxfMText.AlignmentPoint1.X;
             double ld_y = a_dxfMText.AlignmentPoint1.Y;
@@ -660,8 +656,7 @@ namespace Dxf2ProfiCAD
         private static FreeText ConvertDxfMText(DxfMText a_dxfMText)
         {
             EFont l_efont = new EFont();
-            l_efont.m_size = (int)(l_efont.m_size * a_dxfMText.Height * 0.06);
-            l_efont.m_size = MyScaleX(l_efont.m_size);
+            l_efont.m_size = MyScaleX(l_efont.m_size * a_dxfMText.Height * 0.06);
 
             Rectangle l_rect = new Rectangle(MyShiftScaleX(a_dxfMText.InsertionPoint.X), MyShiftScaleY(a_dxfMText.InsertionPoint.Y), 0, 0);
 
@@ -683,7 +678,8 @@ namespace Dxf2ProfiCAD
             int li_angle = 10 * RadiansToAngle(l_angle);
 
             FreeText l_text = new FreeText(ls_text, l_efont, l_rect, li_angle);
-            
+            l_text.m_alignment = ConvertAlignment(a_dxfMText);
+
 
             return l_text;
         }
@@ -712,19 +708,32 @@ namespace Dxf2ProfiCAD
 
         }
 
-        private static QTextAlignment ConvertAlignment(DxfText l_dxgMText)
+        private static QTextAlignment ConvertAlignment(DxfText l_dxf_text)
         {
-            if (l_dxgMText.HorizontalAlignment == TextHorizontalAlignment.Left)
+            if (l_dxf_text.HorizontalAlignment == TextHorizontalAlignment.Left)
             {
                 return QTextAlignment.AL_LM;
             }
-            if (l_dxgMText.HorizontalAlignment == TextHorizontalAlignment.Right)
+            if (l_dxf_text.HorizontalAlignment == TextHorizontalAlignment.Right)
             {
                 return QTextAlignment.AL_RM;
             }
 
             return QTextAlignment.AL_MM;
-            
+        }
+
+        private static QTextAlignment ConvertAlignment(DxfMText l_dxf_MText)
+        {
+            if (l_dxf_MText.AttachmentPoint == AttachmentPoint.MiddleLeft) 
+            {
+                return QTextAlignment.AL_LM;
+            }
+            if (l_dxf_MText.AttachmentPoint == AttachmentPoint.MiddleRight)
+            {
+                return QTextAlignment.AL_RM;
+            }
+
+            return QTextAlignment.AL_MM;
         }
 
         //some circles are made as polylines with Bulges
