@@ -120,6 +120,20 @@ namespace DxfNet
             a_xmlWriter.WriteEndElement();
         }
 
+        public override bool IsValid(int ai_size_x, int ai_size_y)
+        {
+            if (Math.Abs(m_position.X) > ai_size_x)
+            {
+                return false;
+            }
+            if (Math.Abs(m_position.Y) > ai_size_y)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         internal override void RecalcBounds(ref MyRect l_bounds) { }
 
         internal override void MoveBy(Size l_offset)

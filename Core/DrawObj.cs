@@ -72,7 +72,7 @@ namespace DxfNet
         }
 
 
-
+        public abstract bool IsValid(int ai_size_x, int ai_size_y);
 
         internal abstract void RecalcBounds(ref MyRect l_bounds);
 

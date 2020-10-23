@@ -18,6 +18,11 @@ namespace DxfNet
         }
 
 
+        public override bool IsValid(int ai_size_x, int ai_size_y)
+        {
+            return true;
+        }
+
         internal override void RecalcBounds(ref MyRect l_bounds)
         { }
 

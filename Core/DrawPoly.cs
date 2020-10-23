@@ -74,12 +74,7 @@ namespace DxfNet
 
         internal override void Write2Xml(System.Xml.XmlWriter a_xmlWriter)
         {
-            /*
-            if ((m_points.Count == 3) && (m_points[0].X == 500))
-            {
-                int i = 5;
-            }
-            */
+
            	switch(m_nShape){
         	case Shape.spoj:
                 a_xmlWriter.WriteStartElement("wire");
@@ -120,6 +115,24 @@ namespace DxfNet
 
             a_xmlWriter.WriteEndElement();
 
+        }
+
+        public override bool IsValid(int ai_size_x, int ai_size_y)
+        {
+            foreach (Point l_point in m_points)
+            {
+                if(Math.Abs(l_point.X) > ai_size_x)
+                {
+                    return false;
+                }
+
+                if(Math.Abs(l_point.Y) > ai_size_y)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         internal override void RecalcBounds(ref MyRect l_bounds) 

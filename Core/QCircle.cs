@@ -43,6 +43,20 @@ namespace DxfNet
         }
 
 
+        public override bool IsValid(int ai_size_x, int ai_size_y)
+        {
+            if (Math.Abs(m_center.X) > ai_size_x)
+            {
+                return false;
+            }
+            if (Math.Abs(m_center.Y) > ai_size_y)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         internal override void RecalcBounds(ref MyRect l_bounds)
         {
             throw new NotImplementedException();

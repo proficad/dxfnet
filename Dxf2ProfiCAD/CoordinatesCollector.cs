@@ -16,7 +16,7 @@ namespace Dxf2ProfiCAD
     public class CoordinatesCollector : BaseWireframeGraphicsFactory
     {
 
-        public static List<Point3D> m_list = new List<Point3D>(2000);
+        public List<Point3D> m_list = new List<Point3D>(2000);
 
 
         public override void CreateDot(
@@ -82,7 +82,7 @@ namespace Dxf2ProfiCAD
             WritePolylines(shape.ToPolylines4D(ShapeTool.DefaultEpsilon));
         }
 
-        private static void WritePolylines(IList<Polyline4D> polylines)
+        private void WritePolylines(IList<Polyline4D> polylines)
         {
             foreach (Polyline4D polyline in polylines)
             {

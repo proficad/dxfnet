@@ -192,6 +192,7 @@ namespace Dxf2ProfiCAD
             int li_shift_x = (int)(-l_bounds3D.Center.X);
             int li_shift_y = (int)(-l_bounds3D.Center.Y);
 
+            Converter.SetSize(a_size_target);
 
             //            Converter.SetShift(li_shift_x, li_shift_y, a_size_target.Height);
             Converter.SetShift(li_shift_x, li_shift_y, 0);
@@ -405,6 +406,8 @@ namespace Dxf2ProfiCAD
                 int l_baseX = Converter.MyShiftScaleX(l_block.BasePoint.X);
                 int l_baseY = Converter.MyShiftScaleY(l_block.BasePoint.Y);
                 Point l_basePoint = new Point(l_baseX, l_baseY);
+
+                l_basePoint.X = l_basePoint.Y = 0;
                 l_ppdDoc.RecalcToBeInCenterPoint(l_basePoint);
 
 

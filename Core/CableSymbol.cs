@@ -29,6 +29,11 @@ namespace DxfNet
             this.m_hor = lb_hor;
         }
 
+        public override bool IsValid(int ai_size_x, int ai_size_y)
+        {
+            return true;
+        }
+
         internal override void RecalcBounds(ref MyRect l_bounds)
         { }
 

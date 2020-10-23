@@ -18,14 +18,15 @@ namespace Dxf2ProfiCAD
 {
     public static class Converter
     {
-        static double m_scaleX = 1;
-        static double m_scaleY = -m_scaleX;
+        private static double m_scaleX = 1;
+        private static double m_scaleY = -m_scaleX;
 
         static int m_shift_target_y;
 
         public static Stack<int> m_shifts_x = new Stack<int>();
         public static Stack<int> m_shifts_y = new Stack<int>();
 
+        public static Size m_size_target;
 
         public static int MyShiftScaleX(double ai_what)
         {
@@ -45,46 +46,67 @@ namespace Dxf2ProfiCAD
 
         public static DrawObj Convert(DxfEntity a_entity)
         {
-            //DrawObj l_obj;
+            DrawObj l_obj;
             //System.Diagnostics.Debug.WriteLine("converting " + a_entity.ToString());
             
             switch (a_entity)
             {
                 case DxfInsert l_insert:
-                    return ConvertInsert(l_insert);
+                    l_obj = ConvertInsert(l_insert);
+                    break;
                 case DxfMText l_dxf_mtext:
-                    return ConvertDxfMText(l_dxf_mtext);
+                    l_obj = ConvertDxfMText(l_dxf_mtext);
+                    break;
                 case DxfText l_dxf_text:
-                    return ConvertDxfText(l_dxf_text);
+                    l_obj =  ConvertDxfText(l_dxf_text);
+                    break;
                 case DxfArc  l_arc:
-                    return ConvertArc_To_Lines(l_arc);
-//                    return ConvertArc(l_arc);
+                    l_obj =  ConvertArc_To_Lines(l_arc);
+                    break;
                 case DxfCircle l_circle:
-                    return ConvertCircle(l_circle);
+                    l_obj =  ConvertCircle(l_circle);
+                    break;
                 case DxfEllipse l_ellipse:
-                    return ConvertDxfEllipse(l_ellipse);
+                    l_obj =  ConvertDxfEllipse(l_ellipse);
+                    break;
                 case DxfSolid l_solid:
-                    return ConvertDxfSolid(l_solid);
+                    l_obj =  ConvertDxfSolid(l_solid);
+                    break;
                 case DxfHatch l_hatch:
-                    return ConvertDxfHatch(l_hatch);
+                    l_obj =  ConvertDxfHatch(l_hatch);
+                    break;
                 case DxfLine l_dxf_line:
-                    return ConvertDxfLine(l_dxf_line);
+                    l_obj =  ConvertDxfLine(l_dxf_line);
+                    break;
                 case DxfLwPolyline l_dxf_lw_line:
-                    return ConvertDxfLwPolyline(l_dxf_lw_line);
+                    l_obj =  ConvertDxfLwPolyline(l_dxf_lw_line);
+                    break;
                 case DxfPolyline2D l_dxf_line_2D:
-                    return ConvertDxfPolyline2D(l_dxf_line_2D);
+                    l_obj =  ConvertDxfPolyline2D(l_dxf_line_2D);
+                    break;
                 case DxfPolyline2DSpline l_dxf_line_2D_spline:
-                    return ConvertDxfPolyline2D_Spline(l_dxf_line_2D_spline);
+                    l_obj =  ConvertDxfPolyline2D_Spline(l_dxf_line_2D_spline);
+                    break;
                 case DxfSpline l_dxf_spline:
-                    return ConvertDxfSpline(l_dxf_spline);
+                    l_obj =  ConvertDxfSpline(l_dxf_spline);
+                    break;
                 case DxfDimension.Linear l_dim_linear:
-                    return ConvertDxfDimension_Linear(l_dim_linear);
+                    l_obj =  ConvertDxfDimension_Linear(l_dim_linear);
+                    break;
                 case DxfDimension.Aligned l_dim_align:
-                    return ConvertDxfDimension_Aligned(l_dim_align);
+                    l_obj =  ConvertDxfDimension_Aligned(l_dim_align);
+                    break;
                 default:
                     System.Console.WriteLine("did not convert type {0}", a_entity.ToString());
                     return null;
             }
+
+            if (l_obj != null && l_obj.IsValid(Converter.m_size_target.Width, Converter.m_size_target.Height))
+            {
+                return l_obj;
+            }
+
+            return null;
         }
 
 
@@ -197,7 +219,7 @@ namespace Dxf2ProfiCAD
             //iii.NoOfSplineLineSegments = 20;
             //iii.ShapeFlattenEpsilon = -0.1;
 
-            CoordinatesCollector coordinatesCollector = new CoordinatesCollector();
+            CoordinatesCollector l_coordinatesCollector = new CoordinatesCollector();
             DrawContext.Wireframe drawContext =
                 new DrawContext.Wireframe.ModelSpace(
                     a_lDxfSpline.Model,
@@ -205,13 +227,19 @@ namespace Dxf2ProfiCAD
                     Matrix4D.Identity
                 );
 
-            CoordinatesCollector.m_list.Clear();
-            a_lDxfSpline.Draw(drawContext, coordinatesCollector);
+
+            a_lDxfSpline.Draw(drawContext, l_coordinatesCollector);
+
+            if (l_coordinatesCollector.m_list.Count == 0)
+            {
+                return null;
+            }
 
 
             DrawPoly l_drawPoly = new DrawPoly(Shape.polyline);
 
-            int li_spline_points_count = CoordinatesCollector.m_list.Count();
+            /*
+            int li_spline_points_count = coordinatesCollector.m_list.Count();
             int li_max_points = 180;
             int li_step = li_spline_points_count / li_max_points;
             if (li_step == 0)
@@ -221,7 +249,7 @@ namespace Dxf2ProfiCAD
             int li_i = 0;
             while(li_i < (li_spline_points_count - 1))
             {
-                Point3D l_point = CoordinatesCollector.m_list[li_i];
+                Point3D l_point = coordinatesCollector.m_list[li_i];
                 l_drawPoly.AddPoint(
                     MyShiftScaleX(l_point.X),
                     MyShiftScaleY(l_point.Y)
@@ -229,16 +257,16 @@ namespace Dxf2ProfiCAD
 
                 li_i += li_step;
             }
+            */
 
 
-/*
-            foreach (Point3D l_point in CoordinatesCollector.m_list)
+            foreach (Point3D l_point in l_coordinatesCollector.m_list)
             {
                 l_drawPoly.AddPoint(
                     MyShiftScaleX(l_point.X),
                     MyShiftScaleY(l_point.Y)
                 );
-            }*/
+            }
 
             l_drawPoly.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(a_lDxfSpline);
             l_drawPoly.m_objProps.m_lin = Helper.DxfLineType_2_QLin(a_lDxfSpline.LineType, m_scaleX, a_lDxfSpline.LineTypeScale);
@@ -497,11 +525,11 @@ namespace Dxf2ProfiCAD
         {
 
             var graphics_config = new GraphicsConfig();
-            graphics_config.NoOfSplineLineSegments = 3;
-            graphics_config.NoOfArcLineSegments = 3;
-            graphics_config.ShapeFlattenEpsilon = -0.1;
+//            graphics_config.NoOfSplineLineSegments = 3;
+//            graphics_config.NoOfArcLineSegments = 3;
+//            graphics_config.ShapeFlattenEpsilon = -0.1;
 
-            CoordinatesCollector coordinatesCollector = new CoordinatesCollector();
+            CoordinatesCollector l_coordinatesCollector = new CoordinatesCollector();
             DrawContext.Wireframe drawContext =
                 new DrawContext.Wireframe.ModelSpace(
                     a_dxf_arc.Model,
@@ -509,15 +537,20 @@ namespace Dxf2ProfiCAD
                     Matrix4D.Identity
                 );
 
-            CoordinatesCollector.m_list.Clear();
-            a_dxf_arc.Draw(drawContext, coordinatesCollector);
 
+            a_dxf_arc.Draw(drawContext, l_coordinatesCollector);
+
+            if (l_coordinatesCollector.m_list.Count == 0)
+            {
+                return null;
+            }
 
             DrawPoly l_drawPoly = new DrawPoly(Shape.polyline);
 
 //            Console.WriteLine($"seznam má {CoordinatesCollector.m_list.Count()} bodů");
 
-            foreach (Point3D l_point in CoordinatesCollector.m_list)
+
+            foreach (Point3D l_point in l_coordinatesCollector.m_list)
             {
                 //                Console.WriteLine("   {0}", l_point.ToString());
                 l_drawPoly.AddPoint(
@@ -526,9 +559,9 @@ namespace Dxf2ProfiCAD
                 );
             }
 
+
             l_drawPoly.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(a_dxf_arc);
             l_drawPoly.m_objProps.m_lin = Helper.DxfLineType_2_QLin(a_dxf_arc.LineType, m_scaleX, a_dxf_arc.LineTypeScale);
-
 
             return l_drawPoly;
         }
@@ -550,9 +583,7 @@ namespace Dxf2ProfiCAD
 
             l_arc.m_arcBegin = Angle2Size(a_dxf_arc.StartAngle);
             l_arc.m_arcEnd = Angle2Size(a_dxf_arc.EndAngle);
-
-            l_arc.m_arcEnd = Angle2Size(a_dxf_arc.StartAngle);
-            l_arc.m_arcBegin = Angle2Size(a_dxf_arc.EndAngle);
+   
 
 
             l_arc.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(a_dxf_arc);
@@ -786,5 +817,11 @@ namespace Dxf2ProfiCAD
                 MyShiftScaleY(li_y)
                 );
         }
+
+        public static void SetSize(Size a_size_target)
+        {
+            m_size_target = a_size_target;
+        }
+
     }
 }
