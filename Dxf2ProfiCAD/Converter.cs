@@ -600,11 +600,13 @@ namespace Dxf2ProfiCAD
                 return null;
             }
 
-
             EFont l_efont = new EFont();
-            l_efont.m_size = (int)(l_efont.m_size * a_dxfMText.Height);
-            l_efont.m_size = MyScaleX(l_efont.m_size);
-            l_efont.m_size = (int)Math.Round(l_efont.m_size * 0.06);
+            l_efont.m_size = MyScaleX(l_efont.m_size * a_dxfMText.Height * 0.06);
+            if (l_efont.m_size == 0)
+            {
+                l_efont.m_size = 30;
+            }
+
 
 
 
@@ -657,6 +659,12 @@ namespace Dxf2ProfiCAD
         {
             EFont l_efont = new EFont();
             l_efont.m_size = MyScaleX(l_efont.m_size * a_dxfMText.Height * 0.06);
+
+            if (l_efont.m_size == 0)
+            {
+                l_efont.m_size = 30;
+            }
+
 
             Rectangle l_rect = new Rectangle(MyShiftScaleX(a_dxfMText.InsertionPoint.X), MyShiftScaleY(a_dxfMText.InsertionPoint.Y), 0, 0);
 
@@ -724,7 +732,10 @@ namespace Dxf2ProfiCAD
 
         private static QTextAlignment ConvertAlignment(DxfMText l_dxf_MText)
         {
-            if (l_dxf_MText.AttachmentPoint == AttachmentPoint.MiddleLeft) 
+            if ((l_dxf_MText.AttachmentPoint == AttachmentPoint.MiddleLeft) 
+                ||
+                (l_dxf_MText.AttachmentPoint == AttachmentPoint.TopLeft)
+                )
             {
                 return QTextAlignment.AL_LM;
             }
