@@ -37,8 +37,13 @@ namespace DxfNet
         }
 
         //used in DXF->ProfiCAD
-        public void Add(DrawObj a_drawObj, string as_layer_name)
+        public void Add(DrawObj a_drawObj, string as_layer_name, bool ab_merge_layers)
         {
+            if (ab_merge_layers)
+            {
+                as_layer_name = "0";
+            }
+
             Layer l_layer = FindLayer(as_layer_name);
             if (l_layer == null)
             {

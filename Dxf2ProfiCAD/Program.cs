@@ -23,35 +23,38 @@ namespace Dxf2ProfiCAD
 {
     class Program
     {
-        private enum OutputFormat { output_format_sxe, output_format_pxf, output_format_ppd };
+        private enum ParameterNumber{pn_input_file, pn_output_folder, pn_format, pn_merge_layers, pn_log_file}
 
+
+        private enum OutputFormat { output_format_sxe, output_format_pxf, output_format_ppd };
+       
         static OutputFormat l_output_format;
 
         private static string m_path_log;
 
         private static void Main(string[] args)
         {
+            int m_count_parameters = Enum.GetValues(typeof(ParameterNumber)).Length;
+
             ShowIntro();
-            if (args.Length < 3)
+            if (args.Length < m_count_parameters)
             {
                 Report_Error_And_Quit("input parameter missing");
                 ShowUsage();
                 return;
             }
-            if (args.Length > 4)
+            if (args.Length > m_count_parameters)
             {
                 Report_Error_And_Quit("too many parameters");
                 ShowUsage();
                 return;
             }
 
-            if (args.Length > 3)
-            {
-                m_path_log = args[3];
-            }
+            m_path_log = args[(int)ParameterNumber.pn_log_file];
 
-            string ls_in  = args[0];
-            string ls_out = args[1];
+
+            string ls_in  = args[(int)ParameterNumber.pn_input_file];
+            string ls_out = args[(int)ParameterNumber.pn_output_folder];
 
             if (!Directory.Exists(ls_out))
             {
@@ -61,7 +64,7 @@ namespace Dxf2ProfiCAD
             }
 
 
-            string ls_out_format = args[2];
+            string ls_out_format = args[(int)ParameterNumber.pn_format];
             if (ls_out_format == "sxe")
             {
                 l_output_format = OutputFormat.output_format_sxe;
@@ -80,11 +83,27 @@ namespace Dxf2ProfiCAD
                 return;
             }
 
+            bool lb_merge_layers;
+            string ls_merge_layers = args[(int) ParameterNumber.pn_merge_layers];
+            switch (ls_merge_layers)
+            {
+                case "yes":
+                    lb_merge_layers = true;
+                    break;
+                case "no":
+                    lb_merge_layers = false;
+                    break;
+                default:
+                    Report_Error_And_Quit("do you want to merge layers?");
+                    ShowUsage();
+                    return;
+            }
+
             try
             {
                 if (File.Exists(ls_in))
                 {
-                    ConvertOneFile(ls_in, ls_out, l_output_format);
+                    ConvertOneFile(ls_in, ls_out, l_output_format, lb_merge_layers);
                 }
                 else if (Directory.Exists(ls_in))
                 {
@@ -95,7 +114,7 @@ namespace Dxf2ProfiCAD
 
                         System.IO.Directory.CreateDirectory(ls_out_path);
 
-                        ConvertOneFile(ls_path, ls_out_path, l_output_format);
+                        ConvertOneFile(ls_path, ls_out_path, l_output_format, lb_merge_layers);
                     }
                 }
                 else
@@ -198,7 +217,7 @@ namespace Dxf2ProfiCAD
             Converter.SetShift(li_shift_x, li_shift_y, 0);
         }
 
-        private static void ConvertRepo(Repo a_repo, DxfModel model)
+        private static void ConvertRepo(Repo a_repo, DxfModel model, bool ab_merge_layers)
         {
             foreach (WW.Cad.Model.Tables.DxfBlock l_block in model.Blocks)
             {
@@ -224,10 +243,10 @@ namespace Dxf2ProfiCAD
                     {
                         if (l_drawObj is Insert l_insert)
                         {
-                            Add_To_Repo(l_ppdDoc.m_repo, model, l_insert.m_lG);
+                            Add_To_Repo(l_ppdDoc.m_repo, model, l_insert.m_lG, ab_merge_layers);
                         }
 
-                        l_ppdDoc.Add(l_drawObj, l_entity.Layer.Name);
+                        l_ppdDoc.Add(l_drawObj, l_entity.Layer.Name, ab_merge_layers);
                     }
                 }
 
@@ -269,7 +288,7 @@ namespace Dxf2ProfiCAD
         }
 
 
-        private static void ConvertOneFile(string as_input_path, string as_output_path, OutputFormat a_format)
+        private static void ConvertOneFile(string as_input_path, string as_output_path, OutputFormat a_format, bool ab_merge_layers)
         {
             string ls_extension;
 
@@ -322,7 +341,7 @@ namespace Dxf2ProfiCAD
                                      
 
 
-            ConvertRepo(l_repo, model);
+            ConvertRepo(l_repo, model, ab_merge_layers);
 
             foreach (DxfEntity l_entity in model.Entities)
             {
@@ -335,12 +354,7 @@ namespace Dxf2ProfiCAD
                     {
                         string ls_lastGuid = l_insert.m_lG;
 
-                        /*
-                        if (ls_lastGuid == "A32")
-                        {
-                            int o = 5;
-                        }
-                        */
+                  
 
                         System.Diagnostics.Debug.Assert(ls_lastGuid.Length > 0);
                         PpdDoc l_ppdDoc = l_repo.FindPpdDocInRepo(ls_lastGuid);
@@ -354,7 +368,7 @@ namespace Dxf2ProfiCAD
                     }
 
 
-                    l_drawDoc.Add(l_drawObj, l_entity.Layer.Name);
+                    l_drawDoc.Add(l_drawObj, l_entity.Layer.Name, ab_merge_layers);
                 }
             }
 
@@ -369,7 +383,7 @@ namespace Dxf2ProfiCAD
             Console.WriteLine("Conversion completed");
         }
 
-        private static void Add_To_Repo(Repo a_repo, DxfModel a_model, string as_block_name)
+        private static void Add_To_Repo(Repo a_repo, DxfModel a_model, string as_block_name, bool ab_merge_layers)
         {
             if (!a_model.Blocks.Contains(as_block_name))
             {
@@ -395,10 +409,10 @@ namespace Dxf2ProfiCAD
                     {
                         if (l_drawObj is Insert l_insert)
                         {
-                            Add_To_Repo(l_ppdDoc.m_repo, a_model, l_insert.m_lG);
+                            Add_To_Repo(l_ppdDoc.m_repo, a_model, l_insert.m_lG, ab_merge_layers);
                         }
 
-                        l_ppdDoc.Add(l_drawObj, l_entity.Layer.Name);
+                        l_ppdDoc.Add(l_drawObj, l_entity.Layer.Name, ab_merge_layers);
                     }
                 }
 
