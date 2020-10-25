@@ -61,7 +61,7 @@ namespace Dxf2ProfiCAD
                     l_obj =  ConvertDxfText(l_dxf_text);
                     break;
                 case DxfArc  l_arc:
-                    l_obj =  ConvertArc_To_Lines(l_arc);
+                    l_obj =  ConvertArc(l_arc);
                     break;
                 case DxfCircle l_circle:
                     l_obj =  ConvertCircle(l_circle);
@@ -523,6 +523,8 @@ namespace Dxf2ProfiCAD
 
         private static DrawObj ConvertArc_To_Lines(DxfArc a_dxf_arc)
         {
+            
+
 
             var graphics_config = new GraphicsConfig();
 //            graphics_config.NoOfSplineLineSegments = 3;
@@ -567,6 +569,18 @@ namespace Dxf2ProfiCAD
         }
 
         private static DrawObj ConvertArc(DxfArc a_dxf_arc)
+        {
+            if (Program.m_repo_level == 0)
+            {
+                return ConvertArc_Native(a_dxf_arc);
+            }
+            else
+            {
+                return ConvertArc_To_Lines(a_dxf_arc);
+            }
+        }
+
+        private static DrawObj ConvertArc_Native(DxfArc a_dxf_arc)
         {
 
             int li_radius = Math.Abs(MyScaleX(a_dxf_arc.Radius));

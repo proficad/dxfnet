@@ -25,6 +25,7 @@ namespace Dxf2ProfiCAD
     {
         private enum ParameterNumber{pn_input_file, pn_output_folder, pn_format, pn_merge_layers, pn_log_file}
 
+        public static int m_repo_level = 0;
 
         private enum OutputFormat { output_format_sxe, output_format_pxf, output_format_ppd };
        
@@ -219,6 +220,8 @@ namespace Dxf2ProfiCAD
 
         private static void ConvertRepo(Repo a_repo, DxfModel model, bool ab_merge_layers)
         {
+            m_repo_level++;
+
             foreach (WW.Cad.Model.Tables.DxfBlock l_block in model.Blocks)
             {
                 if (string.IsNullOrEmpty(l_block.Name))
@@ -263,7 +266,10 @@ namespace Dxf2ProfiCAD
 
                 //add it to PCadDoc
                 a_repo.AddPpd(l_ppdDoc);
+
             }
+
+            m_repo_level--;
 
         }
 
