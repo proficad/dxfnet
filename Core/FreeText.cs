@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using System.Text.RegularExpressions;
 
 namespace DxfNet
 {
@@ -53,8 +54,27 @@ namespace DxfNet
 
         private void SaveTextToXml(System.Xml.XmlWriter a_xmlWriter, int li_druhpisma, string as_text, Point l_pivot2Save, int ai_angle, string as_currentFont, bool a_bTurnWithSymbol)
         {
- 
-	        string ls_stringEncoded = Helper.EncodeHtml(as_text);
+            // https://stackoverflow.com/questions/397250/unicode-regex-invalid-xml-characters/961504#961504
+
+            // filters control characters but allows only properly-formed surrogate sequences
+            Regex _invalidXMLChars = new Regex(
+                @"(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F\uFEFF\uFFFE\uFFFF]",
+                RegexOptions.Compiled);
+
+            /// <summary>
+            /// removes any unusual unicode characters that can't be encoded into XML
+            /// </summary>
+            string RemoveInvalidXMLChars(string text)
+            {
+                if (string.IsNullOrEmpty(text)) return "";
+                return _invalidXMLChars.Replace(text, "");
+            }
+
+            string ls_stringEncoded = Helper.EncodeHtml(as_text);
+
+            ls_stringEncoded = RemoveInvalidXMLChars(ls_stringEncoded);
+
+
 //            a_xmlWriter.WriteStartElement("text");
 //            a_xmlWriter.WriteElementString("text", ls_stringEncoded);
             a_xmlWriter.WriteStartElement("text");
