@@ -132,6 +132,16 @@ namespace DxfNet
                 }
             }
 
+            if (m_points.Count < 2)
+            {
+                return false;
+            }
+
+            if (2 > Helper.Distance2Points(m_points[0], m_points[1]))
+            {
+                return false;
+            }
+
             return true;
         }
 
