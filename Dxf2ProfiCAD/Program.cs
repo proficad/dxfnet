@@ -133,10 +133,8 @@ namespace Dxf2ProfiCAD
                 {
                     WriteToLogFile(m_path_log, ls_error);
                 }
-                else
-                {
-                    Console.Write(ls_error);
-                }
+                Console.Write(ls_error);
+
                 return;
             }
 
@@ -151,7 +149,7 @@ namespace Dxf2ProfiCAD
         {
             string ls_folder_of_actual_file = Path.GetDirectoryName(as_in_file);
 
-            int li_len_in = 1 + as_in_folder.Length;
+            int li_len_in = as_in_folder.Length;
 
             string ls_relative_path_out = ls_folder_of_actual_file.Substring(li_len_in);
 
@@ -258,7 +256,7 @@ namespace Dxf2ProfiCAD
                 int l_baseX = Converter.MyShiftScaleX(l_block.BasePoint.X);
                 int l_baseY = Converter.MyShiftScaleY(l_block.BasePoint.Y);
                 Point l_basePoint = new Point(l_baseX, l_baseY);
-                l_ppdDoc.RecalcToBeInCenterPoint(l_basePoint);
+                //l_ppdDoc.RecalcToBeInCenterPoint(l_basePoint);
 
                 Converter.m_shifts_x.Pop();
                 Converter.m_shifts_y.Pop();

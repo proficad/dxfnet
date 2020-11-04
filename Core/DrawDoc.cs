@@ -12,6 +12,17 @@ namespace DxfNet
     public abstract class DrawDoc : IEnumerable
     {
 
+        public IEnumerator MyEnum()
+        {
+            foreach (Layer l_layer in m_layers)
+            {
+                foreach (DrawObj l_obj in l_layer)
+                {
+                    yield return l_obj;
+                }
+            }
+        }
+
         public IEnumerator GetEnumerator()
         {
             foreach (Layer l_layer in m_layers)
