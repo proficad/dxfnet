@@ -8,7 +8,7 @@ using WW.Math;
 using WW.Math.Geometry;
 using WW.Cad.IO;
 
-//using WW.ComponentModel;
+
 using WW.Cad.Model;
 using WW.Cad.Model.Entities;
 using WW.Cad.Drawing;
@@ -21,11 +21,11 @@ using WW.Cad.Model.Tables;
 
 namespace Dxf2ProfiCAD
 {
-    class Program
+    static class Program
     {
-        private enum ParameterNumber{pn_input_file, pn_output_folder, pn_format, pn_merge_layers, pn_log_file}
+        private enum ParameterNumber{pn_input_file, pn_output_folder, pn_format, pn_merge_layers, pn_size, pn_log_file }
 
-        public static int m_repo_level = 0;
+        public static int m_repo_level = 0;//how many levels the ConvertRepo() is nested
 
         private enum OutputFormat { output_format_sxe, output_format_pxf, output_format_ppd };
        
@@ -100,11 +100,28 @@ namespace Dxf2ProfiCAD
                     return;
             }
 
+            string ls_drawing_size = args[(int)ParameterNumber.pn_size];
+            if (int.TryParse(ls_drawing_size, out int li_drawing_size))
+            {
+                if (li_drawing_size < DRAWING_MIN_SIZE || li_drawing_size > DRAWING_MAX_SIZE)
+                {
+                    Report_Wrong_Drawing_Size_And_Quit();
+                    return;
+                }
+            }
+            else
+            {
+                Report_Wrong_Drawing_Size_And_Quit();
+                return;
+            }
+            int li_size_tenth_mm = 100 * li_drawing_size;
+   
+
             try
             {
                 if (File.Exists(ls_in))
                 {
-                    ConvertOneFile(ls_in, ls_out, l_output_format, lb_merge_layers);
+                    ConvertOneFile(ls_in, ls_out, l_output_format, lb_merge_layers, li_size_tenth_mm);
                 }
                 else if (Directory.Exists(ls_in))
                 {
@@ -115,11 +132,12 @@ namespace Dxf2ProfiCAD
 
                         System.IO.Directory.CreateDirectory(ls_out_path);
 
-                        ConvertOneFile(ls_path, ls_out_path, l_output_format, lb_merge_layers);
+                        ConvertOneFile(ls_path, ls_out_path, l_output_format, lb_merge_layers, li_size_tenth_mm);
                     }
                 }
                 else
                 {
+                    Console.WriteLine("input file or folder not found");
                     ShowUsage();
                 }
             }
@@ -145,6 +163,17 @@ namespace Dxf2ProfiCAD
 
         }
 
+        private static void Report_Wrong_Drawing_Size_And_Quit()
+        {
+            Console.WriteLine($"drawing size must be between {DRAWING_MIN_SIZE} and {DRAWING_MAX_SIZE}");            
+        }
+
+
+        public static int DRAWING_MAX_SIZE { get; } = 280;
+
+        public static int DRAWING_MIN_SIZE { get; } = 3;
+
+
         private static string Calculate_Output_Path(string as_in_folder, string as_in_file, string as_out_folder)
         {
             string ls_folder_of_actual_file = Path.GetDirectoryName(as_in_file);
@@ -154,8 +183,8 @@ namespace Dxf2ProfiCAD
             string ls_relative_path_out = ls_folder_of_actual_file.Substring(li_len_in);
 
             return Path.Combine(as_out_folder, ls_relative_path_out);
-
         }
+
 
         private static void Report_Error_And_Quit(string as_message)
         {
@@ -288,11 +317,11 @@ namespace Dxf2ProfiCAD
         private static void ShowUsage()
         {
             Console.WriteLine("Syntax:");
-            Console.WriteLine("A2P input_path output_path format(sxe|pxf|ppd) [log_path]");
+            Console.WriteLine("A2P input_path output_path format(sxe|pxf|ppd) drawing size(in cm) log_path");
         }
 
 
-        private static void ConvertOneFile(string as_input_path, string as_output_path, OutputFormat a_format, bool ab_merge_layers)
+        private static void ConvertOneFile(string as_input_path, string as_output_path, OutputFormat a_format, bool ab_merge_layers, int ai_drawing_size)
         {
             string ls_extension;
 
@@ -337,9 +366,9 @@ namespace Dxf2ProfiCAD
             }
 
 
-   
-            const int li_size = 2800;
-            Size l_size_target = new Size(li_size, li_size);
+ 
+
+            Size l_size_target = new Size(ai_drawing_size, ai_drawing_size);
             AdjustScaleAndShift(model, l_size_target);
 
                                      
