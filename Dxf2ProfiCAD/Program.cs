@@ -222,7 +222,15 @@ namespace Dxf2ProfiCAD
         private static void AdjustScaleAndShift(DxfModel a_model, Size a_size_target)
         {
             BoundsCalculator l_bc = new BoundsCalculator();
-            l_bc.GetBounds(a_model);
+
+            if (a_model.Entities.Count > 0)
+            {
+                l_bc.GetBounds(a_model);
+            }
+            else
+            {
+                l_bc.GetBounds(a_model, a_model.ActiveLayout);
+            }
             Bounds3D l_bounds3D = l_bc.Bounds;
 
             double li_scale_x = a_size_target.Width / l_bounds3D.Delta.X;
@@ -376,7 +384,15 @@ namespace Dxf2ProfiCAD
 
             ConvertRepo(l_repo, model, ab_merge_layers);
 
-            foreach (DxfEntity l_entity in model.Entities)
+
+            DxfEntityCollection l_coll = model.Entities;
+            if (l_coll.Count == 0)
+            {
+                l_coll = model.ActiveLayout.Entities;
+            }
+
+            
+            foreach (DxfEntity l_entity in l_coll)
             {
                 DrawObj l_drawObj = Converter.Convert(l_entity);
 
