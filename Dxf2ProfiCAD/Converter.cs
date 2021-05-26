@@ -517,7 +517,8 @@ namespace Dxf2ProfiCAD
             QCircle l_circle = new QCircle(l_center, li_radius);
 
             l_circle.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(a_dxfCircle);
-        
+            l_circle.m_objProps.m_lin = Helper.DxfLineType_2_QLin(a_dxfCircle.LineType, m_scaleX, a_dxfCircle.LineTypeScale);
+
             return l_circle;
         }
 

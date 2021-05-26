@@ -90,6 +90,7 @@ namespace Dxf2ProfiCAD
                 return l_lin;
             }
 
+      
 
             if (a_dxf_line_type == null)
             {
