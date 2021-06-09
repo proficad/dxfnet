@@ -2036,7 +2036,7 @@ namespace Loader
             string[] ls_lineSegments = a_objProps.m_lin.m_body.Split(new char[] { ',' });
             if (ls_lineSegments.Length < 3)
             {
-                throw new Exception("linestyle too short");
+                return null;
             }
             if (ls_lineSegments[0] != "A")
             {
