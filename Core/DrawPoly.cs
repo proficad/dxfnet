@@ -49,6 +49,8 @@ namespace DxfNet
 
         public List<Point> m_points = new List<Point>();
 
+
+
         double m_scale_arrow_x;
         public double Scale_arrow_x
         {

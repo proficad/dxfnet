@@ -40,7 +40,6 @@ namespace DxfNet
         }
         public bool m_bPen;
         public HatchType m_hatchtype;
-        //	BOOL		m_bHatch;
         public int m_hatchspacing;
         public int m_hatchpensize;
         public Size m_hatchoffset;
@@ -49,7 +48,8 @@ namespace DxfNet
         public MFC_Types.MyLogPen m_logpen;
         public MFC_Types.MyLogBrush m_logbrush;
         public QLin m_lin;
-
+        public struct ColorOnOff {public System.Drawing.Color Color; public bool IsOn;};
+        public ColorOnOff m_contour2, m_insulation;
 
         public void SaveToXml(System.Xml.XmlWriter a_xmlWriter)
         {

@@ -718,12 +718,7 @@ namespace Loader
             {
                 l_props.m_logpen.m_width = int.Parse(ls_linewidth);
             }
-            /*
-            if (0 == l_props.m_logpen.lopnWidth.x)
-            {
-                l_props.m_bPen = FALSE;//20-MAY-2004
-            }
-            */
+  
             if (ls_linecolor.Length > 0)
             {
                 int li_lineColor = int.Parse(ls_linecolor);
@@ -744,6 +739,13 @@ namespace Loader
                 l_props.m_logpen.m_style = int.Parse(ls_arrowType);
             }
 
+
+            string ls_contour2 = XmlAttrToString(node.Attributes["op-contour2"]);
+            if(!string.IsNullOrWhiteSpace(ls_contour2))
+            {
+                l_props.m_contour2.IsOn = true;
+                l_props.m_contour2.Color = System.Drawing.ColorTranslator.FromWin32(int.Parse(ls_contour2));
+            }
 
             XmlNode hatchNode = node.SelectSingleNode("descendant::hatch");
             if (hatchNode != null)

@@ -1861,16 +1861,16 @@ namespace Loader
 
         private static void ExportPolyline(DxfEntityCollection a_coll, DrawPoly drawPoly, bool ab_block)
         {
+            if(drawPoly.m_objProps.m_contour2.IsOn)
+            {
+                Export_Polyline_Background(a_coll, drawPoly, ab_block);
+            }
+
+
             int li_arrSize = drawPoly.m_points.Count;
             ArrowType l_arrowType = (ArrowType)drawPoly.m_objProps.m_logpen.m_style;
             bool lb_isArrow = l_arrowType != 0;
 
-            /*
-            if (lb_isArrow)
-            {
-                li_arrSize--;//last segment will be drawn by ExportSipka()
-            }
-            */ 
 
             if (li_arrSize > 1)
             {
@@ -1895,21 +1895,10 @@ namespace Loader
                 {
                     DxfLineType l_lineType = GetLineTypeFromObjProps(drawPoly.m_objProps);
                     dxfPolyline.LineType = l_lineType;
-                    //9 dxfPolyline.LineTypeSource = AttributeSource.This;
                 }
 
               
-                // puvodni kod dxfPolyline.ColorSource = AttributeSource.This;
-                //99 dxfPolyline.ColorSource = AttributeSource.This;//pokus 2013-01-18
-
-                //HACK invert the color to enable import of DXF back to profiCAD
-//2013-01-18                dxfPolyline.Color = (drawPoly.m_objProps.m_logpen.m_color == Color.Black) ? Color.White : drawPoly.m_objProps.m_logpen.m_color;
-
-
-              
                 dxfPolyline.Color = Helper.MakeEntityColorByBlock(drawPoly.m_objProps.m_logpen.m_color, ab_block);
-
-
 
 
                 dxfPolyline.Layer = ExportContext.Current.Layer;
@@ -1920,6 +1909,38 @@ namespace Loader
             }
        
         }
+
+
+        private static void Export_Polyline_Background(DxfEntityCollection a_coll, DrawPoly drawPoly, bool ab_block)
+        {
+            int li_arrSize = drawPoly.m_points.Count;
+            if (li_arrSize > 1)
+            {
+                Point2D[] l_arrPoints = new Point2D[li_arrSize];
+                for (int i = 0; i < li_arrSize; i++)
+                {
+                    l_arrPoints[i].X = drawPoly.m_points[i].X;
+                    l_arrPoints[i].Y = REVERSE_Y * drawPoly.m_points[i].Y;
+                }
+
+                DxfPolyline2D dxfPolyline = new DxfPolyline2D(l_arrPoints);
+
+                dxfPolyline.DefaultStartWidth = drawPoly.m_objProps.m_logpen.m_width;
+                dxfPolyline.DefaultEndWidth = drawPoly.m_objProps.m_logpen.m_width;
+
+                if (drawPoly.m_nShape == Shape.poly)
+                {
+                    dxfPolyline.Closed = true;
+                }
+
+                dxfPolyline.Color = Helper.MakeEntityColorByBlock(drawPoly.m_objProps.m_contour2.Color, ab_block);
+
+                dxfPolyline.Layer = ExportContext.Current.Layer;
+                a_coll.Add(dxfPolyline);
+
+            }
+        }
+
 
         private static void ExportPolylineArrowWithoutStem(DxfEntityCollection a_coll, DrawPoly a_drawPoly, ArrowType a_typ, System.Drawing.Color a_color, double a_scaleX, double a_scaleY, int ai_thickness, bool ab_block, double a_scale_arrow_x, double a_scale_arrow_y)
         {
@@ -2480,6 +2501,8 @@ static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, 
                 l_style.Name = "noname";
             }
         }
+
+ 
 
         //----------------------------------------
     }
