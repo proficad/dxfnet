@@ -26,14 +26,19 @@ namespace Tester
 
         static void Main(string[] args)
         {
+            Test_A2I();
+           
+        }
 
-            //Calculate_Line_Thickness();
-            //TestDim();
-            //Test_Diametric();
-            //Read_Dxf();
-            //TestImageTransform();
-            //ExportAll();
-            TextColors();
+        private static void Test_A2I()
+        {
+            string ls_path_in  = @"A2I\in\in.dxf";
+            string ls_path_out = @"A2I\out\out.png";
+
+            string ls_command = $"A2IEXE png yes 5000 \"{ls_path_in}\" \"{ls_path_out}\"";
+
+            Console.WriteLine(ls_command);
+
         }
 
 
