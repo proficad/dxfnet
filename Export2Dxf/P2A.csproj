@@ -8,8 +8,8 @@
     <ProjectGuid>{CADCC099-D6E1-4D90-86B8-85D7DB1EFE6D}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ProfiCAD2Dxf</RootNamespace>
-    <AssemblyName>ProfiCAD2Dxf</AssemblyName>
+    <RootNamespace>Export2Dxf</RootNamespace>
+    <AssemblyName>P2A</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>Export2Dxf.Program</StartupObject>
