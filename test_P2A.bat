@@ -7,8 +7,10 @@ P2A "%~dp0P2A\in\in.sxe" "outpath" "c:\temp\nologP2A.txt"
 
 if exist outpath (
 	echo P2A passed
+	exit /b 0
 ) else (
 	echo P2A failed !!!
+	exit /b 1
 )
 
 

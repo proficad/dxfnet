@@ -8,7 +8,9 @@ A2IEXE.exe png yes 5000 "%~dp0A2I\in\in.dxf" "outpath" "c:\temp\nolog.txt"
 
 if exist outpath (
 	echo A2I passed
+	exit /b 0
 ) else (
 	echo A2I failed !!!
+	exit /b 1
 )
 
