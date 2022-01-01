@@ -38,5 +38,9 @@ namespace DxfNet
         internal override void Write2Xml(System.Xml.XmlWriter a_xmlWriter)
         { }
 
+        internal override void Recalc_Size(float af_x, float af_y)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

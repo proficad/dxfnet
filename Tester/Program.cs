@@ -35,9 +35,14 @@ namespace Tester
             string ls_path_in  = @"A2I\in\in.dxf";
             string ls_path_out = @"A2I\out\out.png";
 
-            string ls_command = $"A2IEXE png yes 5000 \"{ls_path_in}\" \"{ls_path_out}\"";
+            string ls_command = $"A2IEXE.exe png yes 5000 \"{ls_path_in}\" \"{ls_path_out}\"";
+            //string ls_command = $"A2IEXE.exe";
 
-            Console.WriteLine(ls_command);
+
+            Console.WriteLine("current path: " + System.IO.Directory.GetCurrentDirectory().ToString());
+            Console.WriteLine("command: " + ls_command);
+
+            System.Diagnostics.Process.Start(ls_command);
 
         }
 

@@ -121,6 +121,8 @@ namespace DxfNet
 
         public override bool IsValid(int ai_size_x, int ai_size_y)
         {
+            return true;
+
             foreach (Point l_point in m_points)
             {
                 if(Math.Abs(l_point.X) > ai_size_x)
@@ -225,6 +227,19 @@ namespace DxfNet
             m_position.Y = m_points[0].Y;
 
             RecalcBounds(ref m_position);
+        }
+
+        internal override void Recalc_Size(float af_x, float af_y)
+        {
+            for(int li_i = 0; li_i < m_points.Count; li_i++)
+            {
+                Point l_point = m_points[li_i];
+
+                l_point.X = (int)Math.Round(l_point.X * af_x);
+                l_point.Y = (int)Math.Round(l_point.Y * af_y);
+
+                m_points[li_i] = l_point;
+            }
         }
     }
 }

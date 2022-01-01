@@ -60,10 +60,29 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\A2IDLL\A2IDLL.csproj">
+      <Project>{667333e1-9350-4bcd-91cd-a6d7784e9e0e}</Project>
+      <Name>A2IDLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\A2IEXE\A2IEXE.csproj">
+      <Project>{56bb60ef-eae1-4e80-8e71-f1e465755c3d}</Project>
+      <Name>A2IEXE</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Core\Core.csproj">
+      <Project>{c2460d61-f733-48e4-a53a-6b875d647911}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dxf2ProfiCAD\A2P.csproj">
+      <Project>{6e7e7363-af2e-4bce-855d-b5bb9fc643b2}</Project>
+      <Name>A2P</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Loader\Loader.csproj">
       <Project>{e4692cfb-f467-4f4b-a70e-a33c8e4a4948}</Project>
       <Name>Loader</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="A2I\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

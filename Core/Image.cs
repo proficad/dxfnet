@@ -73,6 +73,9 @@ namespace DxfNet
             return m_position.Height;
         }
 
-
+        internal override void Recalc_Size(float af_x, float af_y)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

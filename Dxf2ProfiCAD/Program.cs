@@ -41,6 +41,10 @@ namespace Dxf2ProfiCAD
             if (args.Length < m_count_parameters)
             {
                 Report_Error_And_Quit("input parameter missing");
+                foreach(var ls_param in args)
+                {
+                    Console.WriteLine(ls_param);
+                }
                 ShowUsage();
                 return;
             }
@@ -402,17 +406,35 @@ namespace Dxf2ProfiCAD
                     if (l_drawObj is Insert l_insert)
                     {
                         string ls_lastGuid = l_insert.m_lG;
+                        Console.WriteLine("insert: " + ls_lastGuid);
 
-                  
+                 
 
                         System.Diagnostics.Debug.Assert(ls_lastGuid.Length > 0);
                         PpdDoc l_ppdDoc = l_repo.FindPpdDocInRepo(ls_lastGuid);
                         if (l_ppdDoc != null)
                         {
+                            //if the symbol uses some huge numbers and compensates it with the scale
+                            //recalculate the numbers
+                            if ((l_insert.m_scaleX < 1) || (l_insert.m_scaleY < 1))
+                            {
+                                l_ppdDoc.Recalc_Size(l_insert.m_scaleX, l_insert.m_scaleY);
+                                l_insert.m_scaleX = 1;
+                                l_insert.m_scaleY = 1;
+                            }
+
+
+
+
+
                             l_insert.SetPpdDoc(l_ppdDoc);
 
                             System.Drawing.Size l_offset = l_ppdDoc.m_offset;
                             l_insert.Offset(l_offset);
+                        }
+                        else
+                        {
+                            Console.WriteLine("did not find symbol for " + ls_lastGuid);
                         }
                     }
 

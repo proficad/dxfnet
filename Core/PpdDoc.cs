@@ -172,16 +172,29 @@ namespace Core
             return l_rect;
         }
 
+
         public Repo GetRepo()
         {
             return m_repo;
         }
+
 
         private void SaveToXmlInner(System.Xml.XmlWriter a_xmlWriter)
         {
             WriteRepo(a_xmlWriter);
             WriteElements(a_xmlWriter);
         }
+
+
+        public void Recalc_Size(float af_x, float af_y)
+        {
+            foreach (DrawObj a_obj in this)
+            {
+                a_obj.Recalc_Size(af_x, af_y);
+                //System.Diagnostics.Debug.WriteLine("GetPosition Union with " + a_obj.m_position.ToString());
+            }
+        }
+
 
         public List<Point> Vyvody
         {

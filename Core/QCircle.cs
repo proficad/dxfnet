@@ -71,5 +71,15 @@ namespace DxfNet
         {
             throw new NotImplementedException();
         }
+
+        internal override void Recalc_Size(float af_x, float af_y)
+        {
+            m_center.X = (int)Math.Round(m_center.X * af_x);
+            m_center.Y = (int)Math.Round(m_center.Y * af_y);
+
+            m_tangent.X = (int)Math.Round(m_tangent.X * af_x);
+            m_tangent.Y = (int)Math.Round(m_tangent.Y * af_y);
+         
+        }
     }
 }

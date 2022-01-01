@@ -77,6 +77,6 @@ namespace DxfNet
         internal abstract void MoveBy(Size l_offset);
 
         public abstract void RecalcPosition();
-
+        internal abstract void Recalc_Size(float af_x, float af_y);
     }
 }
