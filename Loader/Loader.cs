@@ -933,11 +933,16 @@ namespace Loader
         public static void LoadDrawDoc(DrawDoc a_drawDoc, XmlNode a_node)
         {
             XmlAttribute l_layername = a_node.Attributes["name"];
-            if(l_layername != null)
+            XmlAttribute l_layer_visible = a_node.Attributes["v"];
+            if(l_layername != null && l_layer_visible != null && l_layer_visible.Value == "1")
             {
                 Layer l_layer = new Layer(l_layername.Value);
                 a_drawDoc.AddLayer(l_layer);
                 ContextP2A.Current.CurrentLayer = l_layer;
+            }
+            else
+            {
+                return;
             }
 
 
