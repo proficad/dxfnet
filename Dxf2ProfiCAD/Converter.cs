@@ -659,7 +659,9 @@ namespace Dxf2ProfiCAD
             
             Rectangle l_rect = new Rectangle(MyShiftScaleX(ld_x), MyShiftScaleY(ld_y), 0, 0);
 
-            FreeText l_text = new FreeText(a_dxfMText.Text, l_efont, l_rect, 0);
+            string ls_text = a_dxfMText.Text.Replace("\t", "");
+
+            FreeText l_text = new FreeText(ls_text, l_efont, l_rect, 0);
 
             l_text.m_alignment = ConvertAlignment(a_dxfMText);
 
@@ -684,6 +686,7 @@ namespace Dxf2ProfiCAD
             Rectangle l_rect = new Rectangle(MyShiftScaleX(a_dxfMText.InsertionPoint.X), MyShiftScaleY(a_dxfMText.InsertionPoint.Y), 0, 0);
 
             string ls_text = a_dxfMText.SimplifiedText;
+            ls_text = ls_text.Replace("\t", "");
 
             double l_angle;
             double l_axis_x = a_dxfMText.XAxis.X;
