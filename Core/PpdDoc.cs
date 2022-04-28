@@ -79,6 +79,11 @@ namespace Core
 
         internal void SaveToXml(System.Xml.XmlWriter a_xmlWriter)
         {
+            if(m_layers.Count == 0)
+            {
+                return;
+            }
+
             a_xmlWriter.WriteStartElement("ppd");
             a_xmlWriter.WriteAttributeString("name", m_name);
             a_xmlWriter.WriteAttributeString("version", "10.0");
