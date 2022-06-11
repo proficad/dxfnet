@@ -268,10 +268,10 @@ namespace Loader
 
 
             //calc center point of the TB
-            Rectangle l_rectUsed = a_ptb_pos.m_pPtb.GetUsedRect();
+            RectangleF l_rectUsed = a_ptb_pos.m_pPtb.GetUsedRect();
 
-            int li_tbBorderRight = l_rectUsed.Right;
-            int li_tbBorderBottom = l_rectUsed.Bottom;
+            double li_tbBorderRight = l_rectUsed.Right;
+            double li_tbBorderBottom = l_rectUsed.Bottom;
 
             Point3D l_centerPoint = new Point3D();
             int li_turns = lb_turn ? 2 : 0;
@@ -332,11 +332,11 @@ namespace Loader
                 return;
             }
 
-            Rectangle l_rectUsed = l_ptb_doc.GetUsedRect();
+            RectangleF l_rectUsed = l_ptb_doc.GetUsedRect();
 
 
-            int li_tbBorderRight = l_rectUsed.Right;
-            int li_tbBorderBottom = l_rectUsed.Bottom;
+            double li_tbBorderRight = l_rectUsed.Right;
+            double li_tbBorderBottom = l_rectUsed.Bottom;
 
             Point3D l_centerPoint = new Point3D();
             int li_turns = lb_turn ? 2 : 0;
@@ -527,7 +527,7 @@ namespace Loader
         
             l_inserionPoint.Y *= REVERSE_Y;
 
-            Point l_center_point_2D = a_image.GetCenterPoint();
+            PointF l_center_point_2D = a_image.GetCenterPoint();
             l_center_point_2D.Y *= REVERSE_Y;
             Point3D l_center_point_3D = new Point3D(l_center_point_2D.X, l_center_point_2D.Y, 0);
 
@@ -574,7 +574,7 @@ namespace Loader
             DrawPoly l_polyArc = new DrawPoly(Shape.poly);
             foreach (PointF l_pointF in l_points)
             {
-                l_polyArc.AddPoint(Point.Truncate(l_pointF));
+                l_polyArc.AddPoint(l_pointF);
             }
             
 
@@ -762,7 +762,7 @@ namespace Loader
 
         private static void ExportWireLabel(DxfEntityCollection a_coll, DxfNet.Wire a_wire, bool ab_first, EFont a_efont, int ai_a, int ai_b, bool ab_vertically)
         {
-            Point l_point_nearest, l_point_next;
+            PointF l_point_nearest, l_point_next;
             if (ab_first)
             {
                 l_point_nearest = a_wire.m_points[0];
@@ -786,7 +786,8 @@ namespace Loader
 
         // a = distance from wire
         // b = distance from end of wire
-        private static void DrawWireLabelInternal(DxfEntityCollection a_coll, DxfNet.Wire a_wire, bool ab_first, EFont a_efont, UtilsMath.cardinal_directions a_cd, Point a_point_nearest, int ai_a, int ai_b, bool ab_vertically)
+        private static void DrawWireLabelInternal(DxfEntityCollection a_coll, DxfNet.Wire a_wire, bool ab_first, EFont a_efont, UtilsMath.cardinal_directions a_cd, 
+                                                    PointF a_point_nearest, int ai_a, int ai_b, bool ab_vertically)
         {
 
             AttachmentPoint l_attachment_point = AttachmentPoint.MiddleCenter;
@@ -868,11 +869,11 @@ namespace Loader
 
 
 
-        private static void ExportJoint(DxfEntityCollection a_coll, Point a_point, System.Drawing.Color a_color)
+        private static void ExportJoint(DxfEntityCollection a_coll, PointF a_point, System.Drawing.Color a_color)
         {
             const int li_radiusJoint = 7;
 
-            Rectangle l_rect = new Rectangle(a_point.X - li_radiusJoint, a_point.Y - li_radiusJoint, 2 * li_radiusJoint, 2 * li_radiusJoint);
+            RectangleF l_rect = new RectangleF(a_point.X - li_radiusJoint, a_point.Y - li_radiusJoint, 2 * li_radiusJoint, 2 * li_radiusJoint);
             DrawRect l_ellipse = new DrawRect(Shape.ellipse, l_rect);
             l_ellipse.m_objProps.m_bBrush = true;
             l_ellipse.m_objProps.m_logbrush.m_color = a_color;
@@ -1851,7 +1852,7 @@ namespace Loader
             return parameter;
         }
 
-        private static Point3D GetRectCenterPoint(Rectangle a_rect)
+        private static Point3D GetRectCenterPoint(RectangleF a_rect)
         {
             Point3D l_result = new Point3D();
             l_result.X = (a_rect.Left + a_rect.Right) / 2;
@@ -2109,11 +2110,11 @@ namespace Loader
             Point2D[] l_arrPoints = new Point2D[li_arrSize];
             for (int i = 0; i < li_arrSize; i++)
             {
-                int li_x = drawPoly.m_points[i].X;
-                int li_y = drawPoly.m_points[i].Y;
+                double ld_x = drawPoly.m_points[i].X;
+                double ld_y = drawPoly.m_points[i].Y;
 
-                l_arrPoints[i].X = li_x;
-                l_arrPoints[i].Y = REVERSE_Y * li_y;
+                l_arrPoints[i].X = ld_x;
+                l_arrPoints[i].Y = REVERSE_Y * ld_y;
             }
 
             DxfPolyline2DSpline dxfPolyline = new DxfPolyline2DSpline(SplineType.CubicBSpline, l_arrPoints);
@@ -2147,7 +2148,7 @@ namespace Loader
         }
 
 
-static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, Point a_start, Point a_cil, System.Drawing.Color a_color, bool ab_drawStem, bool ab_is_ending, 
+static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, PointF a_start, PointF a_cil, System.Drawing.Color a_color, bool ab_drawStem, bool ab_is_ending, 
     double a_scaleX, double a_scaleY, int ai_thickness, bool ab_block, 
     double a_scale_arrow_x, double a_scale_arrow_y)
 {
@@ -2162,15 +2163,20 @@ static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, 
     int li_dist_60 = 60;
 
     int	li_coef = 2;
-	int li_len = Helper.MyHypot(a_start.X - a_cil.X, a_start.Y - a_cil.Y);
+	double li_len = Helper.MyHypot(a_start.X - a_cil.X, a_start.Y - a_cil.Y);
 
 	switch(a_typ){
 	case ArrowType.at_sip1://velká
 		if (ab_is_ending)
 		{
             DrawPoly l_poly = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-            Point l_point1 = Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - li_coef_x_12 * li_coef, a_start.Y - li_coef_y_5 * li_coef));
-            Point l_point2 = Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - li_coef_x_12 * li_coef, a_start.Y + li_coef_y_5 * li_coef));
+            PointF l_point1 = Helper.PrevodBodu(a_start, a_cil, 
+                new PointF((float)(a_start.X + li_len - li_coef_x_12 * li_coef), (float)(a_start.Y - li_coef_y_5 * li_coef))
+                );
+
+            PointF l_point2 = Helper.PrevodBodu(a_start, a_cil, 
+                new PointF((float)(a_start.X + li_len - li_coef_x_12 * li_coef), (float)(a_start.Y + li_coef_y_5 * li_coef))
+                );
             l_poly.AddPoint(l_point1);
             l_poly.AddPoint(a_cil);
             l_poly.AddPoint(l_point2);
@@ -2183,9 +2189,25 @@ static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, 
 			if (ab_is_ending)
 			{
 
-				Point pointMitte =  Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - 13 * li_coef, a_start.Y - 0 * li_coef));
-				Point pointA =	    Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - li_coef_x_12 * li_coef, a_start.Y - li_coef_y_5 * li_coef));
-				Point pointB =	    Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - li_coef_x_12 * li_coef, a_start.Y + li_coef_y_5 * li_coef));
+				PointF pointMitte =  Helper.PrevodBodu(a_start, a_cil, 
+                                    new PointF(
+                                        (float)(a_start.X + li_len - 13 * li_coef), 
+                                        (float)(a_start.Y - 0 * li_coef)
+                                        )
+                                    );
+				PointF pointA =	    Helper.PrevodBodu(a_start, a_cil, 
+                                    new PointF(
+                                        (float)(a_start.X + li_len - li_coef_x_12 * li_coef), 
+                                        (float)(a_start.Y - li_coef_y_5 * li_coef)
+                                        )
+                                    );
+
+				PointF pointB =	    Helper.PrevodBodu(a_start, a_cil, 
+                                    new PointF(
+                                        (float)(a_start.X + li_len - li_coef_x_12 * li_coef), 
+                                        (float)(a_start.Y + li_coef_y_5 * li_coef)
+                                        )
+                                    );
 	            
                 DrawPoly l_poly2 = new DrawPoly(Shape.polyline, ai_thickness, a_color);
                 l_poly2.AddPoint(a_cil);
@@ -2202,8 +2224,21 @@ static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, 
 		{
             DrawPoly l_poly = new DrawPoly(Shape.polyline, ai_thickness, a_color);
             l_poly.AddPoint(a_cil);
-            l_poly.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - 12 * li_coef, a_start.Y - 3 * li_coef)));
-            l_poly.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - 12 * li_coef, a_start.Y + 3 * li_coef)));
+            l_poly.AddPoint(Helper.PrevodBodu(a_start, a_cil, 
+                new PointF(
+                    (float)(a_start.X + li_len - 12 * li_coef), 
+                    (float)(a_start.Y - 3 * li_coef)
+                    )
+                )
+                );
+
+            l_poly.AddPoint(Helper.PrevodBodu(a_start, a_cil, 
+                new PointF(
+                    (float)(a_start.X + li_len - 12 * li_coef), 
+                    (float)(a_start.Y + 3 * li_coef)
+                    )
+                )
+                );
             l_poly.AddPoint(a_cil);
             Helper.ExportPolylineAux(a_coll, l_poly, ab_block);
 		}
@@ -2212,50 +2247,50 @@ static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, 
 		if (ab_is_ending)
 		{
             DrawPoly l_poly = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-            l_poly.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - li_coef_x_12 * li_coef, a_start.Y - 3 * li_coef)));
+            l_poly.AddPoint(Helper.PrevodBodu(a_start, a_cil, a_start.X + li_len - li_coef_x_12 * li_coef, a_start.Y - 3 * li_coef));
             l_poly.AddPoint(a_cil);
-            l_poly.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - li_coef_x_12 * li_coef, a_start.Y + 3 * li_coef)));
+            l_poly.AddPoint(Helper.PrevodBodu(a_start, a_cil, a_start.X + li_len - li_coef_x_12 * li_coef, a_start.Y + 3 * li_coef));
             Helper.ExportPolylineAux(a_coll, l_poly, ab_block);
 		}
 		else
 		{
             DrawPoly l_poly = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-            l_poly.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len + li_coef_x_24, a_start.Y - 3 * li_coef)));
-            l_poly.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len, a_start.Y)));
-            l_poly.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len + li_coef_x_24, a_start.Y + 3 * li_coef)));
+            l_poly.AddPoint(Helper.PrevodBodu(a_start, a_cil, a_start.X + li_len + li_coef_x_24, a_start.Y - 3 * li_coef));
+            l_poly.AddPoint(Helper.PrevodBodu(a_start, a_cil, a_start.X + li_len, a_start.Y));
+            l_poly.AddPoint(Helper.PrevodBodu(a_start, a_cil, a_start.X + li_len + li_coef_x_24, a_start.Y + 3 * li_coef));
             Helper.ExportPolylineAux(a_coll, l_poly, ab_block);
 		}
 
 		break;
 	case ArrowType.at_sip4://velká oboustranná
         DrawPoly l_poly_sip4 = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-        l_poly_sip4.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - 20 * li_coef, a_start.Y - li_coef_y_5 * li_coef)));
+        l_poly_sip4.AddPoint(Helper.PrevodBodu(a_start, a_cil, a_start.X + li_len - 20 * li_coef, a_start.Y - li_coef_y_5 * li_coef));
         l_poly_sip4.AddPoint(a_cil);
-        l_poly_sip4.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - 20 * li_coef, a_start.Y + li_coef_y_5 * li_coef)));
+        l_poly_sip4.AddPoint(Helper.PrevodBodu(a_start, a_cil, a_start.X + li_len - 20 * li_coef, a_start.Y + li_coef_y_5 * li_coef));
         Helper.ExportPolylineAux(a_coll, l_poly_sip4, ab_block);
 		break;
 	case ArrowType.at_sip5://malá oboustranná
         DrawPoly l_poly_sip5 = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-        l_poly_sip5.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - li_coef_x_12 * li_coef, a_start.Y - li_coef_y_5 * li_coef)));
+        l_poly_sip5.AddPoint(Helper.PrevodBodu(a_start, a_cil, a_start.X + li_len - li_coef_x_12 * li_coef, a_start.Y - li_coef_y_5 * li_coef));
         l_poly_sip5.AddPoint(a_cil);
-        l_poly_sip5.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - li_coef_x_12 * li_coef, a_start.Y + li_coef_y_5 * li_coef)));
+        l_poly_sip5.AddPoint(Helper.PrevodBodu(a_start, a_cil, a_start.X + li_len - li_coef_x_12 * li_coef, a_start.Y + li_coef_y_5 * li_coef));
         Helper.ExportPolylineAux(a_coll, l_poly_sip5, ab_block);
 		break;
     case ArrowType.at_sip7://mala s sipkami dovnitr na kotovani der zvenku added version 4.1
          DrawPoly l_poly_sip_7a = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-        l_poly_sip_7a.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - (li_dist_80 * li_coef), a_start.Y)));
-        l_poly_sip_7a.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - (li_dist_60 * li_coef), a_start.Y - li_coef_y_5 * li_coef)));
+        l_poly_sip_7a.AddPoint(Helper.PrevodBodu(a_start, a_cil, a_start.X + li_len - (li_dist_80 * li_coef), a_start.Y));
+        l_poly_sip_7a.AddPoint(Helper.PrevodBodu(a_start, a_cil, a_start.X + li_len - (li_dist_60 * li_coef), a_start.Y - li_coef_y_5 * li_coef));
         Helper.ExportPolylineAux(a_coll, l_poly_sip_7a, ab_block);
 
         DrawPoly l_poly_sip_7b = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-        l_poly_sip_7b.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - (li_dist_80 * li_coef), a_start.Y)));
-        l_poly_sip_7b.AddPoint(Helper.PrevodBodu(a_start, a_cil, new Point(a_start.X + li_len - (li_dist_60 * li_coef), a_start.Y + li_coef_y_5 * li_coef)));
+        l_poly_sip_7b.AddPoint(Helper.PrevodBodu(a_start, a_cil, a_start.X + li_len - (li_dist_80 * li_coef), a_start.Y));
+        l_poly_sip_7b.AddPoint(Helper.PrevodBodu(a_start, a_cil, a_start.X + li_len - (li_dist_60 * li_coef), a_start.Y + li_coef_y_5 * li_coef));
         Helper.ExportPolylineAux(a_coll, l_poly_sip_7b, ab_block);
         break;
     case ArrowType.at_sip8://    /------------------/ stavební
         DrawPoly l_poly_sip8 = new DrawPoly(Shape.polyline, ai_thickness, a_color);
-        l_poly_sip8.AddPoint(Helper.PrevodBodu(a_cil, a_start, new Point(a_cil.X + li_coef_x_7 * li_coef, a_cil.Y - li_coef_y_7 * li_coef)));
-        l_poly_sip8.AddPoint(Helper.PrevodBodu(a_cil, a_start, new Point(a_cil.X - li_coef_x_7 * li_coef, a_cil.Y + li_coef_y_7 * li_coef)));
+        l_poly_sip8.AddPoint(Helper.PrevodBodu(a_cil, a_start, a_cil.X + li_coef_x_7 * li_coef, a_cil.Y - li_coef_y_7 * li_coef));
+        l_poly_sip8.AddPoint(Helper.PrevodBodu(a_cil, a_start, a_cil.X - li_coef_x_7 * li_coef, a_cil.Y + li_coef_y_7 * li_coef));
         Helper.ExportPolylineAux(a_coll, l_poly_sip8, ab_block);
         break;
 
@@ -2340,7 +2375,7 @@ static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, 
             Vector3D l_axis = TurnsToVector3D(0);
 
 
-            Point l_point_temp = a_wire.GetLineCenterPoint();
+            PointF l_point_temp = a_wire.GetLineCenterPoint();
             Point3D l_center_point = new Point3D(l_point_temp.X, l_point_temp.Y, 0);
 
             //adjust the center point depending on the orientation of the wire

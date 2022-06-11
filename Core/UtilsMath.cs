@@ -10,7 +10,7 @@ namespace DxfNet
     {
         public enum cardinal_directions { cd_north, cd_east, cd_south, cd_west, cd_none };
 
-        public static cardinal_directions GetDirection(Point a_p1, Point a_p2)
+        public static cardinal_directions GetDirection(PointF a_p1, PointF a_p2)
         {
             if (a_p1.Y == a_p2.Y)
             {

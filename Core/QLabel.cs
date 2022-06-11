@@ -7,7 +7,7 @@ namespace DxfNet
 {
     public class QLabel
     {
-        public Point Center;
+        public PointF Center;
         public string Text;
         public int AngleTenths;
 

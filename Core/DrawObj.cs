@@ -38,7 +38,7 @@ namespace DxfNet
 
     public abstract class DrawObj
     {
-        public DrawObj(Shape a_shape, Rectangle a_rect)
+        public DrawObj(Shape a_shape, RectangleF a_rect)
         {
             m_nShape = a_shape;
             m_objProps = new ObjProps();
@@ -53,7 +53,7 @@ namespace DxfNet
             m_objProps = new ObjProps();
         }
 
-        public Rectangle m_position;
+        public RectangleF m_position;
         public string m_text;
         public ObjProps m_objProps;
         public Shape m_nShape;
@@ -61,9 +61,9 @@ namespace DxfNet
 
         internal abstract void Write2Xml(System.Xml.XmlWriter a_xmlWriter);
 
-        public Point GetCenterPoint()
+        public PointF GetCenterPoint()
         {
-            Point l_result = new Point();
+            PointF l_result = new PointF();
             l_result.X = (m_position.Left + m_position.Right) / 2;
             l_result.Y = (m_position.Top + m_position.Bottom) / 2;
             return l_result;
@@ -74,7 +74,7 @@ namespace DxfNet
 
         internal abstract void RecalcBounds(ref MyRect l_bounds);
 
-        internal abstract void MoveBy(Size l_offset);
+        internal abstract void MoveBy(SizeF l_offset);
 
         public abstract void RecalcPosition();
         internal abstract void Recalc_Size(float af_x, float af_y);

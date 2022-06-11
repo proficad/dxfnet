@@ -46,11 +46,11 @@ namespace DxfNet
                 + 256 * 256 * a_input.B;
         }
 
-        public static Point GetRectCenterPoint(MyRect a_rect)
+        public static PointF GetRectCenterPoint(MyRect a_rect)
         {
-            int li_x = (a_rect.Left + a_rect.Right) / 2;
-            int li_y = (a_rect.Top + a_rect.Bottom) / 2;
-            return new Point(li_x, li_y);
+            double ld_x = (a_rect.Left + a_rect.Right) / 2;
+            double ld_y = (a_rect.Top + a_rect.Bottom) / 2;
+            return new PointF((float)ld_x, (float)ld_y);
         }
 
 
@@ -88,16 +88,16 @@ namespace DxfNet
             x = t;
         }
 
-        public static int Distance2Points(Point a_point1, Point a_point2)
+        public static int Distance2Points(PointF a_point1, PointF a_point2)
         {
-            int li_diff_x = a_point1.X - a_point2.X;
-            int li_diff_y = a_point1.Y - a_point2.Y;
+            double li_diff_x = a_point1.X - a_point2.X;
+            double li_diff_y = a_point1.Y - a_point2.Y;
             return (int)Math.Sqrt(
                 (li_diff_x * li_diff_x) + (li_diff_y * li_diff_y)
             );
         }
 
-        internal static int EasyDistance2Points(Point a_point1, Point a_point2)
+        internal static double EasyDistance2Points(PointF a_point1, PointF a_point2)
         {
             return
             Math.Abs(a_point1.X - a_point2.X) + Math.Abs(a_point1.Y - a_point2.Y);
@@ -162,7 +162,7 @@ namespace DxfNet
             return l_list;
         }
 
-        public static void Point2Attrib(System.Xml.XmlWriter a_xmlWriter, String as_attrib, Point a_point)
+        public static void Point2Attrib(System.Xml.XmlWriter a_xmlWriter, String as_attrib, PointF a_point)
         {
             a_xmlWriter.WriteAttributeString(as_attrib + "x", a_point.X.ToString());
             a_xmlWriter.WriteAttributeString(as_attrib + "y", a_point.Y.ToString());

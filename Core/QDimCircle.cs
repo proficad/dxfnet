@@ -39,7 +39,7 @@ namespace DxfNet
             throw new NotImplementedException();
         }
 
-        internal override void MoveBy(Size l_offset)
+        internal override void MoveBy(SizeF l_offset)
         {
             throw new NotImplementedException();
         }

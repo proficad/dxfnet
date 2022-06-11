@@ -307,11 +307,11 @@ namespace DxfNet
 
         private void SubtractPaperMargins(ref Size a_size)
         {
-            a_size.Width = a_size.Width - m_page_size_settings.PageMargins.Left;
-            a_size.Width -= m_page_size_settings.PageMargins.Right;
+            a_size.Width = a_size.Width - (int)m_page_size_settings.PageMargins.Left;
+            a_size.Width -= (int)m_page_size_settings.PageMargins.Right;
 
-            a_size.Height -= m_page_size_settings.PageMargins.Top;
-            a_size.Height -= m_page_size_settings.PageMargins.Bottom;
+            a_size.Height -= (int)m_page_size_settings.PageMargins.Top;
+            a_size.Height -= (int)m_page_size_settings.PageMargins.Bottom;
         }
 
 
@@ -320,7 +320,7 @@ namespace DxfNet
             List<Wire> l_list_of_wires = new List<Wire>();
             GetAllWiresFromThisPage(l_list_of_wires);
 
-            List<Point> l_vyvody = new List<Point>();
+            List<PointF> l_vyvody = new List<PointF>();
 
             PripravVyvody(l_vyvody);
 
@@ -332,12 +332,12 @@ namespace DxfNet
 
         }
 
-        private void SetupWireStatusConnected(Wire a_wire, List<Point> a_vyvody)
+        private void SetupWireStatusConnected(Wire a_wire, List<PointF> a_vyvody)
         {
             a_wire.Is_connected_first = false;
             a_wire.Is_connected_last = false;
 
-            foreach(Point l_point in a_vyvody)
+            foreach(PointF l_point in a_vyvody)
             {
                 if (l_point == a_wire.GetEndingPoint(true))
                 {
@@ -375,7 +375,7 @@ namespace DxfNet
         }
 
 
-        private void PripravVyvody(List<Point> a_vyvody)
+        private void PripravVyvody(List<PointF> a_vyvody)
         {
             List<Insert> l_list_CElems = new List<Insert>();
 	
@@ -392,7 +392,7 @@ namespace DxfNet
                 {
                     foreach(Point l_vyvod in l_ppd.Vyvody)
                     {
-                        Point l_point = l_vyvod;
+                        PointF l_point = l_vyvod;
                         l_point.X += l_center_point.X;
                         l_point.Y += l_center_point.Y;
                         a_vyvody.Add(l_insert.RecalculatePoint(l_point));

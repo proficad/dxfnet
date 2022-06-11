@@ -26,7 +26,7 @@ namespace DxfNet
         internal override void RecalcBounds(ref MyRect l_bounds)
         { }
 
-        internal override void MoveBy(Size l_offset)
+        internal override void MoveBy(SizeF l_offset)
         {
             m_position.X += l_offset.Width;
             m_position.Y += l_offset.Height;

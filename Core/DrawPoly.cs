@@ -23,7 +23,7 @@ namespace DxfNet
             Scale_arrow_y = 1;
         }
 
-        public DrawPoly(Shape a_shape, int ai_thickness, Color a_colorBorder, Point a_from, Point a_to) : base(a_shape)
+        public DrawPoly(Shape a_shape, int ai_thickness, Color a_colorBorder, PointF a_from, PointF a_to) : base(a_shape)
         {
             m_objProps.m_logpen.m_width = ai_thickness;
             m_objProps.m_logpen.m_color = a_colorBorder;
@@ -34,7 +34,20 @@ namespace DxfNet
             Scale_arrow_y = 1;
         }
 
-        public DrawPoly(Shape a_shape, int ai_thickness, Color a_colorBorder, Point [] a_points) : base(a_shape)
+        public DrawPoly(Shape a_shape, int ai_thickness, Color a_colorBorder, PointF [] a_points) : base(a_shape)
+        {
+            m_objProps.m_logpen.m_width = ai_thickness;
+            m_objProps.m_logpen.m_color = a_colorBorder;
+            foreach (PointF l_point in a_points)
+            {
+                AddPoint(l_point);
+            }
+
+            Scale_arrow_x = 1;
+            Scale_arrow_y = 1;
+        }
+
+        public DrawPoly(Shape a_shape, int ai_thickness, Color a_colorBorder, Point[] a_points) : base(a_shape)
         {
             m_objProps.m_logpen.m_width = ai_thickness;
             m_objProps.m_logpen.m_color = a_colorBorder;
@@ -47,7 +60,7 @@ namespace DxfNet
             Scale_arrow_y = 1;
         }
 
-        public List<Point> m_points = new List<Point>();
+        public List<PointF> m_points = new List<PointF>();
 
 
 
@@ -64,12 +77,12 @@ namespace DxfNet
             set { m_scale_arrow_y = value; }
         }
 
-        public void AddPoint(int ai_x, int ai_y)
+        public void AddPoint(double ai_x, double ai_y)
         {
-            Point p = new Point(ai_x, ai_y);
+            PointF p = new PointF((float)ai_x, (float)ai_y);
             m_points.Add(p);
         }
-        public void AddPoint(Point a_point)
+        public void AddPoint(PointF a_point)
         {
             m_points.Add(a_point);
         }
@@ -98,7 +111,7 @@ namespace DxfNet
 
 
         	System.Text.StringBuilder ls_points = new StringBuilder();
-            foreach (Point point in m_points)
+            foreach (PointF point in m_points)
             {
                 ls_points.Append(string.Format("{0},{1},", point.X, point.Y));
             }
@@ -123,7 +136,8 @@ namespace DxfNet
         {
             return true;
 
-            foreach (Point l_point in m_points)
+            /*
+            foreach (PointF l_point in m_points)
             {
                 if(Math.Abs(l_point.X) > ai_size_x)
                 {
@@ -147,11 +161,12 @@ namespace DxfNet
             }
 
             return true;
+            */
         }
 
         internal override void RecalcBounds(ref MyRect l_bounds) 
         {
-            foreach (Point point in m_points)
+            foreach (PointF point in m_points)
             {
                 if (point.X < l_bounds.Left)
                 {
@@ -175,9 +190,9 @@ namespace DxfNet
         }
 
 
-        internal void RecalcBounds(ref Rectangle l_bounds)
+        internal void RecalcBounds(ref RectangleF l_bounds)
         {
-            foreach (Point point in m_points)
+            foreach (PointF point in m_points)
             {
                 if (point.X < l_bounds.Left)
                 {
@@ -202,11 +217,11 @@ namespace DxfNet
             }
         }
 
-        internal override void MoveBy(Size l_offset)
+        internal override void MoveBy(SizeF l_offset)
         {
             for (int li_i = 0; li_i < m_points.Count; li_i++)
             {
-                Point l_point = m_points[li_i];
+                PointF l_point = m_points[li_i];
                 l_point.X += l_offset.Width;
                 l_point.Y += l_offset.Height;
 
@@ -233,7 +248,7 @@ namespace DxfNet
         {
             for(int li_i = 0; li_i < m_points.Count; li_i++)
             {
-                Point l_point = m_points[li_i];
+                PointF l_point = m_points[li_i];
 
                 l_point.X = (int)Math.Round(l_point.X * af_x);
                 l_point.Y = (int)Math.Round(l_point.Y * af_y);

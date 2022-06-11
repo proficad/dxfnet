@@ -62,7 +62,7 @@ namespace DxfNet
             return m_drop2;
         }
 
-        public System.Drawing.Point GetEndingPoint(bool ab_first)
+        public System.Drawing.PointF GetEndingPoint(bool ab_first)
         {
             return ab_first ? m_points[0] : m_points.Last();
         }
@@ -79,7 +79,7 @@ namespace DxfNet
             }
         }
 
-        public Point GetLastButOne()
+        public PointF GetLastButOne()
         {
             return m_points[m_points.Count - 2];
         }
@@ -91,13 +91,13 @@ namespace DxfNet
                 return false;
             }
 
-            int li_dist = Helper.EasyDistance2Points(m_points[0], m_points[1]);
+            double li_dist = Helper.EasyDistance2Points(m_points[0], m_points[1]);
             return li_dist < (10 * ai_long_wire_len);
         }
 
-        public Point GetLineCenterPoint()
+        public PointF GetLineCenterPoint()
         {
-            Point l_center = new Point();
+            PointF l_center = new PointF();
             l_center.X = (m_points[0].X + m_points[1].X) / 2;
             l_center.Y = (m_points[0].Y + m_points[1].Y) / 2;
 

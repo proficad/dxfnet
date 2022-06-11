@@ -8,7 +8,7 @@ namespace DxfNet
 {
     public class QPivot
     {
-        public Point m_pivot;//axis of the object
+        public PointF m_pivot;//axis of the object
         public int m_angle;
         public bool m_horizontal;
         public bool m_vertical;
@@ -16,7 +16,7 @@ namespace DxfNet
         public double ScaleX { get; set; }
         public double ScaleY { get; set; }
 
-        public QPivot(Point a_pivot, int a_angle, bool ab_horizontal, bool ab_vertical)
+        public QPivot(PointF a_pivot, int a_angle, bool ab_horizontal, bool ab_vertical)
         {
             m_pivot = a_pivot;
             m_angle = a_angle;
@@ -35,14 +35,14 @@ namespace DxfNet
 
         }
 
-        public Point PrevodBodu (int x, int y)
+        public PointF PrevodBodu (int x, int y)
         {
-	        return PrevodBodu(new Point(x,y));
+	        return PrevodBodu(new PointF(x,y));
         }
 
-        public Point PrevodBodu (Point vstup)
+        public PointF PrevodBodu (PointF vstup)
         {
-	        Point	vysledek = vstup;
+	        PointF	vysledek = vstup;
 
             if ((m_angle == 0) && (m_vertical == false) && (m_horizontal == false) && (ScaleX == 1) && (ScaleY == 1))
             {
@@ -50,14 +50,14 @@ namespace DxfNet
 	        }
 
 	        //zohlednit polohu bodu vůči středu součástky...
-	        int X = m_pivot.X; 
-	        int Y = m_pivot.Y; 
-	        int x = vstup.X - X; 
-	        int y = vstup.Y - Y;
+	        double X = m_pivot.X; 
+	        double Y = m_pivot.Y; 
+	        double x = vstup.X - X; 
+	        double y = vstup.Y - Y;
 
 
-            x = (int)(x * ScaleX);
-            y = (int)(y * ScaleY);
+            x = x * ScaleX;
+            y = y * ScaleY;
 
 
 	        // a natočení
@@ -68,20 +68,20 @@ namespace DxfNet
 	        switch(m_angle)
             {
 	        case 0: 
-		        vysledek.X = X + x;
-		        vysledek.Y = Y + y;
+		        vysledek.X = (float)(X + x);
+		        vysledek.Y = (float)(Y + y);
 		        break;
 	        case 900: 
-		        vysledek.X = X + y;
-		        vysledek.Y = Y - x;
+		        vysledek.X = (float)(X + y);
+		        vysledek.Y = (float)(Y - x);
 		        break;
 	        case 1800: 
-		        vysledek.X = X - x;
-		        vysledek.Y = Y - y;
+		        vysledek.X = (float)(X - x);
+		        vysledek.Y = (float)(Y - y);
 		        break;
 	        case -900: 
-		        vysledek.X = X - y;
-		        vysledek.Y = Y + x;
+		        vysledek.X = (float)(X - y);
+		        vysledek.Y = (float)(Y + x);
 		        break;
 	        default: {
 		        double pi;
@@ -95,8 +95,8 @@ namespace DxfNet
 		        // update the size
 		        //
 		        x += X; y += Y ;
-		        vysledek.X = x;
-		        vysledek.Y = y;
+		        vysledek.X = (float)x;
+		        vysledek.Y = (float)y;
 		        }//defa
                 break;
 	        }//switch

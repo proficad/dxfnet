@@ -34,22 +34,28 @@ namespace Loader
             return new Point(li_x, li_y);
         }
 
-        public static Point PrevodBodu(Point origin, Point vektor, Point vstup)
+        public static PointF PrevodBodu(PointF origin, PointF vektor, double ad_vstup_x, double ad_vstup_y)
         {
-            Point vysledek = new Point();
+            PointF l_point_vstup = new PointF((float)ad_vstup_x, (float)ad_vstup_y);
+            return PrevodBodu(origin, vektor, l_point_vstup);
+        }
+
+        public static PointF PrevodBodu(PointF origin, PointF vektor, PointF vstup)
+        {
+            PointF vysledek = new PointF();
 
             //zjistit úhel šipky
             double fi_sipky = Math.Atan2((double)(vektor.Y - origin.Y), (double)(vektor.X - origin.X));
             double fi_vstupu = Math.Atan2((double)(vstup.Y - origin.Y), (double)(vstup.X - origin.X));
-            long modul_vstupu = MyHypot((vstup.Y - origin.Y), (vstup.X - origin.X));
+            double modul_vstupu = MyHypot((vstup.Y - origin.Y), (vstup.X - origin.X));
             //
-            vysledek.X = origin.X + (int)(modul_vstupu * Math.Cos(fi_vstupu + fi_sipky));
-            vysledek.Y = origin.Y + (int)(modul_vstupu * Math.Sin(fi_vstupu + fi_sipky));
+            vysledek.X = (float)(origin.X + modul_vstupu * Math.Cos(fi_vstupu + fi_sipky));
+            vysledek.Y = (float)(origin.Y + modul_vstupu * Math.Sin(fi_vstupu + fi_sipky));
 
             return vysledek;
         }
 
-        public static Point PrevodBodu(Point a_vstup, PositionAspect a_aspect)
+        public static PointF PrevodBodu(PointF a_vstup, PositionAspect a_aspect)
         {
             if (
                 (a_aspect.m_angle == 0) 
@@ -65,9 +71,9 @@ namespace Loader
             return pivot.PrevodBodu(a_vstup);
         }
 
-        public static Point PrevodBodu(int ai_x, int ai_y, PositionAspect a_aspect)
+        public static PointF PrevodBodu(int ai_x, int ai_y, PositionAspect a_aspect)
         {
-            return PrevodBodu(new Point(ai_x, ai_y), a_aspect);
+            return PrevodBodu(new PointF(ai_x, ai_y), a_aspect);
         }
 
         public static Vector2D Vector3DTo2D(Vector3D a_v3d)
@@ -78,9 +84,11 @@ namespace Loader
             return l_vecResult;
         }
 
-        public static void My_Bezier(DxfEntityCollection a_coll, PositionAspect a_aspect, Point a_begin, Point a_a1, Point a_a2, Point a_end, int ai_thickness, System.Drawing.Color a_color, bool ab_block)
+        public static void My_Bezier(DxfEntityCollection a_coll, PositionAspect a_aspect, 
+                                    PointF a_begin, PointF a_a1, PointF a_a2, PointF a_end, 
+                                    int ai_thickness, System.Drawing.Color a_color, bool ab_block)
         {
-            Point[] points = { Helper.PrevodBodu(a_begin, a_aspect), Helper.PrevodBodu(a_a1, a_aspect), Helper.PrevodBodu(a_a2, a_aspect), Helper.PrevodBodu(a_end, a_aspect) };
+            PointF[] points = { Helper.PrevodBodu(a_begin, a_aspect), Helper.PrevodBodu(a_a1, a_aspect), Helper.PrevodBodu(a_a2, a_aspect), Helper.PrevodBodu(a_end, a_aspect) };
             DrawPoly l_bezi = new DrawPoly(Shape.bezier, ai_thickness, a_color, points);
             Exporter.ExportBezier(a_coll, l_bezi, ab_block);
         }
@@ -88,6 +96,12 @@ namespace Loader
         public static int MyHypot(int a, int b)
         {
             int sumOfSquares = a * a + b * b;
+            return (int)Math.Sqrt(sumOfSquares);
+        }
+        
+        public static double MyHypot(double a, double b)
+        {
+            double sumOfSquares = a * a + b * b;
             return (int)Math.Sqrt(sumOfSquares);
         }
 

@@ -9,13 +9,13 @@ namespace DxfNet
 {
     public class QCircle : DrawObj
     {
-        public QCircle(Point a_center, Point a_tangent) : base(Shape.circle, new Rectangle())
+        public QCircle(PointF a_center, PointF a_tangent) : base(Shape.circle, new Rectangle())
         {
             m_center = a_center;
             m_tangent = a_tangent;
         }
 
-        public QCircle(Point a_center, int ai_radius) : base(Shape.circle)
+        public QCircle(PointF a_center, int ai_radius) : base(Shape.circle)
         {
             m_center = a_center;
             m_tangent.X = m_center.X + ai_radius;
@@ -23,8 +23,8 @@ namespace DxfNet
         }
 
 
-        public Point m_center;
-        public Point m_tangent;
+        public PointF m_center;
+        public PointF m_tangent;
 
         public EFont m_efont;
         public int m_text_angle;
@@ -62,7 +62,7 @@ namespace DxfNet
             throw new NotImplementedException();
         }
 
-        internal override void MoveBy(Size l_offset)
+        internal override void MoveBy(SizeF l_offset)
         {
             throw new NotImplementedException();
         }

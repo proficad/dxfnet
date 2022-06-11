@@ -10,6 +10,6 @@ namespace DxfNet
     {
         string Tag { get; set; }
         string Value { get; set; }
-        Point AlignmentPoint1 { get; set; }
+        PointF AlignmentPoint1 { get; set; }
     }
 }

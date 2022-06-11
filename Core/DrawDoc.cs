@@ -78,10 +78,10 @@ namespace DxfNet
             a_xmlWriter.WriteEndElement();
         }
 
-        public Rectangle GetUsedRect()
+        public RectangleF GetUsedRect()
         { 
-	        Rectangle l_usedrect = new Rectangle();
-            Rectangle l_position = new Rectangle();
+	        RectangleF l_usedrect = new Rectangle();
+            RectangleF l_position = new Rectangle();
 	        bool	  lb_first = true;
 
 	        foreach(DrawObj l_obj in this)
@@ -95,7 +95,7 @@ namespace DxfNet
 			        lb_first = false;
 		        }
 		        else{
-			        l_usedrect = Rectangle.Union(l_usedrect, l_position);
+			        l_usedrect = RectangleF.Union(l_usedrect, l_position);
 			        //l_usedrect.NormalizeRect();
 		        }
 	        }

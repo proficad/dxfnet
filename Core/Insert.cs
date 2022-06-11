@@ -57,10 +57,10 @@ namespace DxfNet
         public System.Collections.Hashtable m_parameters = new System.Collections.Hashtable(2);
 
 
-        public Insert(Shape a_shape, int a_x, int a_y, float af_scaleX, float af_scaleY) : base(a_shape)
+        public Insert(Shape a_shape, double a_x, double a_y, float af_scaleX, float af_scaleY) : base(a_shape)
         {
-            m_position.X = a_x;
-            m_position.Y = a_y;
+            m_position.X = (float)a_x;
+            m_position.Y = (float)a_y;
 
             m_scaleX = af_scaleX;
             m_scaleY = af_scaleY;
@@ -136,13 +136,13 @@ namespace DxfNet
 
         internal override void RecalcBounds(ref MyRect l_bounds) { }
 
-        internal override void MoveBy(Size l_offset)
+        internal override void MoveBy(SizeF l_offset)
         {
             m_position.X += l_offset.Width;
             m_position.Y += l_offset.Height;
         }
 
-        public void Offset(Size l_offset)
+        public void Offset(SizeF l_offset)
         {
             m_position.X += l_offset.Width;
             m_position.Y += l_offset.Height;
@@ -160,7 +160,7 @@ namespace DxfNet
             if (m_ppdDoc != null)
             {
 
-                Rectangle l_ppdRect = m_ppdDoc.GetPosition();
+                RectangleF l_ppdRect = m_ppdDoc.GetPosition();
                 l_ppdRect.X += l_centerPoint.X;
                 l_ppdRect.Y += l_centerPoint.Y;
 
@@ -174,7 +174,7 @@ namespace DxfNet
 
 
 
-        internal Point RecalculatePoint(Point a_vyvod)
+        internal PointF RecalculatePoint(PointF a_vyvod)
         {
             
             
@@ -193,7 +193,7 @@ namespace DxfNet
 	        l_positionAspect.ScaleY = m_scaleY;
 
 	        QPivot pivot = new QPivot(l_positionAspect);
-	        Point	vysledek = pivot.PrevodBodu(a_vyvod);
+	        PointF	vysledek = pivot.PrevodBodu(a_vyvod);
 
         	return vysledek;	
 

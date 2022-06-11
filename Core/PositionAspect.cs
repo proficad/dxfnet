@@ -8,7 +8,7 @@ namespace DxfNet
 {
     public class PositionAspect
     {
-        public Point m_pivot;
+        public PointF m_pivot;
         public int m_angle;
         public bool m_horizontal;
         public bool m_vertical;
@@ -24,7 +24,7 @@ namespace DxfNet
         }
 
 
-        public PositionAspect(Point a_pivot, int a_angle, bool a_horizontal, bool a_vertical)
+        public PositionAspect(PointF a_pivot, int a_angle, bool a_horizontal, bool a_vertical)
         {
             m_pivot = a_pivot;
             m_angle = a_angle;
@@ -34,7 +34,7 @@ namespace DxfNet
             ScaleY = 1;
         }
 
-        public PositionAspect(Point a_pivot, int a_angle, bool a_horizontal, bool a_vertical, double ad_scale_x, double ad_scale_y)
+        public PositionAspect(PointF a_pivot, int a_angle, bool a_horizontal, bool a_vertical, double ad_scale_x, double ad_scale_y)
         {
             m_pivot = a_pivot;
             m_angle = a_angle;

@@ -137,10 +137,10 @@ namespace DxfNet
 
             //area user wants
             Rectangle l_rectUser = new Rectangle(
-			            10 * l_pageMargins.Left,
-			            10 * l_pageMargins.Top,
-                        li_paperWidth  - (10 * l_pageMargins.Right)  - (10 * l_pageMargins.Left),
-			            li_paperHeight - (10 * l_pageMargins.Bottom) - (10 * l_pageMargins.Top)
+			            (int)(10 * l_pageMargins.Left),
+                        (int)(10 * l_pageMargins.Top),
+                        (int)(li_paperWidth  - (10 * l_pageMargins.Right)  - (10 * l_pageMargins.Left)),
+                        (int)(li_paperHeight - (10 * l_pageMargins.Bottom) - (10 * l_pageMargins.Top))
 			);
 
 		    //for each edge determine who wins

@@ -16,7 +16,7 @@ namespace Core
         public string m_norm;
         public string m_memo;
 
-        public Size m_offset;
+        public SizeF m_offset;
 
 
         public PpdDoc()
@@ -100,7 +100,7 @@ namespace Core
 
 
   
-        public void RecalcToBeInCenterPoint(Point a_basePoint)
+        public void RecalcToBeInCenterPoint(PointF a_basePoint)
         {
             DrawObj l_obj = (DrawObj)this.GetEnumerator().Current;
 
@@ -111,7 +111,7 @@ namespace Core
             
 
             //verify it
-            Rectangle l_rectPos = GetPosition();
+            RectangleF l_rectPos = GetPosition();
             Point l_centerPoint = Helper.GetRectCenterPoint(l_rectPos);
 
 
@@ -131,12 +131,12 @@ namespace Core
             }
 
             //calc center
-            Point l_center = Helper.GetRectCenterPoint(l_bounds);
+            PointF l_center = Helper.GetRectCenterPoint(l_bounds);
 
-            m_offset = new Size(l_center.X, l_center.Y);
+            m_offset = new SizeF(l_center.X, l_center.Y);
 
             //move all points to make the centerpoint be 0,0
-            Size l_offsetOpposite = new Size(-m_offset.Width, -m_offset.Height);
+            SizeF l_offsetOpposite = new SizeF(-m_offset.Width, -m_offset.Height);
             foreach (DrawObj a_obj in this)
             {
                 string ls_debugEcho = "moving from " + a_obj.m_position.ToString();
@@ -156,7 +156,7 @@ namespace Core
         }
 
 
-        public Rectangle GetPosition()
+        public RectangleF GetPosition()
         {
             DrawObj l_obj = (DrawObj)this.GetEnumerator().Current;
 
@@ -167,12 +167,12 @@ namespace Core
 
 
             l_obj.RecalcPosition();
-            Rectangle l_rect = l_obj.m_position;
+            RectangleF l_rect = l_obj.m_position;
             foreach (DrawObj a_obj in this)
             {
                 a_obj.RecalcPosition();
                 System.Diagnostics.Debug.WriteLine("GetPosition Union with " + a_obj.m_position.ToString());
-                l_rect = Rectangle.Union(l_rect, a_obj.m_position);
+                l_rect = RectangleF.Union(l_rect, a_obj.m_position);
             }
             return l_rect;
         }

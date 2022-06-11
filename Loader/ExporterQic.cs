@@ -19,7 +19,7 @@ namespace Loader
     {
 
 
-        private static void ExportQicText(DxfEntityCollection a_dxfEntityCollection, string as_text, Point a_point, QTextAlignment a_align, bool ab_vertical, bool ab_topOrBottomEdge)
+        private static void ExportQicText(DxfEntityCollection a_dxfEntityCollection, string as_text, PointF a_point, QTextAlignment a_align, bool ab_vertical, bool ab_topOrBottomEdge)
         {
             EFont l_font = ExportContext.Current.PCadDocument.Parent.m_fonts.m_fontValue;
             int li_height = Exporter.GetFontAscentSize(l_font);
@@ -85,8 +85,8 @@ namespace Loader
             System.Drawing.Color l_penColor = a_ic.m_objProps.m_logpen.m_color;
 
             int li_stred_x, li_stred_y;
-            li_stred_x = l_posAspect.m_pivot.X;//(m_position.left + m_position.right)/2;
-            li_stred_y = l_posAspect.m_pivot.Y;//(m_position.top  + m_position.bottom)/2;
+            li_stred_x = (int)l_posAspect.m_pivot.X;//(m_position.left + m_position.right)/2;
+            li_stred_y = (int)l_posAspect.m_pivot.Y;//(m_position.top  + m_position.bottom)/2;
 
 
 
@@ -217,15 +217,15 @@ namespace Loader
             // svislé oddělovače
             if (a_ic.m_ver_left)
             {
-                Point l_from = Helper.PrevodBodu(new Point(li_left + 44, li_top), l_posAspect);
-                Point l_to = Helper.PrevodBodu(new Point(li_left + 44, li_bottom), l_posAspect);
+                PointF l_from    = Helper.PrevodBodu(new PointF(li_left + 44, li_top), l_posAspect);
+                PointF l_to      = Helper.PrevodBodu(new PointF(li_left + 44, li_bottom), l_posAspect);
                 DrawPoly l_poly = new DrawPoly(Shape.polyline, 2, l_penColor, l_from, l_to);
                 Helper.ExportPolylineAux(a_coll, l_poly, true);
             }
             if (a_ic.m_ver_right)
             {
-                Point l_from = Helper.PrevodBodu(new Point(li_right - 44, li_top), l_posAspect);
-                Point l_to = Helper.PrevodBodu(new Point(li_right - 44, li_bottom), l_posAspect);
+                PointF l_from    = Helper.PrevodBodu(new PointF(li_right - 44, li_top), l_posAspect);
+                PointF l_to      = Helper.PrevodBodu(new PointF(li_right - 44, li_bottom), l_posAspect);
                 DrawPoly l_poly = new DrawPoly(Shape.polyline, 2, l_penColor, l_from, l_to);
                 Helper.ExportPolylineAux(a_coll, l_poly, true);
             }
@@ -254,16 +254,16 @@ namespace Loader
                     //udělej čárku
                     if ((li_cislo > 0) && (li_cislo <= (a_ic.m_numberOfOutletsVer - 1)))
                     {
-                        Point l_from = Helper.PrevodBodu(new Point(li_left, li_top + ((li_cislo + 1) * QIC.INT_VYV) + QIC.INT_VYV / 2), l_posAspect);
-                        Point l_to = Helper.PrevodBodu(new Point(li_left + 44, li_top + ((li_cislo + 1) * QIC.INT_VYV) + QIC.INT_VYV / 2), l_posAspect);
+                        PointF l_from    = Helper.PrevodBodu(new PointF(li_left, li_top + ((li_cislo + 1) * QIC.INT_VYV) + QIC.INT_VYV / 2), l_posAspect);
+                        PointF l_to      = Helper.PrevodBodu(new PointF(li_left + 44, li_top + ((li_cislo + 1) * QIC.INT_VYV) + QIC.INT_VYV / 2), l_posAspect);
                         DrawPoly l_poly = new DrawPoly(Shape.polyline, 2, l_penColor, l_from, l_to);
                         Helper.ExportPolylineAux(a_coll, l_poly, true);
                     }
                     if ((li_cislo > a_ic.m_numberOfOutletsVer + a_ic.m_numberOfOutletsHor + 1) && (li_cislo <= (a_ic.m_numberOfOutletsVer + a_ic.m_numberOfOutletsHor + a_ic.m_numberOfOutletsVer)))
                     {
                         li_cislo -= (a_ic.m_numberOfOutletsVer + a_ic.m_numberOfOutletsHor);
-                        Point l_from = Helper.PrevodBodu(new Point(li_right - 44, li_top + ((2 + a_ic.m_numberOfOutletsVer - li_cislo) * QIC.INT_VYV) + QIC.INT_VYV / 2), l_posAspect);
-                        Point l_to = Helper.PrevodBodu(new Point(li_right, li_top + ((2 + a_ic.m_numberOfOutletsVer - li_cislo) * QIC.INT_VYV) + QIC.INT_VYV / 2), l_posAspect);
+                        PointF l_from    = Helper.PrevodBodu(new PointF(li_right - 44, li_top + ((2 + a_ic.m_numberOfOutletsVer - li_cislo) * QIC.INT_VYV) + QIC.INT_VYV / 2), l_posAspect);
+                        PointF l_to      = Helper.PrevodBodu(new PointF(li_right, li_top + ((2 + a_ic.m_numberOfOutletsVer - li_cislo) * QIC.INT_VYV) + QIC.INT_VYV / 2), l_posAspect);
                         DrawPoly l_poly = new DrawPoly(Shape.polyline, 2, l_penColor, l_from, l_to);
                         Helper.ExportPolylineAux(a_coll, l_poly, true);
                     }
@@ -271,12 +271,12 @@ namespace Loader
             }
 
             // hlavní obdélník až nakonec
-            Point l_leftTop = Helper.PrevodBodu(new Point(li_left, li_top), l_posAspect);
-            Point l_leftBottom = Helper.PrevodBodu(new Point(li_left, li_bottom), l_posAspect);
-            Point l_rightBottom = Helper.PrevodBodu(new Point(li_right, li_bottom), l_posAspect);
-            Point l_rightTop = Helper.PrevodBodu(new Point(li_right, li_top), l_posAspect);
+            PointF l_leftTop     = Helper.PrevodBodu(new PointF(li_left, li_top),       l_posAspect);
+            PointF l_leftBottom  = Helper.PrevodBodu(new PointF(li_left, li_bottom),    l_posAspect);
+            PointF l_rightBottom = Helper.PrevodBodu(new PointF(li_right, li_bottom),   l_posAspect);
+            PointF l_rightTop    = Helper.PrevodBodu(new PointF(li_right, li_top),      l_posAspect);
 
-            DrawPoly l_body = new DrawPoly(Shape.polyline, 2, l_penColor, new Point[] { l_leftTop, l_leftBottom, l_rightBottom, l_rightTop, l_leftTop });
+            DrawPoly l_body = new DrawPoly(Shape.polyline, 2, l_penColor, new PointF[] { l_leftTop, l_leftBottom, l_rightBottom, l_rightTop, l_leftTop });
             Helper.ExportPolylineAux(a_coll, l_body, true);
 
 
@@ -296,7 +296,7 @@ namespace Loader
 
         private static bool My_Kruh(DxfEntityCollection a_coll, PositionAspect a_aspect, Point a_stred, Size a_polomer)
         {
-            Point s = Helper.PrevodBodu(a_stred, a_aspect);
+            PointF s = Helper.PrevodBodu(a_stred, a_aspect);
 
             // update the size
             //if ((abs(polomer.cx)*2) > (m_size.cx)) m_size.cx = (abs(polomer.cx)*2);
@@ -306,7 +306,8 @@ namespace Loader
             return true;
         }
 
-        private static void QText(DxfEntityCollection a_coll, PositionAspect a_aspect, string as_ret, Point a_point, QTextAlignment a_textAlignment, System.Drawing.Color barva, bool ab_topOrBottomEdge)
+        private static void QText(DxfEntityCollection a_coll, PositionAspect a_aspect, string as_ret, 
+                                    PointF a_point, QTextAlignment a_textAlignment, System.Drawing.Color barva, bool ab_topOrBottomEdge)
         {
 
             if (as_ret.Length == 0)

@@ -294,9 +294,9 @@ namespace Dxf2ProfiCAD
 
 
                 //calc center point of this ppd
-                int l_baseX = Converter.MyShiftScaleX(l_block.BasePoint.X);
-                int l_baseY = Converter.MyShiftScaleY(l_block.BasePoint.Y);
-                Point l_basePoint = new Point(l_baseX, l_baseY);
+                double l_baseX = Converter.MyShiftScaleX(l_block.BasePoint.X);
+                double l_baseY = Converter.MyShiftScaleY(l_block.BasePoint.Y);
+                PointF l_basePoint = new PointF((float)l_baseX, (float)l_baseY);
                 //l_ppdDoc.RecalcToBeInCenterPoint(l_basePoint);
 
                 Converter.m_shifts_x.Pop();
@@ -429,7 +429,7 @@ namespace Dxf2ProfiCAD
 
                             l_insert.SetPpdDoc(l_ppdDoc);
 
-                            System.Drawing.Size l_offset = l_ppdDoc.m_offset;
+                            System.Drawing.SizeF l_offset = l_ppdDoc.m_offset;
                             l_insert.Offset(l_offset);
                         }
                         else
@@ -488,9 +488,9 @@ namespace Dxf2ProfiCAD
                 }
 
                 //calc center point of this ppd
-                int l_baseX = Converter.MyShiftScaleX(l_block.BasePoint.X);
-                int l_baseY = Converter.MyShiftScaleY(l_block.BasePoint.Y);
-                Point l_basePoint = new Point(l_baseX, l_baseY);
+                double l_baseX = Converter.MyShiftScaleX(l_block.BasePoint.X);
+                double l_baseY = Converter.MyShiftScaleY(l_block.BasePoint.Y);
+                PointF l_basePoint = new PointF((float)l_baseX, (float)l_baseY);
 
                 l_basePoint.X = l_basePoint.Y = 0;
                 l_ppdDoc.RecalcToBeInCenterPoint(l_basePoint);

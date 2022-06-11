@@ -17,7 +17,7 @@ namespace DxfNet
         public QTextAlignment m_alignment;
         public int m_angle;
 
-        public FreeText(string as_text, EFont a_efont, Rectangle a_rect, int ai_angle) : base(Shape.text, a_rect)
+        public FreeText(string as_text, EFont a_efont, RectangleF a_rect, int ai_angle) : base(Shape.text, a_rect)
         {
             m_text = as_text;
             m_efont = a_efont;
@@ -39,20 +39,20 @@ namespace DxfNet
 	        int li_druhpisma = 0;
 	
 
-            Point l_pivot2Save = GetPivotRotated();
+            PointF l_pivot2Save = GetPivotRotated();
 	        string ls_currentFont = m_efont.ToString();
 
             SaveTextToXml(a_xmlWriter, li_druhpisma, m_text, l_pivot2Save, m_angle, ls_currentFont, m_bTurnWithSymbol);
 
         }
 
-        private Point GetPivotRotated()
+        private PointF GetPivotRotated()
         {
             //HACK
             return GetCenterPoint();
         }
 
-        private void SaveTextToXml(System.Xml.XmlWriter a_xmlWriter, int li_druhpisma, string as_text, Point l_pivot2Save, int ai_angle, string as_currentFont, bool a_bTurnWithSymbol)
+        private void SaveTextToXml(System.Xml.XmlWriter a_xmlWriter, int li_druhpisma, string as_text, PointF l_pivot2Save, int ai_angle, string as_currentFont, bool a_bTurnWithSymbol)
         {
             // https://stackoverflow.com/questions/397250/unicode-regex-invalid-xml-characters/961504#961504
 
@@ -129,7 +129,7 @@ namespace DxfNet
         internal override void RecalcBounds(ref MyRect l_bounds) 
         { }
 
-        internal override void MoveBy(Size l_offset)
+        internal override void MoveBy(SizeF l_offset)
         {
             m_position.X += l_offset.Width;
             m_position.Y += l_offset.Height;

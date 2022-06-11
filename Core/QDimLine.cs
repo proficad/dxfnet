@@ -9,13 +9,14 @@ namespace DxfNet
 {
     public class QDimLine : DrawObj
     {
-        public Point A, B, C;
+        public PointF A, B, C;
         public QLabel Label = new QLabel();
 
         public enum DimDirection { dimdir_none, dimdir_hor, dimdir_ver, dimdir_aligned };
         public DimDirection m_dir;
 
-        public QDimLine(Point a_a, Point a_b, Point a_c, DimDirection a_dir) : base(Shape.dim_line, new Rectangle(a_a.X, a_a.Y, 1, 1))
+        public QDimLine(PointF a_a, PointF a_b, PointF a_c, DimDirection a_dir) 
+            : base(Shape.dim_line, new RectangleF(a_a.X, a_a.Y, 1, 1))
         {
             A = a_a;
             B = a_b;
@@ -60,11 +61,11 @@ namespace DxfNet
             
         }
 
-        internal override void MoveBy(Size a_offset)
+        internal override void MoveBy(SizeF a_offset)
         {
-            A.Offset(a_offset.Width, a_offset.Height);
-            B.Offset(a_offset.Width, a_offset.Height);
-            C.Offset(a_offset.Width, a_offset.Height);
+            A += a_offset;
+            B += a_offset;
+            C += a_offset;
 
         }
 

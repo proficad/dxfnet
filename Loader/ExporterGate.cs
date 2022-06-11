@@ -36,12 +36,10 @@ namespace Loader
             System.Drawing.Color l_textColor = System.Drawing.Color.Black;
             System.Drawing.Color l_penColor = a_gate.m_objProps.m_logpen.m_color;
 
-            int li_stred_x, li_stred_y;
-            li_stred_x = l_posAspect.m_pivot.X;//(m_position.left + m_position.right)/2;
-            li_stred_y = l_posAspect.m_pivot.Y;//(m_position.top  + m_position.bottom)/2;
 
-            int X = li_stred_x;
-            int Y = li_stred_y;
+            int X = (int)l_posAspect.m_pivot.X;//(m_position.left + m_position.right)/2;
+            int Y = (int)l_posAspect.m_pivot.Y;//(m_position.top  + m_position.bottom)/2;
+
 
             int li_lineThickness = a_gate.m_objProps.m_logpen.m_width;
 
@@ -53,28 +51,28 @@ namespace Loader
             switch(a_gate.m_tvar)
 	        {
             case GateShapeType.gst_inv:
-		        My_Kruh(a_coll, new Point(X + 30,Y), 8);
+		        My_Kruh(a_coll, new PointF(X + 30,Y), 8);
                 ExportBud(a_coll, X, Y, l_penColor);
     	        break;
             case GateShapeType.gst_bud:
                 ExportBud(a_coll, X, Y, l_penColor);
     	        break;
             case GateShapeType.gst_nand:
-		        My_Kruh(a_coll, new Point(X + 79,Y), 8);
+		        My_Kruh(a_coll, new PointF(X + 79,Y), 8);
                 ExportAnd(a_coll, X, Y, li_lineThickness, l_penColor);
                 break;
             case GateShapeType.gst_and:
                 ExportAnd(a_coll, X, Y, li_lineThickness, l_penColor);
     	        break;
             case GateShapeType.gst_nor:
-		        My_Kruh(a_coll, new Point(X + 84,Y), 8);
+		        My_Kruh(a_coll, new PointF(X + 84,Y), 8);
                 ExportOr(a_coll, X, Y, l_penColor);
                 break;
             case GateShapeType.gst_or:
                 ExportOr(a_coll, X, Y, l_penColor);
     	        break;
             case GateShapeType.gst_exnor:
-		        My_Kruh(a_coll, new Point(X + 98,Y), 8);
+		        My_Kruh(a_coll, new PointF(X + 98,Y), 8);
                 ExportExOr(a_coll, X, Y, li_lineThickness, l_penColor);
                 break;
             case GateShapeType.gst_exor:
@@ -344,8 +342,8 @@ namespace Loader
         private static void ExportBud(WW.Cad.Model.Entities.DxfEntityCollection a_coll, int ai_x, int ai_y, System.Drawing.Color l_penColor)
         {
             DrawPoly l_pouzdro = new DrawPoly(Shape.poly, 2, l_penColor, new Point[] {
-            new Point(ai_x - 36, ai_y + 36),
-            new Point(ai_x - 36, ai_y - 36),
+            new Point(ai_x - 36, ai_y + 3),
+            new Point(ai_x - 36, ai_y - 6),
             new Point(ai_x + 25, ai_y),
             new Point(ai_x - 36, ai_y + 36),
             });
@@ -354,7 +352,7 @@ namespace Loader
 
         private static void ExportAnd(WW.Cad.Model.Entities.DxfEntityCollection a_coll, int ai_x, int ai_y, int ai_lineThickness, System.Drawing.Color l_penColor)
         {
-            DrawPoly l_pouzdro = new DrawPoly(Shape.poly, 2, l_penColor, new Point[] {
+            DrawPoly l_pouzdro = new DrawPoly(Shape.poly, 2, l_penColor, new PointF[] {
                     new Point(ai_x + 36, ai_y + 36),
                     new Point(ai_x - 36, ai_y + 36),
                     new Point(ai_x - 36, ai_y - 36),
@@ -374,13 +372,13 @@ namespace Loader
 
         private static void ExportOr(WW.Cad.Model.Entities.DxfEntityCollection a_coll, int ai_x, int ai_y, System.Drawing.Color l_penColor)
         {
-            DrawPoly l_pouzdro = new DrawPoly(Shape.poly, 2, l_penColor, new Point[] {
+            DrawPoly l_pouzdro = new DrawPoly(Shape.poly, 2, l_penColor, new PointF[] {
                     new Point(ai_x + 20, ai_y + 36),
                     new Point(ai_x - 36, ai_y + 36)
                 });
             Helper.ExportPolylineAux(a_coll, l_pouzdro, true);
 
-            l_pouzdro = new DrawPoly(Shape.poly, 2, l_penColor, new Point[] {
+            l_pouzdro = new DrawPoly(Shape.poly, 2, l_penColor, new PointF[] {
                     new Point(ai_x + 20, ai_y - 36),
                     new Point(ai_x - 36, ai_y - 36),
                 });
@@ -427,11 +425,11 @@ namespace Loader
             Helper.ExportPolylineAux(a_coll, l_pouzdro, true);
             PositionAspect l_posAspect = new PositionAspect();
 
-            Point[] body = new Point[4];
-            body[3] = Helper.PrevodBodu(new Point(-25, 36), l_posAspect);
-            body[2] = Helper.PrevodBodu(new Point(-15, 25), l_posAspect);
-            body[1] = Helper.PrevodBodu(new Point(-15, - 25), l_posAspect);
-            body[0] = Helper.PrevodBodu(new Point(-25, - 36), l_posAspect);
+            PointF[] body = new PointF[4];
+            body[3] = Helper.PrevodBodu(new PointF(-25, 36), l_posAspect);
+            body[2] = Helper.PrevodBodu(new PointF(-15, 25), l_posAspect);
+            body[1] = Helper.PrevodBodu(new PointF(-15, - 25), l_posAspect);
+            body[0] = Helper.PrevodBodu(new PointF(-25, - 36), l_posAspect);
             Helper.My_Bezier(a_coll, l_posAspect, body[0], body[1], body[2], body[3], ai_lineThickness, a_penColor, true);
 
             ExportSpicatyZadek(a_coll, ai_lineThickness, a_penColor);
@@ -461,7 +459,7 @@ namespace Loader
             a_coll.Add(l_arc);
         }
         */
-        private static void My_Kruh(DxfEntityCollection a_coll, Point a_center, int ai_radius)
+        private static void My_Kruh(DxfEntityCollection a_coll, PointF a_center, int ai_radius)
         {
             Point3D l_center = new Point3D(a_center.X, a_center.Y, 0);
             DxfCircle l_circle = new DxfCircle(l_center, ai_radius);

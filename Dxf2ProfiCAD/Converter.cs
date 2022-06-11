@@ -28,13 +28,13 @@ namespace Dxf2ProfiCAD
 
         public static Size m_size_target;
 
-        public static int MyShiftScaleX(double ai_what)
+        public static double MyShiftScaleX(double ai_what)
         {
-            return (int)Math.Round((ai_what + m_shifts_x.Peek()) * m_scaleX);
+            return (ai_what + m_shifts_x.Peek()) * m_scaleX;
         }
-        public static int MyShiftScaleY(double ai_what)
+        public static double MyShiftScaleY(double ai_what)
         {
-            return m_shift_target_y + (int)Math.Round((ai_what + m_shifts_y.Peek()) * m_scaleY);
+            return m_shift_target_y + (ai_what + m_shifts_y.Peek()) * m_scaleY;
         }
 
         private static int MyScaleX(double ai_what)
@@ -180,11 +180,12 @@ namespace Dxf2ProfiCAD
             li_radius_x = Math.Abs(li_radius_x);
             li_radius_y = Math.Abs(li_radius_y);
 
-            Point l_center_point = new Point(
-                MyShiftScaleX(a_dxf_ellipse.Center.X), 
-                MyShiftScaleY(a_dxf_ellipse.Center.Y));
+            PointF l_center_point = new PointF(
+                (float)MyShiftScaleX(a_dxf_ellipse.Center.X),
+                (float)MyShiftScaleY(a_dxf_ellipse.Center.Y)
+            );
 
-            Rectangle l_boundingRect = new Rectangle(
+            RectangleF l_boundingRect = new RectangleF(
                 l_center_point.X - li_radius_x, 
                 l_center_point.Y - li_radius_y,
                 li_radius_x + li_radius_x, 
@@ -298,7 +299,13 @@ namespace Dxf2ProfiCAD
 
 
             const float fl = (float)1.1; //pouze pro zkompilovani
-            Insert l_insert = new Insert(Shape.soucastka, MyShiftScaleX(a_dxfInsert.InsertionPoint.X), MyShiftScaleY(a_dxfInsert.InsertionPoint.Y), fl, fl);//99
+            Insert l_insert = new Insert(
+                Shape.soucastka, 
+                MyShiftScaleX(a_dxfInsert.InsertionPoint.X), 
+                MyShiftScaleY(a_dxfInsert.InsertionPoint.Y), 
+                fl, 
+                fl);//99
+
             l_insert.m_angle = RadiansToAnglePositive(a_dxfInsert.Rotation);
             l_insert.m_scaleX = Math.Abs((float)a_dxfInsert.ScaleFactor.X);
             l_insert.m_scaleY = Math.Abs((float)a_dxfInsert.ScaleFactor.Y);
@@ -316,8 +323,8 @@ namespace Dxf2ProfiCAD
             {
                 string ls_text = l_attr.Text;
                 string ls_tagString = l_attr.TagString;
-                int li_x = MyShiftScaleX(l_attr.AlignmentPoint1.X);
-                int li_y = MyShiftScaleY(l_attr.AlignmentPoint1.Y);
+                double li_x = MyShiftScaleX(l_attr.AlignmentPoint1.X);
+                double li_y = MyShiftScaleY(l_attr.AlignmentPoint1.Y);
                 
                 int li_turns_attr = 0;//TODO
                 if (l_attr.Rotation != 0)
@@ -330,7 +337,7 @@ namespace Dxf2ProfiCAD
                 Console.WriteLine("attributes {0} ~ {1} ~ {2} ~ {3}", ls_blockName, ls_text, ls_tagString, coll.Count);
                 int d = 5;
                 */
-                Insert.Satelite l_sat = new Insert.Satelite(ls_tagString, ls_text, li_x, li_y, true, li_turns_attr);
+                Insert.Satelite l_sat = new Insert.Satelite(ls_tagString, ls_text, (int)li_x, (int)li_y, true, li_turns_attr);
                 l_insert.m_satelites.Add(l_sat);
 
             }
@@ -509,11 +516,11 @@ namespace Dxf2ProfiCAD
         private static DrawObj ConvertCircle(DxfCircle a_dxfCircle)
         {
             int li_radius = Math.Abs(MyScaleX(a_dxfCircle.Radius));
-            int li_center_x = MyShiftScaleX(a_dxfCircle.Center.X);
-            int li_center_y = MyShiftScaleY(a_dxfCircle.Center.Y);
+            double ld_center_x = MyShiftScaleX(a_dxfCircle.Center.X);
+            double ld_center_y = MyShiftScaleY(a_dxfCircle.Center.Y);
 
 
-            Point l_center = new Point(li_center_x, li_center_y);
+            PointF l_center = new PointF((float)ld_center_x, (float)ld_center_y);
             QCircle l_circle = new QCircle(l_center, li_radius);
 
             l_circle.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(a_dxfCircle);
@@ -585,14 +592,14 @@ namespace Dxf2ProfiCAD
         {
 
             int li_radius = Math.Abs(MyScaleX(a_dxf_arc.Radius));
-            int li_center_x = MyShiftScaleX(a_dxf_arc.Center.X);
-            int li_center_y = MyShiftScaleY(a_dxf_arc.Center.Y);
+            double li_center_x = MyShiftScaleX(a_dxf_arc.Center.X);
+            double li_center_y = MyShiftScaleY(a_dxf_arc.Center.Y);
 
-            int li_left = li_center_x - li_radius;
-            int li_top = li_center_y - li_radius;
+            double li_left = li_center_x - li_radius;
+            double li_top = li_center_y - li_radius;
             int li_width = 2 * li_radius;
 
-            Rectangle l_boundingRect = new Rectangle(li_left, li_top, li_width, li_width);
+            RectangleF l_boundingRect = new RectangleF((float)li_left, (float)li_top, li_width, li_width);
 
             DrawRect l_arc = new DrawRect(Shape.arc, l_boundingRect);
 
@@ -657,7 +664,12 @@ namespace Dxf2ProfiCAD
 
             
             
-            Rectangle l_rect = new Rectangle(MyShiftScaleX(ld_x), MyShiftScaleY(ld_y), 0, 0);
+            RectangleF l_rect = new RectangleF(
+                (float)MyShiftScaleX(ld_x),
+                (float)MyShiftScaleY(ld_y), 
+                0, 
+                0
+            );
 
             string ls_text = a_dxfMText.Text.Replace("\t", "");
 
@@ -683,7 +695,11 @@ namespace Dxf2ProfiCAD
             }
 
 
-            Rectangle l_rect = new Rectangle(MyShiftScaleX(a_dxfMText.InsertionPoint.X), MyShiftScaleY(a_dxfMText.InsertionPoint.Y), 0, 0);
+            RectangleF l_rect = new RectangleF(
+                (float)MyShiftScaleX(a_dxfMText.InsertionPoint.X),
+                (float)MyShiftScaleY(a_dxfMText.InsertionPoint.Y), 
+                0, 
+                0);
 
             string ls_text = a_dxfMText.SimplifiedText;
             ls_text = ls_text.Replace("\t", "");
@@ -782,24 +798,24 @@ namespace Dxf2ProfiCAD
                 return null;
             }
 
-            int li_firstX = MyShiftScaleX(a_entity.Vertices[0].X);
-            int li_thirdX = MyShiftScaleX(a_entity.Vertices[2].X);
+            double li_firstX = MyShiftScaleX(a_entity.Vertices[0].X);
+            double li_thirdX = MyShiftScaleX(a_entity.Vertices[2].X);
 
-            int li_left = Math.Min(li_firstX, li_thirdX);
-            int li_right = Math.Max(li_firstX, li_thirdX);
+            double li_left     = Math.Min(li_firstX, li_thirdX);
+            double li_right    = Math.Max(li_firstX, li_thirdX);
 
 
-            int li_width = li_right - li_left;
-            int li_height = li_width;
+            double li_width = li_right - li_left;
+            double li_height = li_width;
 
             System.Diagnostics.Debug.Assert(li_width > 0);
             System.Diagnostics.Debug.Assert(li_height > 0);
 
 
-            int li_my_Y = MyShiftScaleY(ld_y);
-            int li_top = li_my_Y - (li_width / 2);
+            double li_my_Y = MyShiftScaleY(ld_y);
+            double li_top = li_my_Y - (li_width / 2);
 
-            Rectangle l_boundingRect = new Rectangle(li_left, li_top, li_width, li_width);
+            RectangleF l_boundingRect = new RectangleF((float)li_left, (float)li_top, (float)li_width, (float)li_width);
             DrawRect l_circle = new DrawRect(Shape.ellipse, l_boundingRect);
             return l_circle;
 
@@ -846,13 +862,13 @@ namespace Dxf2ProfiCAD
         }
 
 
-        private static System.Drawing.Point Point3D_To_Point(WW.Math.Point3D a_point)
+        private static System.Drawing.PointF Point3D_To_Point(WW.Math.Point3D a_point)
         {
             int li_x = (int)Math.Round(a_point.X);
             int li_y = (int)Math.Round(a_point.Y);
-            return new System.Drawing.Point(
-                MyShiftScaleX(li_x),
-                MyShiftScaleY(li_y)
+            return new System.Drawing.PointF(
+                (float)MyShiftScaleX(li_x),
+                (float)MyShiftScaleY(li_y)
                 );
         }
 
