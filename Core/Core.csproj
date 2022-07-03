@@ -86,6 +86,7 @@
     <Compile Include="PtbDoc.cs" />
     <Compile Include="PtbPosition.cs" />
     <Compile Include="PxfDoc.cs" />
+    <Compile Include="QArc_3_P.cs" />
     <Compile Include="QCircle.cs" />
     <Compile Include="QDimCircle.cs" />
     <Compile Include="QDimLine.cs" />

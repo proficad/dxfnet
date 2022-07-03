@@ -31,7 +31,7 @@ namespace DxfNet
                 case Shape.rectangle:
                     a_xmlWriter.WriteStartElement("rect");
                     break;
-                case Shape.arc:
+                case Shape.arc_rect:
                     a_xmlWriter.WriteStartElement("arc");
                     break;
                 case Shape.pie:
@@ -46,7 +46,7 @@ namespace DxfNet
             a_xmlWriter.WriteAttributeString("right", m_position.Right.ToString());
             a_xmlWriter.WriteAttributeString("bottom", m_position.Bottom.ToString());
 
-            if (m_nShape == Shape.arc)
+            if (m_nShape == Shape.arc_rect)
             {
                 a_xmlWriter.WriteAttributeString("bX", m_arcBegin.Width.ToString());
                 a_xmlWriter.WriteAttributeString("bY", m_arcBegin.Height.ToString());
