@@ -596,14 +596,7 @@ namespace Dxf2ProfiCAD
 
         private static DrawObj Convert_Arc_3P(DxfArc a_dxf_arc)
         {
-            //int li_radius = Math.Abs(MyScaleX(a_dxf_arc.Radius));
-            //double li_center_x = MyShiftScaleX(a_dxf_arc.Center.X);
-            //double li_center_y = MyShiftScaleY(a_dxf_arc.Center.Y);
-
-
-
-            //PointF l_point_ = a_dxf_arc.Center + a_dxf_arc.Radius * new Vector2D(Math.Cos(a_dxf_arc.StartAngle), Math.Sin(a_dxf_arc.StartAngle));
-
+         
             SizeF l_size_begin   = Angle2Size(a_dxf_arc.StartAngle, a_dxf_arc.Radius);
             SizeF l_size_mid     = Angle2Size((a_dxf_arc.StartAngle + a_dxf_arc.EndAngle) / 2, a_dxf_arc.Radius);
             SizeF l_size_end     = Angle2Size(a_dxf_arc.EndAngle, a_dxf_arc.Radius);
