@@ -463,7 +463,8 @@ namespace Loader
                     case Shape.circle:          ExportCircle    (a_coll, obj as QCircle, ab_block); break;
                     case Shape.pie:
                     case Shape.chord:           ExportPieChord  (a_coll, obj as DrawRect, ab_block); break;
-                    case Shape.arc:             ExportArc       (a_coll, obj as DrawRect, ab_block); break;
+                    case Shape.arc_3_p:         Export_Arc_3P   (a_coll, obj as QArc_3_P, ab_block); break;
+                    case Shape.arc_rect:        ExportArc_Rect  (a_coll, obj as DrawRect, ab_block); break;
                     case Shape.rectangle:       ExportRect      (a_coll, obj as DrawRect, ab_block); break;
                     case Shape.roundRectangle:  ExportRoundRect (a_coll, obj as DrawRect, ab_block); break;
                     case Shape.text:            ExportFreeText  (a_coll, obj as FreeText); break;
@@ -1646,7 +1647,8 @@ namespace Loader
             return l_patternLine1;
         }
 
-        private static void ExportArc(DxfEntityCollection a_coll, DrawRect drawRect, bool ab_block)
+
+        private static void ExportArc_Rect(DxfEntityCollection a_coll, DrawRect drawRect, bool ab_block)
         {
             if ((drawRect.m_position.Width == 0) || (drawRect.m_position.Height == 0))//fix 2009-2-6
             {
@@ -1707,6 +1709,7 @@ namespace Loader
         }
 
 
+
         private static void ExportSquareArc(DxfEntityCollection a_coll, DrawRect a_drawRect, bool ab_block, double startAngle, double endAngle)
         {
             Point3D l_center = GetRectCenterPoint(a_drawRect.m_position);
@@ -1733,6 +1736,35 @@ namespace Loader
 
             //99 dxfEllipse.ColorSource = AttributeSource.This;
             l_arc.Color = Helper.MakeEntityColorByBlock(a_drawRect.m_objProps.m_logpen.m_color, ab_block);
+
+
+            a_coll.Add(l_arc);
+        }
+
+
+        private static void Export_Arc_3P(DxfEntityCollection a_coll, QArc_3_P a_arc, bool ab_block)
+        {
+            Point3D l_p1 = Helper.Point_To_Point3D(a_arc.m_point_1);
+            Point3D l_p2 = Helper.Point_To_Point3D(a_arc.m_point_2);
+            Point3D l_p3 = Helper.Point_To_Point3D(a_arc.m_point_3);
+
+            l_p1.Y *= -1;
+            l_p2.Y *= -1;
+            l_p3.Y *= -1;
+
+            DxfArc l_arc = new DxfArc();
+            l_arc.InitializeFromThreePoints(l_p1, l_p2, l_p3, true);
+
+       
+            l_arc.Layer = ExportContext.Current.Layer;
+
+            a_arc.m_objProps.m_logpen.m_width = Calculate_Line_Thickness_Ellipse(a_arc.m_objProps.m_logpen.m_width);
+
+            l_arc.LineWeight = (short)(10 * a_arc.m_objProps.m_logpen.m_width);
+            l_arc.Thickness = 10 * a_arc.m_objProps.m_logpen.m_width;
+
+            //99 dxfEllipse.ColorSource = AttributeSource.This;
+            l_arc.Color = Helper.MakeEntityColorByBlock(a_arc.m_objProps.m_logpen.m_color, ab_block);
 
 
             a_coll.Add(l_arc);

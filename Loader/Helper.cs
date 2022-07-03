@@ -368,6 +368,10 @@ namespace Loader
         {
             return new Point3D(a_point.X, a_point.Y, 0);
         }
+        internal static Point3D Point_To_Point3D(PointF a_point)
+        {
+            return new Point3D(a_point.X, a_point.Y, 0);
+        }
 
         //--------------------------------
     }

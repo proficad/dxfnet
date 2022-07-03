@@ -601,12 +601,11 @@ namespace Dxf2ProfiCAD
 
             RectangleF l_boundingRect = new RectangleF((float)li_left, (float)li_top, li_width, li_width);
 
-            DrawRect l_arc = new DrawRect(Shape.arc, l_boundingRect);
+            DrawRect l_arc = new DrawRect(Shape.arc_rect, l_boundingRect);
 
             l_arc.m_arcBegin = Angle2Size(a_dxf_arc.StartAngle);
             l_arc.m_arcEnd = Angle2Size(a_dxf_arc.EndAngle);
    
-
 
             l_arc.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(a_dxf_arc);
 

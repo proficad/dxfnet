@@ -495,7 +495,7 @@ namespace Loader
             switch (nodeElement.Name)
             {
                 case "arc":
-                    l_arcPieChord = new DrawRect(Shape.arc, rect);
+                    l_arcPieChord = new DrawRect(Shape.arc_rect, rect);
                     break;
                 case "pie":
                     l_arcPieChord = new DrawRect(Shape.pie, rect);
@@ -562,6 +562,21 @@ namespace Loader
             AddTextToQCircle(l_circle, a_node);
 
             doc.Add(l_circle, ContextP2A.Current.CurrentLayer);
+        }
+        
+        private static void AddArc_3_P(DrawDoc doc, XmlNode a_node)
+        {
+            PointF l_point_1 = XmlAttrToPoint(a_node, QArc_3_P.ATTR_POINT_1);
+            PointF l_point_2 = XmlAttrToPoint(a_node, QArc_3_P.ATTR_POINT_2);
+            PointF l_point_3 = XmlAttrToPoint(a_node, QArc_3_P.ATTR_POINT_3);
+
+            QArc_3_P l_arc = new QArc_3_P(l_point_1, l_point_2, l_point_3);
+
+            ObjProps l_props = ObjPropsFromXml(a_node);
+            l_arc.m_objProps = l_props;
+
+
+            doc.Add(l_arc, ContextP2A.Current.CurrentLayer);
         }
 
 
@@ -961,6 +976,7 @@ namespace Loader
                         case "rect":        AddRect         (a_drawDoc, nodeElement); break;
                         case "ellipse":     AddEllipse      (a_drawDoc, nodeElement); break;
                         case "circle":      AddCircle       (a_drawDoc, nodeElement); break;
+                        case QArc_3_P.ATTR_NAME_ARC_3_P:    AddArc_3_P      (a_drawDoc, nodeElement); break;
                         case "pie": 
                         case "chord": 
                         case "arc":         AddArcPieChord  (a_drawDoc, nodeElement); break;

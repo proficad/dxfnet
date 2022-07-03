@@ -8,7 +8,7 @@ using System.Xml;
 
 namespace Core
 {
-    internal class QArc_3_P : DrawObj
+    public class QArc_3_P : DrawObj
     {
         public QArc_3_P(PointF a_point_1, PointF a_point_2, PointF a_point_3): base(Shape.arc_3_p, new Rectangle())
         {
@@ -58,16 +58,16 @@ namespace Core
 
 
 
-        private PointF m_point_1;
-        private PointF m_point_2;
-        private PointF m_point_3;
+        public PointF m_point_1;
+        public PointF m_point_2;
+        public PointF m_point_3;
 
 
-        const string ATTR_NAME_ARC_3_P = "arc_3p";
+        public const string ATTR_NAME_ARC_3_P = "arc_3p";
 
-        const string ATTR_POINT_1 = "p_1";
-        const string ATTR_POINT_2 = "p_2";
-        const string ATTR_POINT_3 = "p_3";
+        public const string ATTR_POINT_1 = "p_1";
+        public const string ATTR_POINT_2 = "p_2";
+        public const string ATTR_POINT_3 = "p_3";
 
     }
 }
