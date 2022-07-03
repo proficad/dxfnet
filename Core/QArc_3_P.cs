@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 
-namespace Core
+namespace DxfNet
 {
     public class QArc_3_P : DrawObj
     {
@@ -20,7 +20,7 @@ namespace Core
 
         public override bool IsValid(int ai_size_x, int ai_size_y)
         {
-            throw new NotImplementedException();
+            return (m_point_1 != m_point_2) && (m_point_2 != m_point_3) && (m_point_1 != m_point_3);
         }
 
         public override void RecalcPosition()

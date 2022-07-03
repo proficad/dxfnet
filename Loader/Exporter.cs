@@ -1763,8 +1763,11 @@ namespace Loader
             l_arc.LineWeight = (short)(10 * a_arc.m_objProps.m_logpen.m_width);
             l_arc.Thickness = 10 * a_arc.m_objProps.m_logpen.m_width;
 
-            //99 dxfEllipse.ColorSource = AttributeSource.This;
+          
             l_arc.Color = Helper.MakeEntityColorByBlock(a_arc.m_objProps.m_logpen.m_color, ab_block);
+
+ 
+            l_arc.LineType = GetLineTypeFromObjProps(a_arc.m_objProps);
 
 
             a_coll.Add(l_arc);

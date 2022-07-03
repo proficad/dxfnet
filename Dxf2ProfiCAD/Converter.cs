@@ -13,6 +13,9 @@ using WW.Cad.Model.Tables;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using WW.Cad.Model;
+using static WW.Cad.Model.Entities.DxfDimension;
+using static WW.Cad.Model.DxfValueFormat;
+using static WW.Cad.Model.Objects.Annotations.DxfDimensionObjectContextData;
 
 namespace Dxf2ProfiCAD
 {
@@ -261,7 +264,7 @@ namespace Dxf2ProfiCAD
             */
 
 
-            foreach (Point3D l_point in l_coordinatesCollector.m_list)
+            foreach (WW.Math.Point3D l_point in l_coordinatesCollector.m_list)
             {
                 l_drawPoly.AddPoint(
                     MyShiftScaleX(l_point.X),
@@ -560,7 +563,7 @@ namespace Dxf2ProfiCAD
 //            Console.WriteLine($"seznam má {CoordinatesCollector.m_list.Count()} bodů");
 
 
-            foreach (Point3D l_point in l_coordinatesCollector.m_list)
+            foreach (WW.Math.Point3D l_point in l_coordinatesCollector.m_list)
             {
                 //                Console.WriteLine("   {0}", l_point.ToString());
                 l_drawPoly.AddPoint(
@@ -576,17 +579,66 @@ namespace Dxf2ProfiCAD
             return l_drawPoly;
         }
 
+
         private static DrawObj ConvertArc(DxfArc a_dxf_arc)
         {
             if (Program.m_repo_level == 0)
             {
-                return ConvertArc_Native(a_dxf_arc);
+                return Convert_Arc_3P(a_dxf_arc);
+                //return ConvertArc_Native(a_dxf_arc);
             }
             else
             {
                 return ConvertArc_To_Lines(a_dxf_arc);
             }
         }
+
+
+        private static DrawObj Convert_Arc_3P(DxfArc a_dxf_arc)
+        {
+            //int li_radius = Math.Abs(MyScaleX(a_dxf_arc.Radius));
+            //double li_center_x = MyShiftScaleX(a_dxf_arc.Center.X);
+            //double li_center_y = MyShiftScaleY(a_dxf_arc.Center.Y);
+
+
+
+            //PointF l_point_ = a_dxf_arc.Center + a_dxf_arc.Radius * new Vector2D(Math.Cos(a_dxf_arc.StartAngle), Math.Sin(a_dxf_arc.StartAngle));
+
+            SizeF l_size_begin   = Angle2Size(a_dxf_arc.StartAngle, a_dxf_arc.Radius);
+            SizeF l_size_mid     = Angle2Size((a_dxf_arc.StartAngle + a_dxf_arc.EndAngle) / 2, a_dxf_arc.Radius);
+            SizeF l_size_end     = Angle2Size(a_dxf_arc.EndAngle, a_dxf_arc.Radius);
+
+          
+
+            double ld_begin_x   = a_dxf_arc.Center.X + l_size_begin.Width;
+            double ld_begin_y   = a_dxf_arc.Center.Y + l_size_begin.Height;
+            PointF l_point_begin = new PointF(
+                (float) MyShiftScaleX(ld_begin_x),
+                (float) MyShiftScaleY(ld_begin_y)
+            );
+
+            double ld_mid_x = a_dxf_arc.Center.X + l_size_mid.Width;
+            double ld_mid_y = a_dxf_arc.Center.Y + l_size_mid.Height;
+            PointF l_point_mid = new PointF(
+                (float)MyShiftScaleX(ld_mid_x),
+                (float)MyShiftScaleY(ld_mid_y)
+            );
+
+            double ld_end_x     = a_dxf_arc.Center.X + l_size_end.Width;
+            double ld_end_y     = a_dxf_arc.Center.Y + l_size_end.Height;
+            PointF l_point_end  = new PointF(
+                (float)MyShiftScaleX(ld_end_x),
+                (float)MyShiftScaleY(ld_end_y)
+            );
+
+
+
+            QArc_3_P l_arc = new QArc_3_P(l_point_begin, l_point_mid, l_point_end);
+            l_arc.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(a_dxf_arc);
+
+            return l_arc;
+        }
+
 
         private static DrawObj ConvertArc_Native(DxfArc a_dxf_arc)
         {
@@ -613,6 +665,7 @@ namespace Dxf2ProfiCAD
             return l_arc;
         }
 
+
         private static FreeText ConvertDxfText(DxfText a_dxfMText)
         {
             if (a_dxfMText.Text.Trim().Length == 0)
@@ -627,8 +680,6 @@ namespace Dxf2ProfiCAD
             {
                 l_efont.m_size = 30;
             }
-
-
 
 
 
@@ -831,6 +882,17 @@ namespace Dxf2ProfiCAD
             int li_y = (int)Math.Round(ld_y);
             
             Size l_size = new Size(li_x, li_y);
+            return l_size;
+        }
+
+        private static SizeF Angle2Size(double a_angle, double ad_radius)
+        {
+
+            double ld_x = ad_radius * Math.Cos(a_angle);
+            double ld_y = ad_radius * Math.Sin(a_angle);
+
+
+            SizeF l_size = new SizeF((float)ld_x, (float)ld_y);
             return l_size;
         }
 
