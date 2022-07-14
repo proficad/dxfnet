@@ -61,13 +61,19 @@
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="WW">
-      <HintPath>W:\P\i18n\bin\lib\WW.dll</HintPath>
+      <HintPath>W:\P\dist\11\bin\lib\WW.dll</HintPath>
     </Reference>
     <Reference Include="WW.Cad">
-      <HintPath>W:\P\i18n\bin\lib\WW.Cad.dll</HintPath>
+      <HintPath>W:\P\dist\11\bin\lib\WW.Cad.dll</HintPath>
+    </Reference>
+    <Reference Include="WW.GL">
+      <HintPath>W:\P\dist\11\bin\lib\WW.GL.dll</HintPath>
     </Reference>
     <Reference Include="WW.License">
-      <HintPath>W:\P\i18n\bin\lib\WW.License.dll</HintPath>
+      <HintPath>W:\P\dist\11\bin\lib\WW.License.dll</HintPath>
+    </Reference>
+    <Reference Include="WW.Pdf">
+      <HintPath>W:\P\dist\11\bin\lib\WW.Pdf.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
