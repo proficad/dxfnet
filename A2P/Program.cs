@@ -237,7 +237,8 @@ namespace Dxf2ProfiCAD
             }
             Bounds3D l_bounds3D = l_bc.Bounds;
 
-            Console.WriteLine("bounds: " + l_bounds3D.Delta.ToString());
+            Console.WriteLine("bounds: " + l_bounds3D.ToString());
+            Console.WriteLine("bounds delta: " + l_bounds3D.Delta.ToString());
             Console.WriteLine("target size: " + a_size_target.ToString());
 
             double li_scale_x = a_size_target.Width / l_bounds3D.Delta.X;
@@ -250,6 +251,8 @@ namespace Dxf2ProfiCAD
 
             double li_scale = Math.Min(li_scale_x, li_scale_y);
             Converter.SetScale(li_scale);
+
+            Console.WriteLine("scale: " + li_scale.ToString());
 
             int li_shift_x = (int)(-l_bounds3D.Center.X);
             int li_shift_y = (int)(-l_bounds3D.Center.Y);

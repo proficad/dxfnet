@@ -37,7 +37,8 @@ namespace Dxf2ProfiCAD
         }
         public static double MyShiftScaleY(double ai_what)
         {
-            return m_shift_target_y + (ai_what + m_shifts_y.Peek()) * m_scaleY;
+            double ld_result = m_shift_target_y + (ai_what + m_shifts_y.Peek()) * m_scaleY;
+            return ld_result;
         }
 
         private static int MyScaleX(double ai_what)
