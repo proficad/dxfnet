@@ -401,6 +401,12 @@ namespace Dxf2ProfiCAD
             
             foreach (DxfEntity l_entity in l_coll)
             {
+                if(!l_entity.Layer.Enabled)
+                {
+                    Console.WriteLine("skipping object in disabled layer " + l_entity.Layer.ToString());
+                    continue;
+                }
+
                 DrawObj l_drawObj = Converter.Convert(l_entity);
 
                 if (l_drawObj != null)
