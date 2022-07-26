@@ -15,10 +15,10 @@ namespace DxfNet
             m_tangent = a_tangent;
         }
 
-        public QCircle(PointF a_center, int ai_radius) : base(Shape.circle)
+        public QCircle(PointF a_center, double ai_radius) : base(Shape.circle)
         {
             m_center = a_center;
-            m_tangent.X = m_center.X + ai_radius;
+            m_tangent.X = m_center.X + (float)ai_radius;
             m_tangent.Y = m_center.Y;
         }
 

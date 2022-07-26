@@ -260,7 +260,7 @@ namespace Dxf2ProfiCAD
             Converter.SetSize(a_size_target);
 
             //            Converter.SetShift(li_shift_x, li_shift_y, a_size_target.Height);
-            Converter.SetShift(li_shift_x, li_shift_y, 0);
+            Converter.SetShift(li_shift_x, li_shift_y);
         }
 
         private static void ConvertRepo(Repo a_repo, DxfModel model, bool ab_merge_layers)

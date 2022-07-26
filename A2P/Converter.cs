@@ -24,7 +24,6 @@ namespace Dxf2ProfiCAD
         private static double m_scaleX = 1;
         private static double m_scaleY = -m_scaleX;
 
-        static int m_shift_target_y;
 
         public static Stack<int> m_shifts_x = new Stack<int>();
         public static Stack<int> m_shifts_y = new Stack<int>();
@@ -37,13 +36,13 @@ namespace Dxf2ProfiCAD
         }
         public static double MyShiftScaleY(double ai_what)
         {
-            double ld_result = m_shift_target_y + (ai_what + m_shifts_y.Peek()) * m_scaleY;
+            double ld_result = (ai_what + m_shifts_y.Peek()) * m_scaleY;
             return ld_result;
         }
 
-        private static int MyScaleX(double ai_what)
+        private static double MyScaleX(double ai_what)
         {
-            return (int)Math.Round(ai_what * m_scaleX);
+            return ai_what * m_scaleX;
         }
 
 
@@ -162,7 +161,7 @@ namespace Dxf2ProfiCAD
                 return null;
             }
 
-            int li_radius_x = 0, li_radius_y = 0;
+            double li_radius_x = 0, li_radius_y = 0;
 
             if (a_dxf_ellipse.MajorAxisEndPoint.X != 0 && a_dxf_ellipse.MinorAxisEndPoint.Y != 0)
             {
@@ -189,10 +188,10 @@ namespace Dxf2ProfiCAD
                 (float)MyShiftScaleY(a_dxf_ellipse.Center.Y)
             );
 
-            RectangleF l_boundingRect = new RectangleF(
-                l_center_point.X - li_radius_x, 
+            RectangleF l_boundingRect = Helper.RectangleF(
+                l_center_point.X - li_radius_x,
                 l_center_point.Y - li_radius_y,
-                li_radius_x + li_radius_x, 
+                li_radius_x + li_radius_x,
                 li_radius_y  + li_radius_y
             );
 
@@ -519,13 +518,13 @@ namespace Dxf2ProfiCAD
 
         private static DrawObj ConvertCircle(DxfCircle a_dxfCircle)
         {
-            int li_radius = Math.Abs(MyScaleX(a_dxfCircle.Radius));
+            double ld_radius = Math.Abs(MyScaleX(a_dxfCircle.Radius));
             double ld_center_x = MyShiftScaleX(a_dxfCircle.Center.X);
             double ld_center_y = MyShiftScaleY(a_dxfCircle.Center.Y);
 
 
             PointF l_center = new PointF((float)ld_center_x, (float)ld_center_y);
-            QCircle l_circle = new QCircle(l_center, li_radius);
+            QCircle l_circle = new QCircle(l_center, ld_radius);
 
             l_circle.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(a_dxfCircle);
             l_circle.m_objProps.m_lin = Helper.DxfLineType_2_QLin(a_dxfCircle.LineType, m_scaleX, a_dxfCircle.LineTypeScale);
@@ -637,15 +636,15 @@ namespace Dxf2ProfiCAD
         private static DrawObj ConvertArc_Native(DxfArc a_dxf_arc)
         {
 
-            int li_radius = Math.Abs(MyScaleX(a_dxf_arc.Radius));
+            double li_radius = Math.Abs(MyScaleX(a_dxf_arc.Radius));
             double li_center_x = MyShiftScaleX(a_dxf_arc.Center.X);
             double li_center_y = MyShiftScaleY(a_dxf_arc.Center.Y);
 
             double li_left = li_center_x - li_radius;
             double li_top = li_center_y - li_radius;
-            int li_width = 2 * li_radius;
+            double li_width = 2 * li_radius;
 
-            RectangleF l_boundingRect = new RectangleF((float)li_left, (float)li_top, li_width, li_width);
+            RectangleF l_boundingRect = Helper.RectangleF(li_left, li_top, li_width, li_width);
 
             DrawRect l_arc = new DrawRect(Shape.arc_rect, l_boundingRect);
 
@@ -669,7 +668,7 @@ namespace Dxf2ProfiCAD
             }
 
             EFont l_efont = new EFont();
-            l_efont.m_size = MyScaleX(l_efont.m_size * a_dxfMText.Height * 0.06);
+            l_efont.m_size = (int)MyScaleX(l_efont.m_size * a_dxfMText.Height * 0.06);
             if (l_efont.m_size == 0)
             {
                 l_efont.m_size = 30;
@@ -731,7 +730,7 @@ namespace Dxf2ProfiCAD
         private static FreeText ConvertDxfMText(DxfMText a_dxfMText)
         {
             EFont l_efont = new EFont();
-            l_efont.m_size = MyScaleX(l_efont.m_size * a_dxfMText.Height * 0.06);
+            l_efont.m_size = (int)MyScaleX(l_efont.m_size * a_dxfMText.Height * 0.06);
 
             if (l_efont.m_size == 0)
             {
@@ -899,11 +898,10 @@ namespace Dxf2ProfiCAD
             
         }
 
-        public static void SetShift(int ai_shift_x, int ai_shift_y, int ai_shift_target_y )
+        public static void SetShift(int ai_shift_x, int ai_shift_y )
         {
             m_shifts_x.Push(ai_shift_x);
             m_shifts_y.Push(ai_shift_y);
-            m_shift_target_y = ai_shift_target_y;
         }
 
         private static int RadiansToAngle(double ad_radians)

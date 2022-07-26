@@ -9,7 +9,7 @@ namespace DxfNet.MFC_Types
 	public struct MyLogPen
 	{
 		public int m_style;
-		public int m_width;
+		public double m_width;
 		public Color m_color;
 	}
 }
