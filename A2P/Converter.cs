@@ -25,8 +25,8 @@ namespace Dxf2ProfiCAD
         private static double m_scaleY = -m_scaleX;
 
 
-        public static Stack<int> m_shifts_x = new Stack<int>();
-        public static Stack<int> m_shifts_y = new Stack<int>();
+        public static Stack<double> m_shifts_x = new Stack<double>();
+        public static Stack<double> m_shifts_y = new Stack<double>();
 
         public static Size m_size_target;
 
@@ -100,7 +100,7 @@ namespace Dxf2ProfiCAD
                     l_obj =  ConvertDxfDimension_Aligned(l_dim_align);
                     break;
                 default:
-                    System.Console.WriteLine("did not convert type {0}", a_entity.ToString());
+                    //System.Console.WriteLine("did not convert type {0}", a_entity.ToString());
                     return null;
             }
 
@@ -671,7 +671,8 @@ namespace Dxf2ProfiCAD
             l_efont.m_size = (int)MyScaleX(l_efont.m_size * a_dxfMText.Height * 0.06);
             if (l_efont.m_size == 0)
             {
-                l_efont.m_size = 30;
+                Console.WriteLine("test too small (" + a_dxfMText.Text + ")");
+                l_efont.m_size = 3;
             }
 
 
@@ -706,13 +707,7 @@ namespace Dxf2ProfiCAD
             }
 
             
-            
-            RectangleF l_rect = new RectangleF(
-                (float)MyShiftScaleX(ld_x),
-                (float)MyShiftScaleY(ld_y), 
-                0, 
-                0
-            );
+            RectangleF l_rect = Helper.RectangleF(MyShiftScaleX(ld_x), MyShiftScaleY(ld_y), 0, 0);
 
             string ls_text = a_dxfMText.Text.Replace("\t", "");
 
@@ -734,7 +729,8 @@ namespace Dxf2ProfiCAD
 
             if (l_efont.m_size == 0)
             {
-                l_efont.m_size = 30;
+                Console.WriteLine("test too small (" + a_dxfMText.Text + ")");
+                l_efont.m_size = 3;
             }
 
 
@@ -898,7 +894,7 @@ namespace Dxf2ProfiCAD
             
         }
 
-        public static void SetShift(int ai_shift_x, int ai_shift_y )
+        public static void SetShift(double ai_shift_x, double ai_shift_y )
         {
             m_shifts_x.Push(ai_shift_x);
             m_shifts_y.Push(ai_shift_y);
@@ -917,8 +913,8 @@ namespace Dxf2ProfiCAD
 
         private static System.Drawing.PointF Point3D_To_Point(WW.Math.Point3D a_point)
         {
-            int li_x = (int)Math.Round(a_point.X);
-            int li_y = (int)Math.Round(a_point.Y);
+            double li_x = a_point.X;
+            double li_y = a_point.Y;
             return new System.Drawing.PointF(
                 (float)MyShiftScaleX(li_x),
                 (float)MyShiftScaleY(li_y)
