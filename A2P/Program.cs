@@ -7,7 +7,7 @@ using System.Drawing;
 using WW.Math;
 using WW.Math.Geometry;
 using WW.Cad.IO;
-
+using WW;
 
 using WW.Cad.Model;
 using WW.Cad.Model.Entities;
@@ -241,6 +241,11 @@ namespace Dxf2ProfiCAD
             Console.WriteLine("bounds delta: " + l_bounds3D.Delta.ToString());
             Console.WriteLine("target size: " + a_size_target.ToString());
 
+            double ld_smallest_text_size = Get_Smallest_Text_Size(a_model);
+            double ld_min_width_to_accomodate_texts = l_bounds3D.Delta.X / (ld_smallest_text_size * 65 * 0.06);
+            double ld_min_height_to_accomodate_texts = l_bounds3D.Delta.Y / (ld_smallest_text_size * 65 * 0.06);
+
+
             double li_scale_x = a_size_target.Width / l_bounds3D.Delta.X;
             double li_scale_y = a_size_target.Height / l_bounds3D.Delta.Y;
 
@@ -254,13 +259,13 @@ namespace Dxf2ProfiCAD
 
             Console.WriteLine("scale: " + li_scale.ToString());
 
-            int li_shift_x = (int)(-l_bounds3D.Center.X);
-            int li_shift_y = (int)(-l_bounds3D.Center.Y);
+            double ld_shift_x = -l_bounds3D.Center.X;
+            double ld_shift_y = -l_bounds3D.Center.Y;
 
             Converter.SetSize(a_size_target);
 
             //            Converter.SetShift(li_shift_x, li_shift_y, a_size_target.Height);
-            Converter.SetShift(li_shift_x, li_shift_y);
+            Converter.SetShift(ld_shift_x, ld_shift_y);
         }
 
         private static void ConvertRepo(Repo a_repo, DxfModel model, bool ab_merge_layers)
@@ -514,8 +519,51 @@ namespace Dxf2ProfiCAD
 
         }
 
+        private static double Get_Smallest_Text_Size(DxfModel a_model)
+        {
+            DxfEntityCollection l_coll = a_model.Entities;
+            if (l_coll.Count == 0)
+            {
+                l_coll = a_model.ActiveLayout.Entities;
+            }
+
+            double ld_smallest_test_size = double.MaxValue;
+
+            foreach (DxfEntity l_entity in l_coll)
+            {
+                if(l_entity is DxfText l_text)
+                {
+                    ld_smallest_test_size = Math.Min(ld_smallest_test_size, l_text.Height);
+                }
+
+                if(l_entity is DxfMText l_mtext)
+                {
+                    ld_smallest_test_size = Math.Min(ld_smallest_test_size, l_mtext.Height);
+                }
+            }
+
+            foreach (WW.Cad.Model.Tables.DxfBlock l_block in a_model.Blocks)
+            {
+                foreach(DxfEntity l_entity in l_block.Entities)
+                {
+                    if (l_entity is DxfText l_text)
+                    {
+                        ld_smallest_test_size = Math.Min(ld_smallest_test_size, l_text.Height);
+                    }
+
+                    if (l_entity is DxfMText l_mtext)
+                    {
+                        ld_smallest_test_size = Math.Min(ld_smallest_test_size, l_mtext.Height);
+                    }
+                }
+            }
+
+
+
+                return ld_smallest_test_size;
+        }
+
+
     }
-
-
 
 }
