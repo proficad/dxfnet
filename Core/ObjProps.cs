@@ -7,6 +7,8 @@ using DxfNet.MFC_Types;
 
 namespace DxfNet
 {
+
+
     public enum HatchType 
     { 
         NONE=-1,
@@ -22,9 +24,12 @@ namespace DxfNet
     {
         public ObjProps()
         {
+            const int DEFAULT_LINE_THICKNESS = 0;
+
+
             m_logpen.m_color = Color.Black;
             m_logpen.m_style = 0;
-            m_logpen.m_width = 2;
+            m_logpen.m_width = DEFAULT_LINE_THICKNESS;
 
             m_logbrush.m_color = Color.FromArgb(255, 255, 128);
             m_logbrush.m_style = 0;
@@ -69,10 +74,9 @@ namespace DxfNet
         {
             a_xmlWriter.WriteAttributeString("op-lc", Helper.RGB_2_Int(m_logpen.m_color).ToString());
 
-            if (m_logpen.m_width > 0)
-            {
-                a_xmlWriter.WriteAttributeString("op-lw", m_logpen.m_width.ToString());
-            }
+      
+            a_xmlWriter.WriteAttributeString("op-lw", m_logpen.m_width.ToString());
+            
 
             if (!string.IsNullOrEmpty(m_lin.m_name)) //if line not solid
             {
