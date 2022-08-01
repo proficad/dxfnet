@@ -596,9 +596,26 @@ namespace Dxf2ProfiCAD
 
         private static DrawObj Convert_Arc_3P(DxfArc a_dxf_arc)
         {
+            const double PI_2 = Math.PI * 2;
+
+            double ld_start_angle = a_dxf_arc.StartAngle;
+            double ld_end_angle = a_dxf_arc.EndAngle;
+
+            if(ld_end_angle < ld_start_angle)
+            {
+                ld_end_angle += PI_2;
+            }
+            double ld_middle_angle = (ld_start_angle + ld_end_angle) / 2;
+            if(ld_middle_angle > PI_2)
+            {
+                ld_middle_angle -= PI_2;
+            }
+
+
+            
          
             SizeF l_size_begin   = Angle2Size(a_dxf_arc.StartAngle, a_dxf_arc.Radius);
-            SizeF l_size_mid     = Angle2Size((a_dxf_arc.StartAngle + a_dxf_arc.EndAngle) / 2, a_dxf_arc.Radius);
+            SizeF l_size_mid     = Angle2Size(ld_middle_angle, a_dxf_arc.Radius);
             SizeF l_size_end     = Angle2Size(a_dxf_arc.EndAngle, a_dxf_arc.Radius);
 
           
