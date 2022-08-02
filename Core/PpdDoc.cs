@@ -62,7 +62,7 @@ namespace Core
 
                 l_xmlWriter.WriteStartElement("document");
                 l_xmlWriter.WriteAttributeString("type", "ProfiCAD ppd");
-                l_xmlWriter.WriteAttributeString("version", "10.0");
+                l_xmlWriter.WriteAttributeString("version", "12.0");
                 
                 //a_xmlWriter.WriteAttributeString("name", m_name);
                 
@@ -86,7 +86,7 @@ namespace Core
 
             a_xmlWriter.WriteStartElement("ppd");
             a_xmlWriter.WriteAttributeString("name", m_name);
-            a_xmlWriter.WriteAttributeString("version", "10.0");
+            a_xmlWriter.WriteAttributeString("version", "12.0");
 
             a_xmlWriter.WriteAttributeString("fG", m_fG);
             a_xmlWriter.WriteAttributeString("lG", m_lG);

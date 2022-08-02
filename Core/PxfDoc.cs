@@ -55,7 +55,7 @@ namespace Core
         {
             a_xmlWriter.WriteStartElement("document");
             a_xmlWriter.WriteAttributeString("type", "ProfiCAD pxf");
-            a_xmlWriter.WriteAttributeString("version", "10.0");
+            a_xmlWriter.WriteAttributeString("version", "12.0");
         }
 
         public Repo GetRepo()
