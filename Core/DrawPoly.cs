@@ -250,8 +250,8 @@ namespace DxfNet
             {
                 PointF l_point = m_points[li_i];
 
-                l_point.X = (int)Math.Round(l_point.X * af_x);
-                l_point.Y = (int)Math.Round(l_point.Y * af_y);
+                l_point.X = (float)Math.Round(l_point.X * af_x);
+                l_point.Y = (float)Math.Round(l_point.Y * af_y);
 
                 m_points[li_i] = l_point;
             }

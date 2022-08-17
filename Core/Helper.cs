@@ -73,11 +73,11 @@ namespace DxfNet
         }
 
 
-        public static Point GetRectCenterPoint(RectangleF a_rect)
+        public static PointF GetRectCenterPoint(RectangleF a_rect)
         {
-            int li_x = (int)(a_rect.Left + (a_rect.Width / 2));
-            int li_y = (int)(a_rect.Top + (a_rect.Height / 2));
-            return new Point(li_x, li_y);
+            float lf_x = (float)(a_rect.Left + (a_rect.Width / 2));
+            float lf_y = (float)(a_rect.Top + (a_rect.Height / 2));
+            return new PointF(lf_x, lf_y);
         }
 
 
@@ -88,11 +88,11 @@ namespace DxfNet
             x = t;
         }
 
-        public static int Distance2Points(PointF a_point1, PointF a_point2)
+        public static double Distance2Points(PointF a_point1, PointF a_point2)
         {
             double li_diff_x = a_point1.X - a_point2.X;
             double li_diff_y = a_point1.Y - a_point2.Y;
-            return (int)Math.Sqrt(
+            return Math.Sqrt(
                 (li_diff_x * li_diff_x) + (li_diff_y * li_diff_y)
             );
         }

@@ -385,7 +385,7 @@ namespace DxfNet
 
             foreach(Insert l_insert in l_list_CElems)
 	        {
-                Point l_center_point = Helper.GetRectCenterPoint(l_insert.m_position);
+                PointF l_center_point = Helper.GetRectCenterPoint(l_insert.m_position);
 
                 PpdDoc l_ppd = FindPpdDocInRepo(l_insert.m_lG);
                 if(l_ppd != null)

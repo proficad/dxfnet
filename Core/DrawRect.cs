@@ -89,11 +89,11 @@ namespace DxfNet
 
         internal override void Recalc_Size(float af_x, float af_y)
         {
-            m_position.X = (int)Math.Round(m_position.X * af_x);
-            m_position.Y = (int)Math.Round(m_position.Y * af_y);
+            m_position.X = (float)Math.Round(m_position.X * af_x);
+            m_position.Y = (float)Math.Round(m_position.Y * af_y);
 
-            m_position.Width  = (int)Math.Round(m_position.Width  * af_x);
-            m_position.Height = (int)Math.Round(m_position.Height * af_y);
+            m_position.Width  = (float)Math.Round(m_position.Width  * af_x);
+            m_position.Height = (float)Math.Round(m_position.Height * af_y);
             
         }
     }

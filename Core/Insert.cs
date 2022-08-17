@@ -150,7 +150,7 @@ namespace DxfNet
 
         public override void RecalcPosition()
         {
-            Point l_centerPoint = Helper.GetRectCenterPoint(m_position);
+            PointF l_centerPoint = Helper.GetRectCenterPoint(m_position);
             /*
             if (m_lG == "L51")
             {
@@ -202,11 +202,11 @@ namespace DxfNet
 
         internal override void Recalc_Size(float af_x, float af_y)
         {
-            m_position.X = (int)Math.Round(m_position.X * af_x);
-            m_position.Y = (int)Math.Round(m_position.Y * af_y);
+            m_position.X = m_position.X * af_x;
+            m_position.Y = m_position.Y * af_y;
 
-            m_position.Width = (int)Math.Round(m_position.Width * af_x);
-            m_position.Height = (int)Math.Round(m_position.Height * af_y);
+            m_position.Width  = m_position.Width  * af_x;
+            m_position.Height = m_position.Height * af_y;
         }
     }
 }

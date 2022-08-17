@@ -112,7 +112,7 @@ namespace Core
 
             //verify it
             RectangleF l_rectPos = GetPosition();
-            Point l_centerPoint = Helper.GetRectCenterPoint(l_rectPos);
+            PointF l_centerPoint = Helper.GetRectCenterPoint(l_rectPos);
 
 
             //calc bounds

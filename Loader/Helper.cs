@@ -373,6 +373,14 @@ namespace Loader
             return new Point3D(a_point.X, a_point.Y, 0);
         }
 
+        public static Point PointF_To_Point(PointF a_point)
+        {
+            Point l_point = new Point();
+            l_point.X = (int)Math.Round(a_point.X);
+            l_point.Y = (int)Math.Round(a_point.Y);
+            return l_point;
+        }
+
         //--------------------------------
     }
 }

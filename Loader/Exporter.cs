@@ -1412,7 +1412,7 @@ namespace Loader
 
           
 
-            a_drawRect.m_objProps.m_logpen.m_width = Calculate_Line_Thickness_Ellipse(a_drawRect.m_objProps.m_logpen.m_width);
+            a_drawRect.m_objProps.m_logpen.m_width = Calculate_Line_Thickness_Ellipse((int)a_drawRect.m_objProps.m_logpen.m_width);
 
             dxfEllipse.LineWeight = (short)(10 * a_drawRect.m_objProps.m_logpen.m_width);
             //99 dxfEllipse.ColorSource = AttributeSource.This;
@@ -1430,7 +1430,7 @@ namespace Loader
 
         private static void ExportCircle(DxfEntityCollection a_coll, QCircle a_circle, bool ab_block)
         {
-            int li_radius = DxfNet.Helper.Distance2Points(a_circle.m_center, a_circle.m_tangent);
+            double li_radius = DxfNet.Helper.Distance2Points(a_circle.m_center, a_circle.m_tangent);
             Point3D l_center = new Point3D(a_circle.m_center.X, a_circle.m_center.Y * REVERSE_Y, 0);
 
 
@@ -1450,7 +1450,7 @@ namespace Loader
             DxfCircle dxfCircle = new DxfCircle(l_center, li_radius);
 
 
-            a_circle.m_objProps.m_logpen.m_width = Calculate_Line_Thickness_Ellipse(a_circle.m_objProps.m_logpen.m_width);
+            a_circle.m_objProps.m_logpen.m_width = Calculate_Line_Thickness_Ellipse((int)a_circle.m_objProps.m_logpen.m_width);
 
             dxfCircle.LineWeight = (short)(10 * a_circle.m_objProps.m_logpen.m_width);
             //99 dxfEllipse.ColorSource = AttributeSource.This;
@@ -1701,7 +1701,8 @@ namespace Loader
             }
             
 
-            Point l_centerPoint = DxfNet.Helper.GetRectCenterPoint(l_rect);
+            PointF l_centerPoint_F = DxfNet.Helper.GetRectCenterPoint(l_rect);
+            Point l_centerPoint = Helper.PointF_To_Point(l_centerPoint_F);
             Point l_arcBegin = l_centerPoint + drawRect.m_arcBegin;
             Point l_arcEnd = l_centerPoint + drawRect.m_arcEnd;
 
@@ -1729,7 +1730,7 @@ namespace Loader
             DxfArc l_arc = new DxfArc(l_center, l_radius, l_startAngle, l_endAngle);
             l_arc.Layer = ExportContext.Current.Layer;
 
-            a_drawRect.m_objProps.m_logpen.m_width = Calculate_Line_Thickness_Ellipse(a_drawRect.m_objProps.m_logpen.m_width);
+            a_drawRect.m_objProps.m_logpen.m_width = Calculate_Line_Thickness_Ellipse((int)a_drawRect.m_objProps.m_logpen.m_width);
 
             l_arc.LineWeight = (short)(10 * a_drawRect.m_objProps.m_logpen.m_width);
             l_arc.Thickness = 10 * a_drawRect.m_objProps.m_logpen.m_width;
@@ -1758,7 +1759,7 @@ namespace Loader
        
             l_arc.Layer = ExportContext.Current.Layer;
 
-            a_arc.m_objProps.m_logpen.m_width = Calculate_Line_Thickness_Ellipse(a_arc.m_objProps.m_logpen.m_width);
+            a_arc.m_objProps.m_logpen.m_width = Calculate_Line_Thickness_Ellipse((int)a_arc.m_objProps.m_logpen.m_width);
 
             l_arc.LineWeight = (short)(10 * a_arc.m_objProps.m_logpen.m_width);
             l_arc.Thickness = 10 * a_arc.m_objProps.m_logpen.m_width;
@@ -1940,7 +1941,7 @@ namespace Loader
                 dxfPolyline.Layer = ExportContext.Current.Layer;
                 a_coll.Add(dxfPolyline);
 
-                ExportPolylineArrowWithoutStem(a_coll, drawPoly, l_arrowType, drawPoly.m_objProps.m_logpen.m_color, 1, 1, drawPoly.m_objProps.m_logpen.m_width, ab_block, drawPoly.Scale_arrow_x, drawPoly.Scale_arrow_y);
+                ExportPolylineArrowWithoutStem(a_coll, drawPoly, l_arrowType, drawPoly.m_objProps.m_logpen.m_color, 1, 1, (int)drawPoly.m_objProps.m_logpen.m_width, ab_block, drawPoly.Scale_arrow_x, drawPoly.Scale_arrow_y);
 
             }
        

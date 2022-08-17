@@ -41,7 +41,7 @@ namespace Loader
             int Y = (int)l_posAspect.m_pivot.Y;//(m_position.top  + m_position.bottom)/2;
 
 
-            int li_lineThickness = a_gate.m_objProps.m_logpen.m_width;
+            int li_lineThickness = (int)Math.Round(a_gate.m_objProps.m_logpen.m_width);
 
             DrawPoly l_pouzdro = null;
 
