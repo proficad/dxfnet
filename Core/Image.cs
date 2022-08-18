@@ -8,7 +8,7 @@ namespace DxfNet
 {
     public class QImage : DrawObj
     {
-        public QImage(Shape a_shape, Rectangle a_rect, string as_lastGuid, 
+        public QImage(Shape a_shape, RectangleF a_rect, string as_lastGuid, 
             int a_angle_tenths, bool ab_hor, bool ab_ver) 
             : base(a_shape, a_rect)
         {

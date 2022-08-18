@@ -33,6 +33,13 @@ namespace DxfNet
         }
 
 
+        public static RectangleF RectangleF(double ld_left, double ld_top, double ld_width, double ld_height)
+        {
+            RectangleF l_rect = new RectangleF((float)ld_left, (float)ld_top, (float)ld_width, (float)ld_height);
+            return l_rect;
+        }
+
+
         internal static string Color2String(Color a_input)
         {
             string ls_color = string.Format("{0:X2}{1:X2}{2:X2}", a_input.R, a_input.G, a_input.B);

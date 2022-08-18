@@ -15,11 +15,7 @@ namespace Dxf2ProfiCAD
 {
     public static class Helper
     {
-        public static RectangleF RectangleF(double ld_left, double ld_top, double ld_width, double ld_height)
-        {
-            RectangleF l_rect = new RectangleF((float)ld_left, (float)ld_top, (float)ld_width, (float)ld_height);
-            return l_rect;
-        }
+
 
 
         public static System.Drawing.Color DxfEntityColor2Color(DxfEntity a_dxf_entity)

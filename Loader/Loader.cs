@@ -490,7 +490,7 @@ namespace Loader
 
         private static void AddArcPieChord(DrawDoc doc, XmlNode nodeElement)
         {
-            Rectangle rect = RectFromXml(nodeElement);
+            RectangleF rect = RectFromXml(nodeElement);
             DrawRect l_arcPieChord = null;
             switch (nodeElement.Name)
             {
@@ -529,7 +529,7 @@ namespace Loader
 
         private static void AddRect(DrawDoc doc, XmlNode a_node)
         {
-            Rectangle rect = RectFromXml(a_node);
+            RectangleF rect = RectFromXml(a_node);
             DrawRect drawRect = new DrawRect(Shape.rectangle, rect);
             ObjProps l_props = ObjPropsFromXml(a_node);
             drawRect.m_objProps = l_props;
@@ -540,7 +540,7 @@ namespace Loader
 
         private static void AddEllipse(DrawDoc doc, XmlNode a_node)
         {
-            Rectangle rect = RectFromXml(a_node);
+            RectangleF rect = RectFromXml(a_node);
             DrawRect drawRect = new DrawRect(Shape.ellipse, rect);
             ObjProps l_props = ObjPropsFromXml(a_node);
             drawRect.m_objProps = l_props;
@@ -611,22 +611,23 @@ namespace Loader
             }
         }
 
-        private static Rectangle RectFromXml(XmlNode nodeElement)
+        private static RectangleF RectFromXml(XmlNode nodeElement)
         {
-            int li_left = int.Parse(nodeElement.Attributes["left"].Value);
-            int li_top = int.Parse(nodeElement.Attributes["top"].Value);
-            int li_right = int.Parse(nodeElement.Attributes["right"].Value);
-            int li_bottom = int.Parse(nodeElement.Attributes["bottom"].Value);
-            int li_width = li_right - li_left;
-            int li_height = li_bottom - li_top;
-            Rectangle rect = new Rectangle(li_left, li_top, li_width, li_height);
+            double ld_left     = double.Parse(nodeElement.Attributes["left"].Value);
+            double ld_top      = double.Parse(nodeElement.Attributes["top"].Value);
+            double ld_right    = double.Parse(nodeElement.Attributes["right"].Value);
+            double ld_bottom   = double.Parse(nodeElement.Attributes["bottom"].Value);
+
+            double ld_width     = ld_right - ld_left;
+            double ld_height    = ld_bottom - ld_top;
+            RectangleF rect = DxfNet.Helper.RectangleF(ld_left, ld_top, ld_width, ld_height);
             Helper.FixRectangle(ref rect);
             return rect;
         }
 
         private static void AddRoundRect(DrawDoc doc, XmlNode a_node)
         {
-            Rectangle rect = RectFromXml(a_node);
+            RectangleF rect = RectFromXml(a_node);
             DrawRect drawRect = new DrawRect(Shape.roundRectangle, rect);
             drawRect.m_rX = int.Parse(a_node.Attributes["rX"].Value);
             drawRect.m_rY = int.Parse(a_node.Attributes["rY"].Value);
@@ -652,10 +653,10 @@ namespace Loader
                 throw new Exception("number of points not even");
             }
 
-            int[] li_arrPoints = new int[ls_arrPoints.Length];
+            double[] li_arrPoints = new double[ls_arrPoints.Length];
             for (int i = 0; i < ls_arrPoints.Length; i++)
             {
-                li_arrPoints[i] = int.Parse(ls_arrPoints[i]);
+                li_arrPoints[i] = double.Parse(ls_arrPoints[i]);
             }
 
             DrawPoly poly = null;
@@ -685,9 +686,9 @@ namespace Loader
 
             for (int y = 0; y < ls_arrPoints.Length; y += 2)
             {
-                int li_x = li_arrPoints[y];
-                int li_y = li_arrPoints[y + 1];
-                poly.AddPoint(li_x, li_y);
+                double ld_x = li_arrPoints[y];
+                double ld_y = li_arrPoints[y + 1];
+                poly.AddPoint(ld_x, ld_y);
             }
             ObjProps l_props = ObjPropsFromXml(a_node);
             //add obj props
@@ -941,7 +942,7 @@ namespace Loader
             {
                 return ai_default;
             }
-            return int.Parse(ls_result);
+            return (int) double.Parse(ls_result);
         }
 
 
@@ -1090,7 +1091,7 @@ namespace Loader
 
         private static void AddImage(DrawDoc a_drawDoc, XmlNode a_node)
         {
-            Rectangle l_rect = RectFromXml(a_node);
+            RectangleF l_rect = RectFromXml(a_node);
 
             string ls_lastGuid = XmlAttrToString(a_node, "lG");
             if (string.IsNullOrEmpty(ls_lastGuid))
@@ -1441,13 +1442,13 @@ namespace Loader
 
         private static void AddInsert(DrawDoc doc, XmlNode a_node)
         {
-            int li_x = int.Parse(a_node.Attributes["x"].Value);
-            int li_y = int.Parse(a_node.Attributes["y"].Value);
+            double ld_x = double.Parse(a_node.Attributes["x"].Value);
+            double ld_y = double.Parse(a_node.Attributes["y"].Value);
 
             float lf_scaleX = Helper.ParseScale(a_node.Attributes["sX"]);
             float lf_scaleY = Helper.ParseScale(a_node.Attributes["sY"]);
 
-            Insert l_insert   = new Insert(Shape.soucastka, li_x, li_y, lf_scaleX, lf_scaleY);
+            Insert l_insert   = new Insert(Shape.soucastka, ld_x, ld_y, lf_scaleX, lf_scaleY);
 
             l_insert.m_lG = XmlAttrToString(a_node, "lG");
             if (string.IsNullOrEmpty(l_insert.m_lG))

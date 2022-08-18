@@ -188,7 +188,7 @@ namespace Dxf2ProfiCAD
                 (float)MyShiftScaleY(a_dxf_ellipse.Center.Y)
             );
 
-            RectangleF l_boundingRect = Helper.RectangleF(
+            RectangleF l_boundingRect = DxfNet.Helper.RectangleF(
                 l_center_point.X - li_radius_x,
                 l_center_point.Y - li_radius_y,
                 li_radius_x + li_radius_x,
@@ -661,7 +661,7 @@ namespace Dxf2ProfiCAD
             double li_top = li_center_y - li_radius;
             double li_width = 2 * li_radius;
 
-            RectangleF l_boundingRect = Helper.RectangleF(li_left, li_top, li_width, li_width);
+            RectangleF l_boundingRect = DxfNet.Helper.RectangleF(li_left, li_top, li_width, li_width);
 
             DrawRect l_arc = new DrawRect(Shape.arc_rect, l_boundingRect);
 
@@ -724,7 +724,7 @@ namespace Dxf2ProfiCAD
             }
 
             
-            RectangleF l_rect = Helper.RectangleF(MyShiftScaleX(ld_x), MyShiftScaleY(ld_y), 0, 0);
+            RectangleF l_rect = DxfNet.Helper.RectangleF(MyShiftScaleX(ld_x), MyShiftScaleY(ld_y), 0, 0);
 
             string ls_text = a_dxfMText.Text.Replace("\t", "");
 
