@@ -433,13 +433,14 @@ namespace Dxf2ProfiCAD
                         {
                             //if the symbol uses some huge numbers and compensates it with the scale
                             //recalculate the numbers
+                            /*
                             if ((l_insert.m_scaleX < 1) || (l_insert.m_scaleY < 1))
                             {
                                 l_ppdDoc.Recalc_Size(l_insert.m_scaleX, l_insert.m_scaleY);
                                 l_insert.m_scaleX = 1;
                                 l_insert.m_scaleY = 1;
                             }
-
+                            */
 
 
 
