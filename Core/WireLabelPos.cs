@@ -4,12 +4,12 @@ namespace DxfNet
 {
     public class WireLabelPos
     {
-        public WireLabelPos(Point a_point)
+        public WireLabelPos(PointF a_point)
         {
             m_point = a_point;
         }
 
-        public Point m_point;
+        public PointF m_point;
 
     }
 }

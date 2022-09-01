@@ -8,14 +8,14 @@ namespace DxfNet
 {
     public class QDimCircle : DrawObj
     {
-        public Point A, B, C;
+        public PointF A, B, C;
         public bool m_has_2_arrows;
-        public Point m_pos_label;
+        public PointF m_pos_label;
 
         public QLabel Label;
 
 
-        public QDimCircle(Point a_a, Point a_b, bool ab_has_2_arr, Point a_pos_label) : base(Shape.dim_circle, new Rectangle(a_a.X, a_a.Y, 1, 1))
+        public QDimCircle(PointF a_a, PointF a_b, bool ab_has_2_arr, PointF a_pos_label) : base(Shape.dim_circle, new RectangleF(a_a.X, a_a.Y, 1, 1))
         {
             A = a_a;
             B = a_b;

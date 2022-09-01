@@ -552,8 +552,8 @@ namespace Loader
 
         private static void AddCircle(DrawDoc doc, XmlNode a_node)
         {
-            Point l_center  = XmlAttrToPoint(a_node, "center");
-            Point l_tangent = XmlAttrToPoint(a_node, "tangent");
+            PointF l_center  = XmlAttrToPointF(a_node, "center");
+            PointF l_tangent = XmlAttrToPointF(a_node, "tangent");
             QCircle l_circle = new QCircle(l_center, l_tangent);
 
             ObjProps l_props = ObjPropsFromXml(a_node);
@@ -566,9 +566,9 @@ namespace Loader
         
         private static void AddArc_3_P(DrawDoc doc, XmlNode a_node)
         {
-            PointF l_point_1 = XmlAttrToPoint(a_node, QArc_3_P.ATTR_POINT_1);
-            PointF l_point_2 = XmlAttrToPoint(a_node, QArc_3_P.ATTR_POINT_2);
-            PointF l_point_3 = XmlAttrToPoint(a_node, QArc_3_P.ATTR_POINT_3);
+            PointF l_point_1 = XmlAttrToPointF(a_node, QArc_3_P.ATTR_POINT_1);
+            PointF l_point_2 = XmlAttrToPointF(a_node, QArc_3_P.ATTR_POINT_2);
+            PointF l_point_3 = XmlAttrToPointF(a_node, QArc_3_P.ATTR_POINT_3);
 
             QArc_3_P l_arc = new QArc_3_P(l_point_1, l_point_2, l_point_3);
 
@@ -921,11 +921,13 @@ namespace Loader
         }
 
 
-        public static Point XmlAttrToPoint(XmlNode a_node, string as_attr_prefix)
+
+
+        public static PointF XmlAttrToPointF(XmlNode a_node, string as_attr_prefix)
         {
-            Point l_point = new Point();
-            l_point.X = XmlAttrToInt(a_node.Attributes[as_attr_prefix + "x"]);
-            l_point.Y = XmlAttrToInt(a_node.Attributes[as_attr_prefix + "y"]);
+            PointF l_point = new PointF();
+            l_point.X = XmlAttrToFloat(a_node.Attributes[as_attr_prefix + "x"]);
+            l_point.Y = XmlAttrToFloat(a_node.Attributes[as_attr_prefix + "y"]);
 
             return l_point;
         }
@@ -1000,12 +1002,12 @@ namespace Loader
 
         private static void AddDimCircle(DrawDoc a_drawDoc, XmlNode a_node)
         {
-            Point l_a = XmlAttrToPoint(a_node, "a");
-            Point l_b = XmlAttrToPoint(a_node, "b");
+            PointF l_a = XmlAttrToPointF(a_node, "a");
+            PointF l_b = XmlAttrToPointF(a_node, "b");
 
             bool lb_has_2_arrows = XmlAttrToBool(a_node.Attributes["arr2"]);
 
-            Point l_label_pos = XmlAttrToPoint(a_node, "lp");
+            PointF l_label_pos = XmlAttrToPointF(a_node, "lp");
 
             QDimCircle l_dim = new QDimCircle(l_a, l_b, lb_has_2_arrows, l_label_pos);
             a_drawDoc.Add(l_dim, ContextP2A.Current.CurrentLayer);
@@ -1016,9 +1018,9 @@ namespace Loader
 
         private static void AddDimLine(DrawDoc a_drawDoc, XmlNode a_node)
         {
-            Point l_a = XmlAttrToPoint(a_node, "a");
-            Point l_b = XmlAttrToPoint(a_node, "b");
-            Point l_c = XmlAttrToPoint(a_node, "c");
+            PointF l_a = XmlAttrToPointF(a_node, "a");
+            PointF l_b = XmlAttrToPointF(a_node, "b");
+            PointF l_c = XmlAttrToPointF(a_node, "c");
 
             QDimLine.DimDirection l_dir = (QDimLine.DimDirection)XmlAttrToInt(a_node.Attributes["dir"]);
 
@@ -1031,7 +1033,7 @@ namespace Loader
         {
             if(null != a_node)
             {
-                Point l_center_point = XmlAttrToPoint(a_node, "pos_");
+                PointF l_center_point = XmlAttrToPointF(a_node, "pos_");
                 string ls_text = XmlAttrToString(a_node, "text");
                 int li_angle = XmlAttrToInt(a_node, "angle");
                 QLabel l_label = new QLabel { Center = l_center_point, Text = ls_text, AngleTenths = li_angle };
@@ -1630,7 +1632,7 @@ namespace Loader
             XmlNode l_node = a_node.SelectSingleNode(as_name);
             if (null != l_node)
             {
-                Point l_point = XmlAttrToPoint(l_node, "");
+                PointF l_point = XmlAttrToPointF(l_node, "");
                 a_label = new DxfNet.WireLabelPos(l_point);
             }
         }
