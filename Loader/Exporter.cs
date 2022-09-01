@@ -42,6 +42,7 @@ namespace Loader
             foreach (Layer l_layer in a_doc.m_layers)
             { 
                 string ls_name = l_layer.Name;
+                ls_name = ls_name.Replace(",", "");
                 if (!model.Layers.Contains(ls_name))
                 {
                     model.Layers.Add(new DxfLayer(ls_name));
