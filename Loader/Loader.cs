@@ -531,6 +531,7 @@ namespace Loader
         {
             RectangleF rect = RectFromXml(a_node);
             DrawRect drawRect = new DrawRect(Shape.rectangle, rect);
+            drawRect.m_rect_angle = XmlAttrToInt(a_node.Attributes["a"]);
             ObjProps l_props = ObjPropsFromXml(a_node);
             drawRect.m_objProps = l_props;
 
@@ -542,11 +543,11 @@ namespace Loader
         {
             RectangleF rect = RectFromXml(a_node);
             DrawRect drawRect = new DrawRect(Shape.ellipse, rect);
+            drawRect.m_rect_angle = XmlAttrToInt(a_node.Attributes["a"]);
             ObjProps l_props = ObjPropsFromXml(a_node);
             drawRect.m_objProps = l_props;
 
             AddTextToDrawRect(drawRect, a_node);
-
             doc.Add(drawRect, ContextP2A.Current.CurrentLayer);
         }
 

@@ -95,6 +95,12 @@ namespace DxfNet
             x = t;
         }
 
+        public static double Angle2Radians(int ai_angle_tenth_of_degree)
+        {
+            return Math.PI * ai_angle_tenth_of_degree / 1800;
+        }
+
+
         public static double Distance2Points(PointF a_point1, PointF a_point2)
         {
             double li_diff_x = a_point1.X - a_point2.X;

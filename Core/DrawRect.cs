@@ -20,6 +20,9 @@ namespace DxfNet
 
         public bool m_arrow_flipped;
         public int m_text_angle;
+
+        public int m_rect_angle; // angle of the rectangle or ellipse (starting with version 12.1 (November 2022) they may be rotated
+
         internal override void Write2Xml(System.Xml.XmlWriter a_xmlWriter)
         {
 

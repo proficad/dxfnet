@@ -548,7 +548,7 @@ namespace Loader
 
             TransformConfig tc = new TransformConfig();
 
-            double ld_angle_rad = Angle2Radians((int)a_image.m_angle_tenths);
+            double ld_angle_rad = DxfNet.Helper.Angle2Radians(a_image.m_angle_tenths);
 
             double ld_hor = a_image.m_hor ? -1 : 1;
             double ld_ver = a_image.m_ver ? -1 : 1;
@@ -1156,7 +1156,7 @@ namespace Loader
 
             l_insert.Color = Helper.MakeEntityColorByBlock(a_insert.m_color_border, false);
 
-            l_insert.Rotation = Angle2Radians(a_insert.m_angle);
+            l_insert.Rotation = DxfNet.Helper.Angle2Radians(a_insert.m_angle);
 
             l_insert.Layer = ExportContext.Current.Layer;
             a_dxfEntityCollection.Add(l_insert);
@@ -1321,6 +1321,19 @@ namespace Loader
             l_arrPoints[3].X = a_drawRect.m_position.Left;
             l_arrPoints[3].Y = a_drawRect.m_position.Top * REVERSE_Y;
 
+            if (a_drawRect.m_rect_angle != 0)
+            {
+                PointF l_center_point = a_drawRect.GetCenterPoint();
+                l_center_point.Y = -l_center_point.Y;
+                Point2D l_center_point_2d = Helper.PointF_To_Point2D(l_center_point);
+
+                for(int li_i = 0; li_i < 4; li_i++)
+                {
+                    l_arrPoints[li_i] = Helper.RotatePoint2D(l_center_point_2d, a_drawRect.m_rect_angle, l_arrPoints[li_i]);
+                }
+            }
+
+
             ExportPolygonFilled(a_coll, l_arrPoints, a_drawRect.m_objProps, ab_block);
 
             DxfPolyline2D dxfPolyline = new DxfPolyline2D(l_arrPoints);
@@ -1402,13 +1415,39 @@ namespace Loader
 
             if (a_drawRect.m_objProps.m_bBrush)
             {
-                ExportEllipseSolid(a_coll, l_center, l_longAxis, ld_ratio, a_drawRect.m_objProps, false, ab_block);
+                ExportEllipseSolid(a_coll, l_center, l_longAxis, ld_ratio, a_drawRect.m_rect_angle, a_drawRect.m_objProps, false, ab_block);
             }
-            ExportEllipseSolid(a_coll, l_center, l_longAxis, ld_ratio, a_drawRect.m_objProps, true, ab_block);
-   
+            ExportEllipseSolid(a_coll, l_center, l_longAxis, ld_ratio, a_drawRect.m_rect_angle, a_drawRect.m_objProps, true, ab_block);
+
+
+            Point2D l_center_2d = new Point2D();
+            l_center_2d.X = l_center.X;
+            l_center_2d.Y = -l_center.Y;
+
+            PointF l_point_dist = new PointF((float)(l_longAxis.X + l_center_2d.X), (float)(l_longAxis.Y + l_center_2d.Y));
+
+            double l_dist_1 = DxfNet.Helper.Distance2Points(Helper.Point2D_To_PointF(l_center_2d), l_point_dist);
+
+
+            if(a_drawRect.m_rect_angle != 0)
+            {
+
+                PointF l_result = Helper.RotatePointF(Helper.Point2D_To_PointF(l_center_2d), a_drawRect.m_rect_angle, l_point_dist);
+                l_longAxis.X = l_result.X;
+                l_longAxis.Y = l_result.Y;
+
+                l_longAxis.X -= l_center_2d.X;
+                l_longAxis.Y -= l_center_2d.Y;
+
+                double l_dist_2 = DxfNet.Helper.Distance2Points(Helper.Point2D_To_PointF(l_center_2d), l_result);
+
+                double ld_diff = l_dist_1 - l_dist_2;
+            }
+
+
             DxfEllipse dxfEllipse = new DxfEllipse(l_center, l_longAxis, ld_ratio);
 
-
+            
 //            dxfEllipse. =  .DefaultStartWidth = drawRect.m_objProps.m_logpen.m_width;
 
           
@@ -1440,9 +1479,9 @@ namespace Loader
 
             if (a_circle.m_objProps.m_bBrush)
             {
-                ExportEllipseSolid(a_coll, l_center, l_longAxis, 1, a_circle.m_objProps, false, ab_block);
+                ExportEllipseSolid(a_coll, l_center, l_longAxis, 1, 0, a_circle.m_objProps, false, ab_block);
             }
-            ExportEllipseSolid(a_coll, l_center, l_longAxis, 1, a_circle.m_objProps, true, ab_block);
+            ExportEllipseSolid(a_coll, l_center, l_longAxis, 1, 0, a_circle.m_objProps, true, ab_block);
 
 
 
@@ -1530,8 +1569,16 @@ namespace Loader
         }
 
 
-        private static void ExportEllipseSolid(DxfEntityCollection a_dxfEntityCollection, Point3D l_center, Vector3D l_longAxis, double ld_ratio, ObjProps a_objProps, bool ab_hatch, bool ab_block)
+        private static void ExportEllipseSolid(DxfEntityCollection a_dxfEntityCollection, Point3D l_center, Vector3D l_longAxis, double ld_ratio, int ai_angle, ObjProps a_objProps, bool ab_hatch, bool ab_block)
         {
+
+            if (ai_angle != 0)
+            {
+           
+            }
+
+
+
             if (ab_hatch && (a_objProps.m_hatchtype == HatchType.NONE))
             {
                 return;
@@ -2395,10 +2442,6 @@ static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, 
        
         }
 
-        private static double Angle2Radians(int ai_angle_tenth_of_degree)
-        {
-            return (double)(Math.PI * ai_angle_tenth_of_degree / 1800);
-        }
 
         private static void Export_Straight_Wire_Label(DxfEntityCollection a_coll, DxfNet.Wire a_wire, EFont a_efont, SettingsNumberingWire pSettings)
         {
