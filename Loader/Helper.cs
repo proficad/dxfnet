@@ -34,6 +34,21 @@ namespace Loader
             return new Point(li_x, li_y);
         }
 
+        public static Point3D RotatePoint3D(Point3D a_axis, int ai_angle, Point3D a_pointToRotate)
+        {
+            double li_rad = DxfNet.Helper.Angle2Radians(ai_angle);
+
+
+            double fi_vstupu = Math.Atan2((a_pointToRotate.Y - a_axis.Y), (a_pointToRotate.X - a_axis.X));
+            double modul_vstupu = MyHypot(a_pointToRotate.X - a_axis.X, a_pointToRotate.Y - a_axis.Y);
+            //
+
+            double li_x = a_axis.X + (modul_vstupu * Math.Cos(fi_vstupu + li_rad));
+            double li_y = a_axis.Y + (modul_vstupu * Math.Sin(fi_vstupu + li_rad));
+
+            return new Point3D(li_x, li_y, 0);
+        }
+
         public static Point2D RotatePoint2D(Point2D a_axis, int ai_angle, Point2D a_pointToRotate)
         {
             double li_rad = DxfNet.Helper.Angle2Radians(ai_angle);
@@ -48,6 +63,7 @@ namespace Loader
 
             return new Point2D(li_x, li_y);
         }
+
         public static PointF RotatePointF(PointF a_axis, int ai_angle, PointF a_pointToRotate)
         {
             double li_rad = DxfNet.Helper.Angle2Radians(ai_angle);
@@ -419,6 +435,11 @@ namespace Loader
         }
 
         internal static PointF Point2D_To_PointF(Point2D a_input)
+        {
+            PointF l_point = new PointF((float)a_input.X, (float)a_input.Y);
+            return l_point;
+        }
+        internal static PointF Point3D_To_PointF(Point3D a_input)
         {
             PointF l_point = new PointF((float)a_input.X, (float)a_input.Y);
             return l_point;
