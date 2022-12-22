@@ -26,8 +26,10 @@ namespace Tester
 
         static void Main(string[] args)
         {
-            Test_A2I();
-           
+            // Test_A2I();
+
+            Test_Circle_Dims();
+            //Test_Diametric();
         }
 
         private static void Test_A2I()
@@ -190,12 +192,39 @@ namespace Tester
 
             DwgWriter.Write(@"H:\f3\dim.dwg", model);
         }
-      
 
-            
-            
-        // For aligned dimensions it may be easier using a distance to calculate the dimension line location.
-        public static DxfDimension CreateAlignedDim(DxfModel model, Point3D a, Point3D b, double d /* distance */)
+        private static void Test_Circle_Dims()
+        {
+            DxfModel model = new DxfModel();
+
+            DxfLayer layer = new DxfLayer("DIMENSIONS");
+            model.Layers.Add(layer);
+
+            DxfCircle circle = new DxfCircle(new Point3D(0d, 0d, 0d), 100d);
+            circle.Color = EntityColors.Green;
+            model.Entities.Add(circle);
+
+
+            DxfBlock block = new DxfBlock("DIAMETRIC_DIMENSIONS");
+            model.Blocks.Add(block);
+
+            DxfInsert insert = new DxfInsert(block, new Point3D(10, -15, 0));
+            insert.Layer = layer;
+            model.Entities.Add(insert);
+
+            DxfDimension.Diametric diametricDimension1 = new DxfDimension.Diametric(model.CurrentDimensionStyle);
+            diametricDimension1.ArcLineIntersectionPoint2 = new Point3D(0, 0, 0);
+            diametricDimension1.ArcLineIntersectionPoint1 = new Point3D(100d, 0, 0);
+            diametricDimension1.DimensionStyleOverrides.TextInsideHorizontal = true;
+            model.Entities.Add(diametricDimension1);
+
+            DxfWriter.Write(@"D:\H\Test_Diametric.dxf", model, false);
+        }
+
+
+
+            // For aligned dimensions it may be easier using a distance to calculate the dimension line location.
+            public static DxfDimension CreateAlignedDim(DxfModel model, Point3D a, Point3D b, double d /* distance */)
         {
             DxfDimension.Aligned dim = new DxfDimension.Aligned(model.CurrentDimensionStyle);
             dim.ExtensionLine1StartPoint = a;
@@ -228,34 +257,28 @@ namespace Tester
 
         private static void Test_Diametric()
         {
-            DxfModel model = new DxfModel();
+            DxfModel model = new DxfModel(DxfVersion.Dxf14);
 
             DxfLayer layer = new DxfLayer("DIMENSIONS");
             model.Layers.Add(layer);
 
-            DxfCircle circle = new DxfCircle(new Point3D(0d, 0d, 0d), 100d);
-            circle.Color = EntityColors.Green;
-            model.Entities.Add(circle);
-
-
             DxfBlock block = new DxfBlock("DIAMETRIC_DIMENSIONS");
             model.Blocks.Add(block);
 
-            DxfInsert insert = new DxfInsert(block, new Point3D(10, -15, 0));
+            DxfInsert insert = new DxfInsert(block, new Point3D(10, -30, 0));
             insert.Layer = layer;
             model.Entities.Add(insert);
 
-            DxfDimension.Diametric diametricDimension1 = new DxfDimension.Diametric(model.CurrentDimensionStyle);
-            diametricDimension1.ArcLineIntersectionPoint1 = new Point3D(-70d, 70d, 0);
-            diametricDimension1.ArcLineIntersectionPoint2 = new Point3D(70d, -70d, 0);
-            diametricDimension1.DimensionStyleOverrides.TextInsideHorizontal = true;
-            diametricDimension1.DimensionStyleOverrides.TextInsideExtensions = true;
-            // Need this, otherwise for ArrowsTextFitType.MoveBestFit text and arrows are moved outside the extension lines.
-            diametricDimension1.DimensionStyleOverrides.ArrowsTextFit = ArrowsTextFitType.MoveBoth;
-            model.Entities.Add(diametricDimension1);
+            {
+                DxfDimension.Diametric dimension = new DxfDimension.Diametric(model.CurrentDimensionStyle);
+                dimension.ArcLineIntersectionPoint1 = new Point3D(0, 0, 0);
+                dimension.ArcLineIntersectionPoint2 = new Point3D(2, 1, 0);
+                block.Entities.Add(dimension);
+            }
 
-            DxfWriter.Write(@"H:\Test_Diametric.dxf", model, false);
+            DxfWriter.Write(@"D:\H\Test.dxf", model, false);
         }
+    
 
 
         private static void Read_Dxf()
