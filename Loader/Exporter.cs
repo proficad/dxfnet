@@ -20,6 +20,7 @@ using System.Collections;
 using Core;
 using Microsoft.Win32;
 using WW.Cad.Drawing;
+//using static WW.Cad.Model.DxfValueFormat;
 
 namespace Loader
 {
@@ -49,6 +50,9 @@ namespace Loader
                 }
             }
 
+            
+            model.Header.InsUnits = DrawingUnits.Millimeters;//2022-12-22
+            
 
             ExportContext.Setup(model, a_doc);
             //          model.Entities.Add(new DxfText("Hatch bounded by multiple boundary paths (R14)", new Point3D(0, 1.5d, 0d), 0.1d));
@@ -1377,6 +1381,8 @@ namespace Loader
             a_coll.Add(hatch);
         }
 */
+
+
         private static void ExportEllipse(DxfEntityCollection a_coll, DrawRect a_drawRect, bool ab_block)
         {
             //need center, long axis and min/maj ratio
@@ -1420,53 +1426,35 @@ namespace Loader
             ExportEllipseSolid(a_coll, l_center, l_longAxis, ld_ratio, a_drawRect.m_rect_angle, a_drawRect.m_objProps, true, ab_block);
 
 
-            Point2D l_center_2d = new Point2D();
-            l_center_2d.X = l_center.X;
-            l_center_2d.Y = -l_center.Y;
-
-            PointF l_point_dist = new PointF((float)(l_longAxis.X + l_center_2d.X), (float)(l_longAxis.Y + l_center_2d.Y));
-
-            double l_dist_1 = DxfNet.Helper.Distance2Points(Helper.Point2D_To_PointF(l_center_2d), l_point_dist);
-
-
             if(a_drawRect.m_rect_angle != 0)
             {
-
-                PointF l_result = Helper.RotatePointF(Helper.Point2D_To_PointF(l_center_2d), a_drawRect.m_rect_angle, l_point_dist);
-                l_longAxis.X = l_result.X;
-                l_longAxis.Y = l_result.Y;
-
-                l_longAxis.X -= l_center_2d.X;
-                l_longAxis.Y -= l_center_2d.Y;
-
-                double l_dist_2 = DxfNet.Helper.Distance2Points(Helper.Point2D_To_PointF(l_center_2d), l_result);
-
-                double ld_diff = l_dist_1 - l_dist_2;
+                Point3D l_point_dist = l_center + l_longAxis;
+                
+                PointF l_result = Helper.RotatePointF(Helper.Point3D_To_PointF(l_center), a_drawRect.m_rect_angle, Helper.Point3D_To_PointF(l_point_dist));
+                l_longAxis.X = l_result.X - l_center.X;
+                l_longAxis.Y = l_result.Y - l_center.Y;
             }
 
 
             DxfEllipse dxfEllipse = new DxfEllipse(l_center, l_longAxis, ld_ratio);
 
-            
-//            dxfEllipse. =  .DefaultStartWidth = drawRect.m_objProps.m_logpen.m_width;
-
-          
 
             a_drawRect.m_objProps.m_logpen.m_width = Calculate_Line_Thickness_Ellipse((int)a_drawRect.m_objProps.m_logpen.m_width);
 
             dxfEllipse.LineWeight = (short)(10 * a_drawRect.m_objProps.m_logpen.m_width);
-            //99 dxfEllipse.ColorSource = AttributeSource.This;
+            
             dxfEllipse.Color = Helper.MakeEntityColorByBlock(a_drawRect.m_objProps.m_logpen.m_color, ab_block);
 
             DxfLineType l_lineType = GetLineTypeFromObjProps(a_drawRect.m_objProps);
             dxfEllipse.LineType = l_lineType;
-            //9dxfEllipse.LineTypeSource = AttributeSource.This;
+            
 
             dxfEllipse.Layer = ExportContext.Current.Layer; 
             a_coll.Add(dxfEllipse);
 
             ExportTextInRect(a_coll, l_center, a_drawRect.m_text, a_drawRect.m_efont, a_drawRect.m_text_angle);
         }
+
 
         private static void ExportCircle(DxfEntityCollection a_coll, QCircle a_circle, bool ab_block)
         {
@@ -2552,6 +2540,52 @@ static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, 
 
         private static void ExportDimCircle(DxfEntityCollection a_coll, QDimCircle a_dim, bool ab_block)
         {
+
+            // there are too many problems with real dims, so we just draw an arrow with a text label
+
+            QDimStyle l_dim_style = ExportContext.Current.PCadDocument.m_dim_style;
+            int li_thickness = l_dim_style.m_line_dim.m_thickness;
+            DrawPoly l_line = new DrawPoly(Shape.line, li_thickness, System.Drawing.Color.Black, a_dim.B, a_dim.A);
+
+
+            ArrowType l_arrow_type = a_dim.m_has_2_arrows ? ArrowType.at_sip4 : ArrowType.at_sip1;
+
+
+            l_line.m_objProps.m_logpen.m_style = (int)l_arrow_type;
+
+
+
+            ExportPolyline(a_coll, l_line, false);
+
+
+
+
+            if(string.IsNullOrEmpty(a_dim.m_label.Text))
+            {
+                return;
+            }
+
+            string ls_label = a_dim.m_label.Text;
+
+            Point3D l_anchor = new Point3D(a_dim.m_label.Center.X, a_dim.m_label.Center.Y, 0);
+            l_anchor.Y *= REVERSE_Y;
+
+            EFont l_efont = ExportContext.Current.PCadDocument.Parent.m_fonts.m_fontType;
+            int li_height = GetFontAscentSize(l_efont);
+
+            DxfMText dxfText = new DxfMText(ls_label, l_anchor, li_height);
+            dxfText.Color = Helper.MakeEntityColorByBlock(l_efont.m_color, false);
+
+            dxfText.AttachmentPoint = AttachmentPoint.MiddleCenter;
+            //dxfText.XAxis = a_dim.m_label.
+
+            a_coll.Add(dxfText);
+
+            
+            
+
+
+            /*
             Point3D A_3D = new Point3D(a_dim.A.X, a_dim.A.Y * REVERSE_Y, 0);
             Point3D B_3D = new Point3D(a_dim.B.X, a_dim.B.Y * REVERSE_Y, 0);
             Point3D l_pos_label = new Point3D(a_dim.m_pos_label.X, a_dim.m_pos_label.Y, 0);
@@ -2575,6 +2609,7 @@ static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, 
 
             dxfDim.Layer = ExportContext.Current.Layer;
             a_coll.Add(dxfDim);
+            */
         }
 
 
