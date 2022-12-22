@@ -1001,6 +1001,8 @@ namespace Loader
         }
 
 
+
+
         private static void AddDimCircle(DrawDoc a_drawDoc, XmlNode a_node)
         {
             PointF l_a = XmlAttrToPointF(a_node, "a");
@@ -1014,8 +1016,10 @@ namespace Loader
             a_drawDoc.Add(l_dim, ContextP2A.Current.CurrentLayer);
 
             XmlNode l_node_label = a_node.SelectSingleNode("label");
-            l_dim.Label = LoadQLabel(l_node_label);
+            l_dim.m_label = LoadQLabel(l_node_label);
         }
+
+
 
         private static void AddDimLine(DrawDoc a_drawDoc, XmlNode a_node)
         {
