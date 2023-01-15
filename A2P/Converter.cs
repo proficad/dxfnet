@@ -78,6 +78,9 @@ namespace Dxf2ProfiCAD
                 case DxfHatch l_hatch:
                     l_obj =  ConvertDxfHatch(l_hatch);
                     break;
+                case DxfLeader l_dxf_leader:
+                    l_obj =  ConvertDxfLeader(l_dxf_leader);
+                    break;
                 case DxfLine l_dxf_line:
                     l_obj =  ConvertDxfLine(l_dxf_line);
                     break;
@@ -86,6 +89,12 @@ namespace Dxf2ProfiCAD
                     break;
                 case DxfPolyline2D l_dxf_line_2D:
                     l_obj =  ConvertDxfPolyline2D(l_dxf_line_2D);
+                    break;
+                case DxfPolyline3D l_dxf_line_3D:
+                    l_obj =  ConvertDxfPolyline3D(l_dxf_line_3D);
+                    break;
+                case DxfWipeout l_dxf_wipe_out:
+                    l_obj =  ConvertDxfWipeout(l_dxf_wipe_out);
                     break;
                 case DxfPolyline2DSpline l_dxf_line_2D_spline:
                     l_obj =  ConvertDxfPolyline2D_Spline(l_dxf_line_2D_spline);
@@ -100,7 +109,7 @@ namespace Dxf2ProfiCAD
                     l_obj =  ConvertDxfDimension_Aligned(l_dim_align);
                     break;
                 default:
-                    //System.Console.WriteLine("did not convert type {0}", a_entity.ToString());
+                    System.Console.WriteLine("did not convert type {0}", a_entity.ToString());
                     return null;
             }
 
@@ -287,6 +296,8 @@ namespace Dxf2ProfiCAD
                 return null;
             }
 
+            Vector3D l_vector_scale = a_dxfInsert.ScaleFactor;
+
             string ls_blockName = a_dxfInsert.Block.Name;
 
             if (!a_dxfInsert.Model.Blocks.Contains(ls_blockName))
@@ -400,10 +411,49 @@ namespace Dxf2ProfiCAD
                 }
             }
 
-
             return l_drawPoly;
-
         }
+        private static DrawObj ConvertDxfPolyline3D(DxfPolyline3D a_dxfLine)
+        {
+            DrawPoly l_drawPoly = new DrawPoly(Shape.polyline);
+
+            foreach (DxfVertex3D l_vertex in a_dxfLine.Vertices)
+            {
+                l_drawPoly.AddPoint(MyShiftScaleX(l_vertex.X), MyShiftScaleY(l_vertex.Y));
+            }
+
+
+
+            if (a_dxfLine.Closed)
+            {
+                DxfVertex3D l_vertex = a_dxfLine.Vertices[0];
+                l_drawPoly.AddPoint(MyShiftScaleX(l_vertex.X), MyShiftScaleY(l_vertex.Y));
+            }
+
+
+            l_drawPoly.RecalcPosition();
+            l_drawPoly.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(a_dxfLine);
+            l_drawPoly.m_objProps.m_lin = Helper.DxfLineType_2_QLin(a_dxfLine.LineType, m_scaleX, a_dxfLine.LineTypeScale);
+       
+            return l_drawPoly;
+        }
+        private static DrawObj ConvertDxfWipeout(DxfWipeout a_dxfWipeout)
+        {
+            DrawPoly l_drawPoly = new DrawPoly(Shape.poly);
+
+            foreach (WW.Math.Point2D l_point in a_dxfWipeout.BoundaryVertices)
+            {
+                l_drawPoly.AddPoint(MyShiftScaleX(l_point.X), MyShiftScaleY(l_point.Y));
+            }
+
+            EntityColor l_color = a_dxfWipeout.Color;
+            var xxx = a_dxfWipeout.DxfColor;
+
+            l_drawPoly.RecalcPosition();
+       
+            return l_drawPoly;
+        }
+
 
 
         private static DrawObj ConvertDxfPolyline2D_Spline(DxfPolyline2DSpline a_dxfLine2DSpline)
@@ -452,6 +502,33 @@ namespace Dxf2ProfiCAD
 
             return l_drawPoly;
         }
+
+
+        private static DrawObj ConvertDxfLeader(DxfLeader a_leader)
+        {
+            //Console.WriteLine("line type: " + a_line.LineType.Name);
+
+            //if(l_line.LineType.Name == DxfLineType.LineTypeNameByLayer)
+
+            DrawPoly l_drawPoly = new DrawPoly(Shape.polyline);
+
+            foreach (WW.Math.Point3D l_vertex in a_leader.Vertices)
+            {
+                l_drawPoly.AddPoint(MyShiftScaleX(l_vertex.X), MyShiftScaleY(l_vertex.Y));
+            }
+
+
+
+            l_drawPoly.RecalcPosition();
+            l_drawPoly.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(a_leader);
+            l_drawPoly.m_objProps.m_lin = Helper.DxfLineType_2_QLin(a_leader.LineType, m_scaleX, a_leader.LineTypeScale);
+
+        
+
+            return l_drawPoly;
+
+        }
+
 
 
         private static DrawObj ConvertDxfLine(DxfLine a_line)
@@ -688,7 +765,7 @@ namespace Dxf2ProfiCAD
             l_efont.m_size = (int)MyScaleX(l_efont.m_size * a_dxfMText.Height * 0.06);
             if (l_efont.m_size == 0)
             {
-                Console.WriteLine("test too small (" + a_dxfMText.Text + ")");
+                Console.WriteLine("text too small (" + a_dxfMText.Text + ")");
                 l_efont.m_size = 3;
             }
 
@@ -746,7 +823,7 @@ namespace Dxf2ProfiCAD
 
             if (l_efont.m_size == 0)
             {
-                Console.WriteLine("test too small (" + a_dxfMText.Text + ")");
+                Console.WriteLine("text too small (" + a_dxfMText.Text + ")");
                 l_efont.m_size = 3;
             }
 

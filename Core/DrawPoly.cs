@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using System.Globalization;
 
 namespace DxfNet
 {
@@ -107,13 +108,20 @@ namespace DxfNet
                 throw new Exception("invalid shape");
 		        
 	        }
-  
 
 
-        	System.Text.StringBuilder ls_points = new StringBuilder();
+            //without this, some computers put comma instead of dot as a separator
+            NumberFormatInfo nfi = new NumberFormatInfo();
+            nfi.NumberDecimalSeparator = ".";
+            nfi.NumberGroupSeparator = string.Empty;
+            nfi.NumberDecimalDigits = 4;
+            
+
+            System.Text.StringBuilder ls_points = new StringBuilder();
             foreach (PointF point in m_points)
             {
-                ls_points.Append(string.Format("{0},{1},", point.X, point.Y));
+                ls_points.Append(string.Format(nfi, "{0:f},{1:f},", point.X, point.Y, nfi));
+
             }
 
             a_xmlWriter.WriteAttributeString("pts", ls_points.ToString());

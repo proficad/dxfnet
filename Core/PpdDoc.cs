@@ -54,6 +54,8 @@ namespace Core
             settings.OmitXmlDeclaration = true;
             settings.Indent = true;
 
+            
+
             XmlWriter l_xmlWriter = XmlWriter.Create(as_path, settings);
 
             if (l_xmlWriter != null)

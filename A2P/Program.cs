@@ -165,6 +165,7 @@ namespace Dxf2ProfiCAD
                 WriteToLogFile(m_path_log, "ok");
             }
 
+            Console.ReadLine();
         }
 
         private static void Report_Wrong_Drawing_Size_And_Quit()
@@ -467,7 +468,7 @@ namespace Dxf2ProfiCAD
             string ls_output_path = Path.Combine(as_output_path, ls_file_name) + "." + ls_extension;
 
 
-            l_drawDoc.Save(ls_output_path);
+             l_drawDoc.Save(ls_output_path);
 
             Console.WriteLine("Conversion completed");
         }
