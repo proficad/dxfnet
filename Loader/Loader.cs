@@ -614,10 +614,10 @@ namespace Loader
 
         private static RectangleF RectFromXml(XmlNode nodeElement)
         {
-            double ld_left     = double.Parse(nodeElement.Attributes["left"].Value);
-            double ld_top      = double.Parse(nodeElement.Attributes["top"].Value);
-            double ld_right    = double.Parse(nodeElement.Attributes["right"].Value);
-            double ld_bottom   = double.Parse(nodeElement.Attributes["bottom"].Value);
+            double ld_left      = DxfNet.Helper.String2Double(nodeElement.Attributes["left"].Value);
+            double ld_top       = DxfNet.Helper.String2Double(nodeElement.Attributes["top"].Value);
+            double ld_right     = DxfNet.Helper.String2Double(nodeElement.Attributes["right"].Value);
+            double ld_bottom    = DxfNet.Helper.String2Double(nodeElement.Attributes["bottom"].Value);
 
             double ld_width     = ld_right - ld_left;
             double ld_height    = ld_bottom - ld_top;
@@ -657,7 +657,7 @@ namespace Loader
             double[] li_arrPoints = new double[ls_arrPoints.Length];
             for (int i = 0; i < ls_arrPoints.Length; i++)
             {
-                li_arrPoints[i] = double.Parse(ls_arrPoints[i]);
+                li_arrPoints[i] = DxfNet.Helper.String2Double(ls_arrPoints[i]);
             }
 
             DrawPoly poly = null;
@@ -945,7 +945,7 @@ namespace Loader
             {
                 return ai_default;
             }
-            return (int) double.Parse(ls_result);
+            return (int) DxfNet.Helper.String2Double(ls_result);
         }
 
 
@@ -1449,8 +1449,8 @@ namespace Loader
 
         private static void AddInsert(DrawDoc doc, XmlNode a_node)
         {
-            double ld_x = double.Parse(a_node.Attributes["x"].Value);
-            double ld_y = double.Parse(a_node.Attributes["y"].Value);
+            double ld_x = DxfNet.Helper.String2Double(a_node.Attributes["x"].Value);
+            double ld_y = DxfNet.Helper.String2Double(a_node.Attributes["y"].Value);
 
             float lf_scaleX = Helper.ParseScale(a_node.Attributes["sX"]);
             float lf_scaleY = Helper.ParseScale(a_node.Attributes["sY"]);

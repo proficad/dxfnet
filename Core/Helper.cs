@@ -181,6 +181,11 @@ namespace DxfNet
             a_xmlWriter.WriteAttributeString(as_attrib + "y", a_point.Y.ToString());
         }
 
+        public static double String2Double(string as_value)
+        {
+            return double.Parse(as_value, System.Globalization.CultureInfo.InvariantCulture);
+        }
+
 
         //------------------------------------  
     }
