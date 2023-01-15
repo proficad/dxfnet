@@ -2550,14 +2550,9 @@ static void ExportSipkaWithoutStem(DxfEntityCollection a_coll, ArrowType a_typ, 
 
             ArrowType l_arrow_type = a_dim.m_has_2_arrows ? ArrowType.at_sip4 : ArrowType.at_sip1;
 
-
             l_line.m_objProps.m_logpen.m_style = (int)l_arrow_type;
 
-
-
             ExportPolyline(a_coll, l_line, false);
-
-
 
 
             if(string.IsNullOrEmpty(a_dim.m_label.Text))
