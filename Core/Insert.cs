@@ -34,7 +34,22 @@ namespace DxfNet
             {
                 a_xmlWriter.WriteStartElement("att");
                 a_xmlWriter.WriteAttributeString("name", m_name);
-                a_xmlWriter.WriteAttributeString("value", m_value);
+
+                string ls_value = Helper.RemoveTroublesomeCharacters(m_value);
+
+                try
+                {
+                    //value may contain some toxic stuff the would crash the program
+
+
+                    a_xmlWriter.WriteAttributeString("value", ls_value);
+                }
+                catch(Exception e) 
+                { 
+                    Console.WriteLine(e.ToString());
+                
+                }
+
                 a_xmlWriter.WriteAttributeString("x", m_x.ToString());
                 a_xmlWriter.WriteAttributeString("y", m_y.ToString());
                 a_xmlWriter.WriteAttributeString("v", "1");

@@ -33,6 +33,33 @@ namespace DxfNet
         }
 
 
+
+
+        // https://stackoverflow.com/questions/20762/how-do-you-remove-invalid-hexadecimal-characters-from-an-xml-based-data-source-p/641632#641632
+        internal static string RemoveTroublesomeCharacters(string as_input)
+        {
+            if (as_input == null) return null;
+
+            StringBuilder newString = new StringBuilder();
+            char ch;
+
+            for (int i = 0; i < as_input.Length; i++)
+            {
+
+                ch = as_input[i];
+                // remove any characters outside the valid UTF-8 range as well as all control characters
+                // except tabs and new lines
+                //if ((ch < 0x00FD && ch > 0x001F) || ch == '\t' || ch == '\n' || ch == '\r')
+                //if using .NET version prior to 4, use above logic
+                if (XmlConvert.IsXmlChar(ch)) //this method is new in .NET 4
+                {
+                    newString.Append(ch);
+                }
+            }
+            return newString.ToString();
+        }
+
+
         public static RectangleF RectangleF(double ld_left, double ld_top, double ld_width, double ld_height)
         {
             RectangleF l_rect = new RectangleF((float)ld_left, (float)ld_top, (float)ld_width, (float)ld_height);

@@ -316,7 +316,10 @@ namespace Dxf2ProfiCAD
 
 
                 //add it to PCadDoc
-                a_repo.AddPpd(l_ppdDoc);
+                if(l_ppdDoc.m_layers.Count > 0)
+                {
+                    a_repo.AddPpd(l_ppdDoc);
+                }
 
             }
 
@@ -407,7 +410,7 @@ namespace Dxf2ProfiCAD
                 l_coll = model.ActiveLayout.Entities;
             }
 
-            
+            int li_counter = 0;
             foreach (DxfEntity l_entity in l_coll)
             {
                 if(!l_entity.Layer.Enabled)
@@ -415,6 +418,8 @@ namespace Dxf2ProfiCAD
                     Console.WriteLine("skipping object in disabled layer " + l_entity.Layer.ToString());
                     continue;
                 }
+
+                li_counter++;
 
                 DrawObj l_drawObj = Converter.Convert(l_entity);
 
@@ -425,27 +430,12 @@ namespace Dxf2ProfiCAD
                     {
                         string ls_lastGuid = l_insert.m_lG;
                         Console.WriteLine("insert: " + ls_lastGuid);
-
-                 
+               
 
                         System.Diagnostics.Debug.Assert(ls_lastGuid.Length > 0);
                         PpdDoc l_ppdDoc = l_repo.FindPpdDocInRepo(ls_lastGuid);
                         if (l_ppdDoc != null)
                         {
-                            //if the symbol uses some huge numbers and compensates it with the scale
-                            //recalculate the numbers
-                            /*
-                            if ((l_insert.m_scaleX < 1) || (l_insert.m_scaleY < 1))
-                            {
-                                l_ppdDoc.Recalc_Size(l_insert.m_scaleX, l_insert.m_scaleY);
-                                l_insert.m_scaleX = 1;
-                                l_insert.m_scaleY = 1;
-                            }
-                            */
-
-
-
-
                             l_insert.SetPpdDoc(l_ppdDoc);
 
                             System.Drawing.SizeF l_offset = l_ppdDoc.m_offset;
@@ -454,6 +444,7 @@ namespace Dxf2ProfiCAD
                         else
                         {
                             Console.WriteLine("did not find symbol for " + ls_lastGuid);
+                            continue;
                         }
                     }
 
