@@ -165,7 +165,7 @@ namespace Dxf2ProfiCAD
                 WriteToLogFile(m_path_log, "ok");
             }
 
-            Console.ReadLine();
+            
         }
 
         private static void Report_Wrong_Drawing_Size_And_Quit()
