@@ -733,7 +733,7 @@ namespace Loader
 
             if (ls_linewidth.Length > 0)
             {
-                l_props.m_logpen.m_width = int.Parse(ls_linewidth);
+                l_props.m_logpen.m_width = double.Parse(ls_linewidth, System.Globalization.CultureInfo.InvariantCulture);
             }
   
             if (ls_linecolor.Length > 0)

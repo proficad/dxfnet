@@ -15,18 +15,18 @@ namespace DxfNet
             Scale_arrow_y = 1;
         }
 
-        public DrawPoly(Shape a_shape, int ai_thickness, Color a_colorBorder) : base(a_shape)
+        public DrawPoly(Shape a_shape, double ad_thickness, Color a_colorBorder) : base(a_shape)
         {
-            m_objProps.m_logpen.m_width = ai_thickness;
+            m_objProps.m_logpen.m_width = ad_thickness;
             m_objProps.m_logpen.m_color = a_colorBorder;
 
             Scale_arrow_x = 1;
             Scale_arrow_y = 1;
         }
 
-        public DrawPoly(Shape a_shape, int ai_thickness, Color a_colorBorder, PointF a_from, PointF a_to) : base(a_shape)
+        public DrawPoly(Shape a_shape, double ad_thickness, Color a_colorBorder, PointF a_from, PointF a_to) : base(a_shape)
         {
-            m_objProps.m_logpen.m_width = ai_thickness;
+            m_objProps.m_logpen.m_width = ad_thickness;
             m_objProps.m_logpen.m_color = a_colorBorder;
             AddPoint(a_from);
             AddPoint(a_to);
@@ -35,9 +35,9 @@ namespace DxfNet
             Scale_arrow_y = 1;
         }
 
-        public DrawPoly(Shape a_shape, int ai_thickness, Color a_colorBorder, PointF [] a_points) : base(a_shape)
+        public DrawPoly(Shape a_shape, double ad_thickness, Color a_colorBorder, PointF [] a_points) : base(a_shape)
         {
-            m_objProps.m_logpen.m_width = ai_thickness;
+            m_objProps.m_logpen.m_width = ad_thickness;
             m_objProps.m_logpen.m_color = a_colorBorder;
             foreach (PointF l_point in a_points)
             {
@@ -48,9 +48,9 @@ namespace DxfNet
             Scale_arrow_y = 1;
         }
 
-        public DrawPoly(Shape a_shape, int ai_thickness, Color a_colorBorder, Point[] a_points) : base(a_shape)
+        public DrawPoly(Shape a_shape, double ad_thickness, Color a_colorBorder, Point[] a_points) : base(a_shape)
         {
-            m_objProps.m_logpen.m_width = ai_thickness;
+            m_objProps.m_logpen.m_width = ad_thickness;
             m_objProps.m_logpen.m_color = a_colorBorder;
             foreach (Point l_point in a_points)
             {
