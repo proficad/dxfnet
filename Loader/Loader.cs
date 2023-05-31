@@ -42,7 +42,7 @@ namespace Loader
                 {
                     foreach (PCadDoc l_page in doc.m_pages)
                     {
-                        string ls_outPath = Path.Combine(ls_path, ls_filename) + "_" + l_page.Name + ls_ext;
+                        string ls_outPath = Path.Combine(ls_path, ls_filename) + "_" + Helper.SanitizeLayerName(l_page.Name) + ls_ext;
                         Exporter.Export(l_page, ls_outPath);
                         a_coll.Add(ls_outPath);
                     }
