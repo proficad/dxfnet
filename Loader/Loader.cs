@@ -424,7 +424,11 @@ namespace Loader
             {
                 string ls_name = XmlAttrToString(l_node.Attributes["name"]);
                 string ls_value = XmlAttrToString(l_node.Attributes["value"]);
-                a_hashTable[ls_name] = ls_value;
+                if (ls_name != null && ls_value != null && !string.IsNullOrEmpty(ls_value))
+                {
+                    a_hashTable[ls_name] = ls_value;
+                }
+                
             }
 
 
