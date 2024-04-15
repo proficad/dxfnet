@@ -47,78 +47,82 @@ namespace Dxf2ProfiCAD
 
 
 
-        public static DrawObj Convert(DxfEntity a_entity)
+        public static List<DrawObj> Convert(DxfEntity a_entity)
         {
-            DrawObj l_obj;
+            List<DrawObj> l_obj = new List<DrawObj>(1);
             //System.Diagnostics.Debug.WriteLine("converting " + a_entity.ToString());
             
             switch (a_entity)
             {
                 case DxfInsert l_insert:
-                    l_obj = ConvertInsert(l_insert);
+                    l_obj.Add(ConvertInsert(l_insert));
                     break;
                 case DxfMText l_dxf_mtext:
-                    l_obj = ConvertDxfMText(l_dxf_mtext);
+                    l_obj.Add(ConvertDxfMText(l_dxf_mtext));
                     break;
                 case DxfText l_dxf_text:
-                    l_obj =  ConvertDxfText(l_dxf_text);
+                    l_obj.Add(ConvertDxfText(l_dxf_text));
                     break;
                 case DxfArc  l_arc:
-                    l_obj =  ConvertArc(l_arc);
+                    l_obj.Add(ConvertArc(l_arc));
                     break;
                 case DxfCircle l_circle:
-                    l_obj =  ConvertCircle(l_circle);
+                    l_obj.Add(ConvertCircle(l_circle));
                     break;
                 case DxfEllipse l_ellipse:
-                    l_obj =  ConvertDxfEllipse(l_ellipse);
+                    l_obj.Add(ConvertDxfEllipse(l_ellipse));
                     break;
                 case DxfSolid l_solid:
-                    l_obj =  ConvertDxfSolid(l_solid);
+                    l_obj.Add(ConvertDxfSolid(l_solid));
                     break;
                 case DxfHatch l_hatch:
-                    l_obj =  ConvertDxfHatch(l_hatch);
+                    l_obj.Add(ConvertDxfHatch(l_hatch));
                     break;
                 case DxfLeader l_dxf_leader:
-                    l_obj =  ConvertDxfLeader(l_dxf_leader);
+                    l_obj.Add(ConvertDxfLeader(l_dxf_leader));
                     break;
                 case DxfLine l_dxf_line:
-                    l_obj =  ConvertDxfLine(l_dxf_line);
+                    l_obj.Add(ConvertDxfLine(l_dxf_line));
                     break;
                 case DxfLwPolyline l_dxf_lw_line:
-                    l_obj =  ConvertDxfLwPolyline(l_dxf_lw_line);
+                    l_obj.Add(ConvertDxfLwPolyline(l_dxf_lw_line));
                     break;
                 case DxfPolyline2D l_dxf_line_2D:
-                    l_obj =  ConvertDxfPolyline2D(l_dxf_line_2D);
+                    l_obj.Add(ConvertDxfPolyline2D(l_dxf_line_2D));
                     break;
                 case DxfPolyline3D l_dxf_line_3D:
-                    l_obj =  ConvertDxfPolyline3D(l_dxf_line_3D);
+                    l_obj.Add(ConvertDxfPolyline3D(l_dxf_line_3D));
+                    break;
+                case DxfPolyfaceMesh l_dxf_line_mesh:
+                    //l_obj.Add(ConvertDxfPolyfaceMesh(l_dxf_line_mesh));
+                    foreach (var l_face in l_dxf_line_mesh.Faces)
+                    {
+                        l_obj.Add(ConvertDxfMeshFace(l_face));
+                    }
                     break;
                 case DxfWipeout l_dxf_wipe_out:
-                    l_obj =  ConvertDxfWipeout(l_dxf_wipe_out);
+                    l_obj.Add(ConvertDxfWipeout(l_dxf_wipe_out));
                     break;
                 case DxfPolyline2DSpline l_dxf_line_2D_spline:
-                    l_obj =  ConvertDxfPolyline2D_Spline(l_dxf_line_2D_spline);
+                    l_obj.Add(ConvertDxfPolyline2D_Spline(l_dxf_line_2D_spline));
                     break;
                 case DxfSpline l_dxf_spline:
-                    l_obj =  ConvertDxfSpline(l_dxf_spline);
+                    l_obj.Add(ConvertDxfSpline(l_dxf_spline));
                     break;
                 case DxfDimension.Linear l_dim_linear:
-                    l_obj =  ConvertDxfDimension_Linear(l_dim_linear);
+                    l_obj.Add(ConvertDxfDimension_Linear(l_dim_linear));
                     break;
                 case DxfDimension.Aligned l_dim_align:
-                    l_obj =  ConvertDxfDimension_Aligned(l_dim_align);
+                    l_obj.Add(ConvertDxfDimension_Aligned(l_dim_align));
                     break;
                 default:
                     System.Console.WriteLine("did not convert type {0}", a_entity.ToString());
                     return null;
             }
 
-            if (l_obj != null && l_obj.IsValid(Converter.m_size_target.Width, Converter.m_size_target.Height))
-            {
-                return l_obj;
-            }
-
-            return null;
+            //l_obj.RemoveAll(x => !x.IsValid(Converter.m_size_target.Width, Converter.m_size_target.Height));
+            return l_obj;
+            
         }
 
 
@@ -437,6 +441,41 @@ namespace Dxf2ProfiCAD
        
             return l_drawPoly;
         }
+        
+        private static DrawObj ConvertDxfPolyfaceMesh(DxfPolyfaceMesh a_dxfLine)
+        {
+            DrawPoly l_drawPoly = new DrawPoly(Shape.polyline);
+
+            foreach (DxfVertex3D l_vertex in a_dxfLine.Vertices)
+            {
+                l_drawPoly.AddPoint(MyShiftScaleX(l_vertex.X), MyShiftScaleY(l_vertex.Y));
+            }
+
+
+            l_drawPoly.RecalcPosition();
+            l_drawPoly.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(a_dxfLine);
+            l_drawPoly.m_objProps.m_lin = Helper.DxfLineType_2_QLin(a_dxfLine.LineType, m_scaleX, a_dxfLine.LineTypeScale);
+       
+            return l_drawPoly;
+        }
+                
+        private static DrawObj ConvertDxfMeshFace(DxfMeshFace a_face)
+        {
+            DrawPoly l_drawPoly = new DrawPoly(Shape.polyline);
+
+            foreach (var l_corner in a_face.Corners)
+            {
+                l_drawPoly.AddPoint(MyShiftScaleX(l_corner.Vertex.X), MyShiftScaleY(l_corner.Vertex.Y));
+            }
+
+
+            l_drawPoly.RecalcPosition();
+            l_drawPoly.m_objProps.m_logpen.m_color = Helper.DxfEntityColor2Color(a_face);
+            l_drawPoly.m_objProps.m_lin = Helper.DxfLineType_2_QLin(a_face.LineType, m_scaleX, a_face.LineTypeScale);
+       
+            return l_drawPoly;
+        }
+
         private static DrawObj ConvertDxfWipeout(DxfWipeout a_dxfWipeout)
         {
             DrawPoly l_drawPoly = new DrawPoly(Shape.poly);

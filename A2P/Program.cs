@@ -292,8 +292,7 @@ namespace Dxf2ProfiCAD
                 
                 foreach (DxfEntity l_entity in l_block.Entities)
                 {
-                    DrawObj l_drawObj = Converter.Convert(l_entity);
-                    if (l_drawObj != null)
+                    foreach (DrawObj l_drawObj in Converter.Convert(l_entity))
                     {
                         if (l_drawObj is Insert l_insert)
                         {
@@ -301,7 +300,9 @@ namespace Dxf2ProfiCAD
                         }
 
                         l_ppdDoc.Add(l_drawObj, l_entity.Layer.Name, ab_merge_layers);
-                    }
+                        
+                    }                    
+
                 }
 
 
@@ -421,35 +422,37 @@ namespace Dxf2ProfiCAD
 
                 li_counter++;
 
-                DrawObj l_drawObj = Converter.Convert(l_entity);
 
-                if (l_drawObj != null)
+                foreach (DrawObj l_drawObj in Converter.Convert(l_entity))
                 {
-                    // if it is an insert move it by the offset of its PPD
-                    if (l_drawObj is Insert l_insert)
+                    if (l_drawObj != null)
                     {
-                        string ls_lastGuid = l_insert.m_lG;
-                        Console.WriteLine("insert: " + ls_lastGuid);
-               
-
-                        System.Diagnostics.Debug.Assert(ls_lastGuid.Length > 0);
-                        PpdDoc l_ppdDoc = l_repo.FindPpdDocInRepo(ls_lastGuid);
-                        if (l_ppdDoc != null)
+                        // if it is an insert move it by the offset of its PPD
+                        if (l_drawObj is Insert l_insert)
                         {
-                            l_insert.SetPpdDoc(l_ppdDoc);
+                            string ls_lastGuid = l_insert.m_lG;
+                            Console.WriteLine("insert: " + ls_lastGuid);
 
-                            System.Drawing.SizeF l_offset = l_ppdDoc.m_offset;
-                            l_insert.Offset(l_offset);
+
+                            System.Diagnostics.Debug.Assert(ls_lastGuid.Length > 0);
+                            PpdDoc l_ppdDoc = l_repo.FindPpdDocInRepo(ls_lastGuid);
+                            if (l_ppdDoc != null)
+                            {
+                                l_insert.SetPpdDoc(l_ppdDoc);
+
+                                System.Drawing.SizeF l_offset = l_ppdDoc.m_offset;
+                                l_insert.Offset(l_offset);
+                            }
+                            else
+                            {
+                                Console.WriteLine("did not find symbol for " + ls_lastGuid);
+                                continue;
+                            }
                         }
-                        else
-                        {
-                            Console.WriteLine("did not find symbol for " + ls_lastGuid);
-                            continue;
-                        }
+
+
+                        l_drawDoc.Add(l_drawObj, l_entity.Layer.Name, ab_merge_layers);
                     }
-
-
-                    l_drawDoc.Add(l_drawObj, l_entity.Layer.Name, ab_merge_layers);
                 }
             }
 
@@ -485,15 +488,17 @@ namespace Dxf2ProfiCAD
 
                 foreach (DxfEntity l_entity in l_block.Entities)
                 {
-                    DrawObj l_drawObj = Converter.Convert(l_entity);
-                    if (l_drawObj != null)
+                    foreach(DrawObj l_drawObj in Converter.Convert(l_entity))
                     {
-                        if (l_drawObj is Insert l_insert)
+                        if (l_drawObj != null)
                         {
-                            Add_To_Repo(l_ppdDoc.m_repo, a_model, l_insert.m_lG, ab_merge_layers);
-                        }
+                            if (l_drawObj is Insert l_insert)
+                            {
+                                Add_To_Repo(l_ppdDoc.m_repo, a_model, l_insert.m_lG, ab_merge_layers);
+                            }
 
-                        l_ppdDoc.Add(l_drawObj, l_entity.Layer.Name, ab_merge_layers);
+                            l_ppdDoc.Add(l_drawObj, l_entity.Layer.Name, ab_merge_layers);
+                        }
                     }
                 }
 
