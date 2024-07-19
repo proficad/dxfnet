@@ -734,23 +734,35 @@ namespace Dxf2ProfiCAD
             SizeF l_size_mid     = Angle2Size(ld_middle_angle, a_dxf_arc.Radius);
             SizeF l_size_end     = Angle2Size(a_dxf_arc.EndAngle, a_dxf_arc.Radius);
 
-          
 
-            double ld_begin_x   = a_dxf_arc.Center.X + l_size_begin.Width;
+            double ld_center_x = a_dxf_arc.Center.X;
+            if (DxfNet.Helper.Double_Equal(a_dxf_arc.Transform.M00, -1.0))
+            {
+                ld_center_x = -a_dxf_arc.Center.X;
+
+                l_size_begin.Width = -l_size_begin.Width;
+                l_size_mid.Width = -l_size_mid.Width;
+                l_size_end.Width = -l_size_end.Width;
+            }
+
+               
+
+
+            double ld_begin_x   = ld_center_x + l_size_begin.Width;
             double ld_begin_y   = a_dxf_arc.Center.Y + l_size_begin.Height;
             PointF l_point_begin = new PointF(
                 (float) MyShiftScaleX(ld_begin_x),
                 (float) MyShiftScaleY(ld_begin_y)
             );
 
-            double ld_mid_x = a_dxf_arc.Center.X + l_size_mid.Width;
+            double ld_mid_x = ld_center_x + l_size_mid.Width;
             double ld_mid_y = a_dxf_arc.Center.Y + l_size_mid.Height;
             PointF l_point_mid = new PointF(
                 (float)MyShiftScaleX(ld_mid_x),
                 (float)MyShiftScaleY(ld_mid_y)
             );
 
-            double ld_end_x     = a_dxf_arc.Center.X + l_size_end.Width;
+            double ld_end_x     = ld_center_x + l_size_end.Width;
             double ld_end_y     = a_dxf_arc.Center.Y + l_size_end.Height;
             PointF l_point_end  = new PointF(
                 (float)MyShiftScaleX(ld_end_x),

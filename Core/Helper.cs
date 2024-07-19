@@ -213,6 +213,12 @@ namespace DxfNet
             return double.Parse(as_value, System.Globalization.CultureInfo.InvariantCulture);
         }
 
+        public static bool Double_Equal(double ad_1, double ad_2)
+        {
+            double ld_tolerance = 0.001; // Choose an appropriate tolerance
+            return (Math.Abs(ad_1 - ad_1) <= ld_tolerance);
+        }
+
 
         //------------------------------------  
     }
