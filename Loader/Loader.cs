@@ -342,8 +342,8 @@ namespace Loader
             settingsPage.PagesHor = XmlAttrToIntWithDefault(nodePageSettings.Attributes["pgsHor"], 1);
             settingsPage.PagesVer = XmlAttrToIntWithDefault(nodePageSettings.Attributes["pgsVer"], 1);
 
-            string ls_showT     = nodePageSettings.Attributes["showT"].Value;
-            string ls_showV     = nodePageSettings.Attributes["showV"].Value;
+            string ls_showT     = nodePageSettings.Attributes["showT"]?.Value ?? String.Empty;
+            string ls_showV     = nodePageSettings.Attributes["showV"]?.Value ?? String.Empty;
 
             a_collPages.m_show_types    = (ls_showT == "YES");
             a_collPages.m_show_values   = (ls_showV == "YES");
@@ -365,7 +365,7 @@ namespace Loader
 
                 settingsPage.PageMargins = new MyRect { Left = li_left, Top = li_top, Right = li_right, Bottom = li_bottom };
 
-                settingsPage.IncludeMargins = nodePageSettings.Attributes["includeMargins"].Value == "YES";
+                settingsPage.IncludeMargins = false;// nodePageSettings.Attributes["includeMargins"].Value == "YES";
             }
 
         }
