@@ -292,14 +292,24 @@ namespace Dxf2ProfiCAD
                 
                 foreach (DxfEntity l_entity in l_block.Entities)
                 {
-                    foreach (DrawObj l_drawObj in Converter.Convert(l_entity))
+                    List<DrawObj> l_list = Converter.Convert(l_entity);
+
+                    if (l_list == null)
+                    {
+                        continue;
+                    }
+
+                    foreach (DrawObj l_drawObj in l_list)
                     {
                         if (l_drawObj is Insert l_insert)
                         {
                             Add_To_Repo(l_ppdDoc.m_repo, model, l_insert.m_lG, ab_merge_layers);
                         }
 
-                        l_ppdDoc.Add(l_drawObj, l_entity.Layer.Name, ab_merge_layers);
+                        if (l_drawObj != null)
+                        {
+                            l_ppdDoc.Add(l_drawObj, l_entity.Layer.Name, ab_merge_layers);
+                        }
                         
                     }                    
 
@@ -422,8 +432,14 @@ namespace Dxf2ProfiCAD
 
                 li_counter++;
 
+                List<DrawObj> l_list = Converter.Convert(l_entity);
 
-                foreach (DrawObj l_drawObj in Converter.Convert(l_entity))
+                if (l_list == null)
+                {
+                    continue;
+                }
+
+                foreach (DrawObj l_drawObj in l_list)
                 {
                     if (l_drawObj != null)
                     {
