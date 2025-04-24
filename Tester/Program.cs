@@ -26,16 +26,16 @@ namespace Tester
 
         static void Main(string[] args)
         {
-            // Test_A2I();
+            Test_A2I();
 
-            Test_Circle_Dims();
+            //Test_Circle_Dims();
             //Test_Diametric();
         }
 
         private static void Test_A2I()
         {
-            string ls_path_in  = @"A2I\in\in.dxf";
-            string ls_path_out = @"A2I\out\out.png";
+            string ls_path_in  = @"D:\projects\desktop\DxfNet\Tester\A2I\in\in.dxf";
+            string ls_path_out = @"D:\projects\desktop\DxfNet\Tester\A2I\out\out.png";
 
             string ls_command = $"A2IEXE.exe png yes 5000 \"{ls_path_in}\" \"{ls_path_out}\"";
             //string ls_command = $"A2IEXE.exe";
