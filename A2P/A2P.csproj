@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Dxf2ProfiCAD</RootNamespace>
     <AssemblyName>A2P</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -55,24 +55,19 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="WW, Version=4.0.39.18, Culture=neutral, PublicKeyToken=87d16b8f7b531b65, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="WW">
       <HintPath>..\DLL\WW.dll</HintPath>
     </Reference>
-    <Reference Include="WW.Cad, Version=4.0.39.18, Culture=neutral, PublicKeyToken=87d16b8f7b531b65, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="WW.Cad">
       <HintPath>..\DLL\WW.Cad.dll</HintPath>
     </Reference>
-    <Reference Include="WW.GL, Version=4.0.39.18, Culture=neutral, PublicKeyToken=87d16b8f7b531b65, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="WW.GL">
       <HintPath>..\DLL\WW.GL.dll</HintPath>
     </Reference>
-    <Reference Include="WW.License, Version=4.0.0.0, Culture=neutral, PublicKeyToken=87d16b8f7b531b65, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="WW.License">
       <HintPath>..\DLL\WW.License.dll</HintPath>
     </Reference>
-    <Reference Include="WW.Pdf, Version=4.0.39.18, Culture=neutral, PublicKeyToken=87d16b8f7b531b65, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="WW.Pdf">
       <HintPath>..\DLL\WW.Pdf.dll</HintPath>
     </Reference>
   </ItemGroup>

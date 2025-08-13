@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>A2IDLL</RootNamespace>
     <AssemblyName>A2IDLL</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>
     </StartupObject>
@@ -29,6 +29,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -37,6 +38,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -53,19 +55,19 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="WW">
-      <HintPath>W:\P\dist\11\bin\lib\WW.dll</HintPath>
+      <HintPath>..\DLL\WW.dll</HintPath>
     </Reference>
     <Reference Include="WW.Cad">
-      <HintPath>W:\P\dist\11\bin\lib\WW.Cad.dll</HintPath>
+      <HintPath>..\DLL\WW.Cad.dll</HintPath>
     </Reference>
     <Reference Include="WW.GL">
-      <HintPath>W:\P\dist\11\bin\lib\WW.GL.dll</HintPath>
+      <HintPath>..\DLL\WW.GL.dll</HintPath>
     </Reference>
     <Reference Include="WW.License">
-      <HintPath>W:\P\dist\11\bin\lib\WW.License.dll</HintPath>
+      <HintPath>..\DLL\WW.License.dll</HintPath>
     </Reference>
     <Reference Include="WW.Pdf">
-      <HintPath>W:\P\dist\11\bin\lib\WW.Pdf.dll</HintPath>
+      <HintPath>..\DLL\WW.Pdf.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
